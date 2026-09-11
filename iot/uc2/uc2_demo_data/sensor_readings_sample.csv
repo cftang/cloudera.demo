@@ -1,0 +1,19 @@
+event_time,machine_id,process_type,metric,value,unit
+2025-06-24 06:00:00,CNC-01,cnc,vibration_rms,0.8885,mm/s
+2025-06-24 06:00:00,CNC-01,cnc,temperature,41.7406,celsius
+2025-06-24 06:00:00,CNC-01,cnc,sound_db,77.7774,dB
+2025-06-24 06:05:00,CNC-01,cnc,vibration_rms,0.8826,mm/s
+2025-06-24 06:05:00,CNC-01,cnc,temperature,42.1738,celsius
+2025-06-24 06:05:00,CNC-01,cnc,sound_db,78.4646,dB
+2025-06-24 06:00:00,PAINT-01,paint_booth,humidity,46.404,percent
+2025-06-24 06:00:00,PAINT-01,paint_booth,pressure,101.2362,kPa
+2025-06-24 06:00:00,PAINT-01,paint_booth,temperature,20.8021,celsius
+2025-06-24 06:05:00,PAINT-01,paint_booth,humidity,47.3271,percent
+2025-06-24 06:05:00,PAINT-01,paint_booth,pressure,101.6283,kPa
+2025-06-24 06:05:00,PAINT-01,paint_booth,temperature,22.0884,celsius
+2025-06-24 06:00:00,BAT-01,battery_assembly,temperature,28.1994,celsius
+2025-06-24 06:00:00,BAT-01,battery_assembly,voltage,3.6947,volts
+2025-06-24 06:05:00,BAT-01,battery_assembly,temperature,27.557,celsius
+2025-06-24 06:05:00,BAT-01,battery_assembly,voltage,3.6797,volts
+2025-06-24 06:10:00,BAT-01,battery_assembly,temperature,27.8126,celsius
+2025-06-24 06:10:00,BAT-01,battery_assembly,voltage,3.7098,volts

@@ -1,0 +1,8 @@
+[
+  "vibration_rms",
+  "temperature",
+  "sound_db",
+  "humidity",
+  "pressure",
+  "voltage"
+]

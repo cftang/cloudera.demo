@@ -1,0 +1,56 @@
+health_assessment:
+  description: >
+    A machine_health alert has fired for {machine_id} at {alert_timestamp} with a
+    reported health_score of {health_score}. Investigate and assess the failure risk:
+
+    1. Use the iceberg-mcp-server to query the machine_health table for {machine_id}
+       in the window {alert_timestamp} minus 60 minutes to {alert_timestamp}. Capture
+       health_score, anomaly_score, edge_alert_flag, and the per-axis RMS columns
+       (vibration_rms_x, vibration_rms_y, vibration_rms_z) over time.
+    2. Use the iceberg-mcp-server to query vibration_readings for the same machine and
+       window. Identify which axis (x, y, or z) shows the strongest upward trend and
+       summarise the trend direction and magnitude.
+    3. Call the RUL Prediction Tool with action=predict_rul, passing machine_id,
+       health_score, the latest vibration_rms_x / vibration_rms_y / vibration_rms_z,
+       and anomaly_score from the most recent machine_health row. Record the returned
+       rul_hours, risk_level, and confidence — do not estimate these yourself.
+    4. Classify overall severity using both the model output and the evidence:
+       CRITICAL (rul_hours < 8 or health_score < 40 with a Z-axis spike),
+       HIGH (edge_alert_flag true or anomaly_score spike), MEDIUM (gradual decline),
+       LOW (stable).
+
+    Input variables: {machine_id}, {alert_timestamp}, {health_score}.
+  expected_output: >
+    A structured health assessment containing:
+    - machine_id and alert_timestamp
+    - severity classification (CRITICAL / HIGH / MEDIUM / LOW)
+    - rul_hours and confidence from the RUL Prediction Tool
+    - dominant vibration axis and trend description
+    - 3–5 supporting evidence rows (timestamp, health_score, anomaly_score, rms_z)
+    - a one-line plain-language summary of the likely failure mode
+  agent: health_monitor
+
+work_order_generation:
+  description: >
+    Using the health assessment for {machine_id}, generate a prioritised maintenance
+    work order and a fleet status narrative:
+
+    1. Map the severity and dominant failure mode to a maintenance action:
+       - CRITICAL spindle bearing (Z-axis spike, RUL < 8h) -> immediate bearing
+         replacement, schedule emergency downtime now.
+       - HIGH edge anomaly (edge_alert_flag) -> stop-run recommendation, spindle
+         inspection before next cycle.
+       - MEDIUM tool wear (gradual decline) -> tool change at shift end.
+    2. Estimate the parts required, the recommended downtime window, and the priority.
+    3. Produce a work order JSON with fields: work_order_id, machine_id, severity,
+       rul_hours, recommended_action, parts, downtime_window, created_at.
+    4. Write the JSON to an Artifact File named work_order_{machine_id}.json and also
+       return a short human-readable fleet status update for the supervisor.
+  expected_output: >
+    A maintenance work order JSON (work_order_id, machine_id, severity, rul_hours,
+    recommended_action, parts, downtime_window, created_at) written to an Artifact
+    File, plus a 2–3 sentence fleet status narrative summarising the machine state,
+    the action, and the urgency.
+  agent: maintenance_planner
+  context:
+    - health_assessment

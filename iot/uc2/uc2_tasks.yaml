@@ -1,0 +1,70 @@
+alert_triage_task:
+  description: >
+    A quality_predictions alert has fired for {machine_id} at {alert_timestamp} with
+    defect_rate {defect_rate} and risk_level {risk_level}. Triage it:
+
+    1. Call the Quality Prediction Tool with action=predict_quality, passing the
+       machine_id, process_type, and the most recent sensor values for that machine
+       (vibration_rms / temperature / sound_db for CNC-01; humidity / pressure /
+       temperature for PAINT-01; temperature / voltage for BAT-01). Confirm the
+       returned defect_rate and risk_level against the alert.
+    2. Classify the operational severity: HIGH (defect_rate >= 0.16 -> production
+       stop), MEDIUM (0.08–0.12 -> process/environmental check), INVESTIGATE
+       (pattern anomaly with negative or unstable score).
+    3. Decide which Iceberg tables the Root-Cause Investigator must query
+       (sensor_readings always; quality_events for logged defects) and which metrics
+       are relevant for this machine and process_type.
+
+    Input variables: {machine_id}, {alert_timestamp}, {defect_rate}, {risk_level}.
+  expected_output: >
+    A structured triage result: confirmed severity (HIGH / MEDIUM / INVESTIGATE),
+    the Quality Prediction Tool's defect_rate / risk_level / confidence, the
+    process_type, and an explicit list of source tables and metrics to investigate.
+  agent: alert_triage
+
+root_cause_investigation:
+  description: >
+    Using the triage routing for {machine_id}, investigate the root cause:
+
+    1. Use the NL-to-SQL tool to query sensor_readings for {machine_id} in the window
+       {alert_timestamp} minus 15 minutes to {alert_timestamp}. Pivot the narrow
+       (metric, value) rows into per-metric series and identify which metric drifted
+       first and by how much.
+    2. Use the NL-to-SQL tool to query quality_events for the same machine and window;
+       capture any event_type (defect_logged / rework / scrap) and defect_code.
+    3. Correlate the signals: determine the leading indicator and the likely physical
+       cause (worn welding tip for joint vibration+temperature rise on CNC-01; HVAC
+       drift for a humidity climb on PAINT-01; cooling-cycle fault for a temperature
+       spike on BAT-01).
+
+    Input variables: {machine_id}, {alert_timestamp}.
+  expected_output: >
+    A root-cause hypothesis stating the leading indicator metric, the direction and
+    magnitude of its drift, any correlated defect_code from quality_events, and 3–5
+    supporting evidence rows (timestamp, metric, value). One-line plain-language
+    statement of the most likely cause.
+  agent: root_cause_investigator
+  context:
+    - alert_triage_task
+
+recommendation_action:
+  description: >
+    Using the root-cause hypothesis for {machine_id}, produce the corrective action:
+
+    1. Map the root cause to the corrective-action library:
+       - Worn welding tip (CNC-01) -> production stop + welding tip change.
+       - Humidity drift (PAINT-01) -> HVAC adjustment before next shift.
+       - Battery thermal anomaly (BAT-01) -> cooling-system inspection + charge-cycle
+         correlation.
+    2. Set a priority consistent with the triaged severity.
+    3. Produce a work-order JSON with fields: work_order_id, machine_id, defect_code,
+       root_cause, corrective_action, priority, created_at. Write it to an Artifact
+       File named work_order_{machine_id}.json.
+    4. Return a concise, human-readable recommendation for the production supervisor.
+  expected_output: >
+    A corrective-action recommendation (2–3 sentences) plus a work-order JSON
+    (work_order_id, machine_id, defect_code, root_cause, corrective_action, priority,
+    created_at) written to an Artifact File, ready for MES write-back.
+  agent: recommendation_agent
+  context:
+    - root_cause_investigation

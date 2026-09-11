@@ -1,0 +1,2826 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hands-on lab demonstrating how Cloudera AI Agent Studio, RAG Studio, and Synthetic Data Studio interoperate — two focused demos plus a three-studio capstone.">
+      
+      
+      
+        <link rel="canonical" href="https://ferdinandzhong.github.io/handson-labs/synthetic_data_lab/synthetic_data_d2_5_workflow/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Synthetic Data Generation — Direction 2.5 Hands-On Lab - Cloudera AI Studios Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#synthetic-data-generation-direction-25-hands-on-lab" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Cloudera AI Studios Lab" class="md-header__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cloudera AI Studios Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Synthetic Data Generation — Direction 2.5 Hands-On Lab
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../studios/agent_studio/" class="md-tabs__link">
+          
+  
+  
+  Studios
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/lab1_calculator_workflow/" class="md-tabs__link">
+          
+  
+  
+  Agent Studio Quickstart
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/agent_rag_demo/" class="md-tabs__link">
+          
+  
+  
+  RAG Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-tabs__link">
+          
+  
+  
+  Synthetic Data Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/nl_to_sql/nl_to_sql_workflow/" class="md-tabs__link">
+          
+  
+  
+  NL-to-SQL Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/memory/digital_banking_chatbot/" class="md-tabs__link">
+          
+  
+  
+  Agent Memory Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/iot/uc1_predictive_maintenance/" class="md-tabs__link">
+          
+  
+  
+  IoT Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../hallucination_guardrails/anti_hallucination_lab/" class="md-tabs__link">
+          
+  
+  
+  Vehicle Manufacturing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/rag_studio_tool/" class="md-tabs__link">
+          
+  
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cloudera AI Studios Lab" class="md-nav__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    Cloudera AI Studios Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Studios
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Studios
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/agent_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/rag_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/synthetic_data_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio Quickstart
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Studio Quickstart
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/lab1_calculator_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1: Build Your First Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/lab2_calculator_with_tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2: Workflow with a Custom Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RAG Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/agent_rag_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic RAG-App Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Synthetic Data Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic_data_d1_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D1: LLM-Driven Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic_data_d2_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D2: SDS Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic_data_d3_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D3: Production Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNTHETIC_DATA_DEMO_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workshop Presenter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NL-to-SQL Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/nl_to_sql/nl_to_sql_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Agentic Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/nl_to_sql/nl_to_sql_workflow_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Memory Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Memory Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/memory/digital_banking_chatbot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Banking Chatbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IoT Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/iot/uc1_predictive_maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC1: Predictive Maintenance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/iot/uc2_predictive_quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC2: Predictive Quality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vehicle Manufacturing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Vehicle Manufacturing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hallucination_guardrails/anti_hallucination_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Grounding + Guardrails (POC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hallucination_guardrails/anti_hallucination_lab_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anti-Hallucination (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/rag_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/synthetic_data_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jailbreak_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jailbreak & Input Safety Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/nl_query_evaluator_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL Query Evaluator Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/ontology_grounding_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ontology Grounding Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g1_verdict_lock_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G1: Verdict Lock Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g2_claim_citation_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G2: Claim Citation Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g3_grounding_verifier_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G3: Grounding Verifier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g4_action_catalog_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G4: Action Catalog Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scope">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#not-suitable-for-production-ml-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not suitable for production ML training
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-steps-matches-d3-agentic-agents-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline steps (matches D3 agentic Agents 1–4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagram-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagram quick reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="synthetic-data-generation-direction-25-hands-on-lab">Synthetic Data Generation — Direction 2.5 Hands-On Lab<a class="headerlink" href="#synthetic-data-generation-direction-25-hands-on-lab" title="Permanent link">&para;</a></h1>
+<p><strong>Agent Studio script authoring</strong> — same logical pipeline as <a href="../synthetic_data_d3_workflow/">Direction 3</a> agentic mode, but runs entirely in the <strong>Agent Studio UI</strong> and <strong>stops after writing Python scripts</strong>. You do not run the scripts or dispatch CML Jobs from the workflow itself.</p>
+<p>This lab uses <strong>Agent Studio only</strong>. It does <strong>not</strong> use the <a href="https://docs.cloudera.com">CAI Workbench MCP Server</a>. Schema profiling uses <strong><code>iceberg-mcp-server</code></strong> attached to Agent 1 (same as D1/D2).</p>
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Where it runs</th>
+<th>Generates</th>
+<th>Executes scripts?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>D2</strong></td>
+<td>Agent Studio + SDS</td>
+<td>JSON rows via SDS API</td>
+<td>SDS evaluates rows</td>
+</tr>
+<tr>
+<td><strong>D2.5</strong> (this lab)</td>
+<td>Agent Studio only</td>
+<td><code>generate_*.py</code> + <code>evaluate_*.py</code></td>
+<td><strong>No</strong> — stop at script files</td>
+</tr>
+<tr>
+<td><strong>D3 agentic</strong></td>
+<td>CAI App <code>/agent/*</code></td>
+<td>Same scripts via CrewAI</td>
+<td>Yes — CML Jobs (optional)</td>
+</tr>
+<tr>
+<td><strong>D3 deterministic</strong></td>
+<td><code>run_pipeline.py</code> / <code>/pipeline/*</code></td>
+<td>CSVs from existing scripts</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="diagrams">Diagrams<a class="headerlink" href="#diagrams" title="Permanent link">&para;</a></h2>
+<p><img alt="Figure 1 — D2.5 architecture: Agent Studio scan → strategy → timestamped Python scripts" src="../../images/synthetic_data_workflow_d2_5/architecture.png" /></p>
+<p><img alt="Figure 2 — D2.5 vs D3: this lab stops after script authoring (no Agent 5 / CML Jobs)" src="../../images/synthetic_data_workflow_d2_5/stop_boundary.png" /></p>
+<p>Diagram PNGs: <code>../images/synthetic_data_workflow_d2_5/</code>.</p>
+<p><strong>How to read Figure 1</strong></p>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>What it represents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Workflow inputs</strong></td>
+<td><code>target_tables</code>, <code>database</code>, <code>rows_per_table</code>, <code>seed</code></td>
+</tr>
+<tr>
+<td><strong>Agents 1–4</strong></td>
+<td>Same logical steps as D3 agentic mode (scan → two strategists → code writer)</td>
+</tr>
+<tr>
+<td><strong>Session artifacts</strong></td>
+<td><code>schema_manifest.json</code> + timestamped <code>.py</code> files via Artifact Files</td>
+</tr>
+<tr>
+<td><strong>D3 execution (dashed)</strong></td>
+<td>Optional — not part of this lab; use D3 after downloading scripts</td>
+</tr>
+</tbody>
+</table>
+<p>Companion docs:
+- <code>../extra_materials/synthetic_data_workflow_d2_5/agents.yaml</code> — Agent Studio import
+- <code>../extra_materials/synthetic_data_workflow_d2_5/tasks.yaml</code> — Task definitions
+- <a href="../synthetic_data_d3_workflow/"><code>synthetic_data_d3_workflow.md</code></a> — run scripts after this lab</p>
+<hr />
+<h2 id="scope">Scope<a class="headerlink" href="#scope" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>D2.5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IS</strong></td>
+<td>Agent Studio workshop — profile schema via <code>iceberg-mcp-server</code>, plan strategies, <strong>author timestamped Python scripts</strong></td>
+</tr>
+<tr>
+<td><strong>IS NOT</strong></td>
+<td>CAI Workbench MCP, CML Job dispatch, SDS integration, or the CrewAI app (<code>/agent/*</code>)</td>
+</tr>
+<tr>
+<td><strong>Best for</strong></td>
+<td>Learning the D3 agentic pipeline interactively in Agent Studio before production automation</td>
+</tr>
+<tr>
+<td><strong>Next step</strong></td>
+<td>Download artifacts and run scripts manually or via <a href="../synthetic_data_d3_workflow/">D3 deterministic mode</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="not-suitable-for-production-ml-training">Not suitable for production ML training<a class="headerlink" href="#not-suitable-for-production-ml-training" title="Permanent link">&para;</a></h3>
+<p>D2.5 <strong>does not produce training data</strong>. It is an Agent Studio workshop that stops after
+script authoring — by design.</p>
+<table>
+<thead>
+<tr>
+<th>Why not</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>No data output</strong></td>
+<td>The workflow ends at timestamped <code>.py</code> files and <code>schema_manifest.json</code>. No CSVs, no eval report, no rows for model training.</td>
+</tr>
+<tr>
+<td><strong>No execution path</strong></td>
+<td>Scripts are not run, CML Jobs are not dispatched, and there is no <code>--seed</code> reproducibility run inside this lab.</td>
+</tr>
+<tr>
+<td><strong>LLM-authored code requires review</strong></td>
+<td>Generated scripts may differ from the D3 reference implementation and need human validation before any production use.</td>
+</tr>
+<tr>
+<td><strong>Session-bound artefacts</strong></td>
+<td>Outputs must be downloaded from Artifact Files and uploaded to a CAI project — not written directly to production paths.</td>
+</tr>
+<tr>
+<td><strong>Teaching step, not delivery</strong></td>
+<td>D2.5 exists to learn the D3 agentic design interactively. Production delivery always requires <a href="../synthetic_data_d3_workflow/">D3</a>.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>D2.5 → download scripts → <strong>D3 deterministic</strong> is the intended path to production.
+Skipping D3 means you have code on disk but no training dataset.</p>
+</blockquote>
+<h3 id="pipeline-steps-matches-d3-agentic-agents-14">Pipeline steps (matches D3 agentic Agents 1–4)<a class="headerlink" href="#pipeline-steps-matches-d3-agentic-agents-14" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Agent</th>
+<th>Tool</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Scan</td>
+<td>Schema Scanner</td>
+<td><code>iceberg-mcp-server</code> + Artifact Files</td>
+<td><code>schema_manifest.json</code></td>
+</tr>
+<tr>
+<td>2. Plan generation</td>
+<td>Generation Strategist</td>
+<td>LLM only</td>
+<td>Strategy JSON</td>
+</tr>
+<tr>
+<td>3. Plan evaluation</td>
+<td>Evaluation Strategist</td>
+<td>LLM only</td>
+<td>Evaluation plan JSON</td>
+</tr>
+<tr>
+<td>4. Write scripts</td>
+<td>Code Writer</td>
+<td><strong>Artifact Files Read/Write Tool</strong></td>
+<td><code>generate_synthetic_data_&lt;timestamp&gt;.py</code>, <code>evaluate_synthetic_data_&lt;timestamp&gt;.py</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>D3 adds <strong>Agent 5 (Script Verifier + CmlJobTool)</strong> to verify and run scripts. D2.5 intentionally omits that step (see Figure 2).</p>
+</blockquote>
+<h3 id="diagram-quick-reference">Diagram quick reference<a class="headerlink" href="#diagram-quick-reference" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Figure</th>
+<th>File</th>
+<th>Consult when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Figure 1</strong></td>
+<td><code>architecture.png</code></td>
+<td>Overall Agent Studio pipeline</td>
+</tr>
+<tr>
+<td><strong>Figure 2</strong></td>
+<td><code>stop_boundary.png</code></td>
+<td>Explaining why this lab does not run scripts or CML Jobs</td>
+</tr>
+<tr>
+<td><strong>Figure 3</strong></td>
+<td><code>final_workflow.png</code></td>
+<td>Wiring agents, tasks, and context links in Agent Studio</td>
+</tr>
+<tr>
+<td><strong>Figure 4</strong></td>
+<td><code>script_artifacts.png</code></td>
+<td>Collecting outputs from the Artifact Files tab</td>
+</tr>
+<tr>
+<td><strong>Figure 5</strong></td>
+<td>D3 <code>agentic_architecture.png</code></td>
+<td>Comparing D2.5 scope to full D3 agentic mode</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="agent-studio-script-authoring">Agent Studio script authoring<a class="headerlink" href="#agent-studio-script-authoring" title="Permanent link">&para;</a></h1>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<h3 id="1-iceberg-mcp-iceberg-mcp-server">1. Iceberg MCP — <code>iceberg-mcp-server</code><a class="headerlink" href="#1-iceberg-mcp-iceberg-mcp-server" title="Permanent link">&para;</a></h3>
+<p>Registered in Agent Studio (same as D1/D2).</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IMPALA_HOST</strong></td>
+<td><code>hue-impala-gateway.datalake.….cloudera.site</code></td>
+</tr>
+<tr>
+<td><strong>IMPALA_PORT</strong></td>
+<td><code>443</code></td>
+</tr>
+<tr>
+<td><strong>IMPALA_USER</strong></td>
+<td>Your workload user</td>
+</tr>
+<tr>
+<td><strong>IMPALA_PASSWORD</strong></td>
+<td>Your password</td>
+</tr>
+<tr>
+<td><strong>IMPALA_DATABASE</strong></td>
+<td><code>&lt;your_database&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>Optional connectivity check:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>synthetic_data_workflow_d3/test_impala_connection.py
+</code></pre></div>
+<h3 id="2-artifact-files-readwrite-tool">2. Artifact Files Read/Write Tool<a class="headerlink" href="#2-artifact-files-readwrite-tool" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schema Scanner</td>
+<td>Artifact Files Read/Write Tool</td>
+<td>Persist <code>schema_manifest.json</code></td>
+</tr>
+<tr>
+<td>Code Writer</td>
+<td>Artifact Files Read/Write Tool</td>
+<td><strong>Required</strong> — write both <code>.py</code> scripts</td>
+</tr>
+</tbody>
+</table>
+<p>Agents 1 and 4 <strong>must</strong> call the tool to write files. Text-only output is not sufficient.</p>
+<h3 id="3-yaml-import-optional">3. YAML import (optional)<a class="headerlink" href="#3-yaml-import-optional" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From project root, if crewai_yaml_importer is available:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>crewai_yaml_importer<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--agents<span class="w"> </span>extra_materials/synthetic_data_workflow_d2_5/agents.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--tasks<span class="w">  </span>extra_materials/synthetic_data_workflow_d2_5/tasks.yaml
+</code></pre></div>
+<p>Or build manually in the UI using the steps below.</p>
+<hr />
+<h2 id="b1-create-the-workflow">B1 — Create the workflow<a class="headerlink" href="#b1-create-the-workflow" title="Permanent link">&para;</a></h2>
+<p>In Agent Studio: <strong>Agentic Workflows</strong> → <strong>Create Workflow</strong> → <strong>New Workflow</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Workflow Name</strong></td>
+<td><code>Synthetic Data Generation D2.5</code></td>
+</tr>
+<tr>
+<td><strong>Process type</strong></td>
+<td><strong>Sequential</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="b2-workflow-settings">B2 — Workflow settings<a class="headerlink" href="#b2-workflow-settings" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Toggle</th>
+<th>Setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Is Conversational</strong></td>
+<td><strong>OFF</strong></td>
+</tr>
+<tr>
+<td><strong>Manager Agent</strong></td>
+<td><strong>OFF</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="input-variables">Input variables<a class="headerlink" href="#input-variables" title="Permanent link">&para;</a></h3>
+<p>Add <strong>exactly four</strong> variables:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>target_tables</code></td>
+<td><code>source_customers,source_accounts,source_transactions</code></td>
+<td>Comma-separated table names or <code>all</code></td>
+</tr>
+<tr>
+<td><code>database</code></td>
+<td><code>&lt;your_database&gt;</code></td>
+<td>Impala database</td>
+</tr>
+<tr>
+<td><code>rows_per_table</code></td>
+<td><code>1000</code></td>
+<td>Default <code>--rows</code> for the generate script</td>
+</tr>
+<tr>
+<td><code>seed</code></td>
+<td><code>42</code></td>
+<td>Default <code>--seed</code> for reproducibility</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Template rule:</strong> Only <code>{target_tables}</code>, <code>{database}</code>, <code>{rows_per_table}</code>, and <code>{seed}</code> may appear in curly braces in agent/task text. Use angle brackets for placeholders in expected output examples.</p>
+</blockquote>
+<hr />
+<h2 id="b3-add-four-agents">B3 — Add four agents<a class="headerlink" href="#b3-add-four-agents" title="Permanent link">&para;</a></h2>
+<p>Create each agent below. Attach tools before moving to the next agent.</p>
+<blockquote>
+<p>Every agent must have <strong>Name</strong>, <strong>Role</strong>, <strong>Backstory</strong>, and <strong>Goal</strong> filled in the Agent Studio UI. Copy the blocks below verbatim.</p>
+</blockquote>
+<h3 id="agent-1-schema-and-relationship-scanner">Agent 1 — Schema and Relationship Scanner<a class="headerlink" href="#agent-1-schema-and-relationship-scanner" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Schema and Relationship Scanner</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Schema and Relationship Scanner</code></td>
+</tr>
+<tr>
+<td><strong>LLM Model</strong></td>
+<td><code>gpt-4o</code> (or instructor default)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Backstory</strong> (copy into the <strong>Backstory</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>You are an expert data analyst who reads Impala schemas via iceberg-mcp-server.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>You run DESCRIBE, COUNT(*), GROUP BY top-N on categorical columns, and MIN/MAX/AVG
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>only on numeric or timestamp columns (never AVG on strings). You flag PII-risk
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>columns by name patterns and infer FK relationships from column-name overlaps.
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>You never export real row values — only aggregated statistics and representative
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>codes. You work with any database schema, not just banking schemas.
+</code></pre></div>
+<p><strong>Goal</strong> (copy into the <strong>Goal</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Profile every target table in {target_tables} in the {database} data lakehouse,
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>infer foreign-key relationships and a safe generation order, and produce a
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>schema_manifest.json artefact that the code-writing agent uses to author
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>deterministic Python scripts.
+</code></pre></div>
+<p><strong>Tools / MCP:</strong> <code>iceberg-mcp-server</code> — add <strong><code>get_schema</code></strong> and <strong><code>execute_query</code></strong>. <strong>Artifact Files Read/Write Tool</strong></p>
+<hr />
+<h3 id="agent-2-python-generation-strategist">Agent 2 — Python Generation Strategist<a class="headerlink" href="#agent-2-python-generation-strategist" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Python Generation Strategist</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Python Generation Strategist</code></td>
+</tr>
+<tr>
+<td><strong>LLM Model</strong></td>
+<td><code>gpt-4o</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Backstory</strong> (copy into the <strong>Backstory</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>You are a synthetic data engineer. For lookup tables you use faker with manual
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>code-description pairs. For customer/account masters you use SDV SingleTablePreset.
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>For time-series transaction tables you use SDV PARSynthesizer. You specify when
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>faker.providers.bank, .person, or .address are needed, and when Luhn-valid card
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>numbers or SWIFT BIC codes are required. Output a generation strategy JSON that
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>is database-agnostic.
+</code></pre></div>
+<p><strong>Goal</strong> (copy into the <strong>Goal</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Map each table to the most suitable Python generation approach (faker, SDV
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>SingleTablePreset, SDV PARSynthesizer) and identify special column rules for the
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>script author.
+</code></pre></div>
+<p><strong>Tools / MCP:</strong> None — LLM reasoning only.</p>
+<hr />
+<h3 id="agent-3-statistical-evaluation-strategist">Agent 3 — Statistical Evaluation Strategist<a class="headerlink" href="#agent-3-statistical-evaluation-strategist" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Statistical Evaluation Strategist</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Statistical Evaluation Strategist</code></td>
+</tr>
+<tr>
+<td><strong>LLM Model</strong></td>
+<td><code>gpt-4o</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Backstory</strong> (copy into the <strong>Backstory</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>You are a statistician who validates synthetic data fidelity. You select KS tests
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>for numeric distributions, chi-squared for categoricals, Pearson correlation
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>diffs for relationships, pandas.merge for FK completeness, regex scans for PII
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>leakage, and temporal coherence checks. Output an evaluation plan JSON valid for
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>any schema.
+</code></pre></div>
+<p><strong>Goal</strong> (copy into the <strong>Goal</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Design the statistical test plan for the evaluate_synthetic_data.py script:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>which tests (KS, chi-squared, null-rate, FK integrity, PII regex, temporal)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>apply to which table types.
+</code></pre></div>
+<p><strong>Tools / MCP:</strong> None — LLM reasoning only.</p>
+<hr />
+<h3 id="agent-4-python-script-writer">Agent 4 — Python Script Writer<a class="headerlink" href="#agent-4-python-script-writer" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Python Script Writer</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Python Script Writer</code></td>
+</tr>
+<tr>
+<td><strong>LLM Model</strong></td>
+<td><code>gpt-4o</code> (prefer larger context if available)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Backstory</strong> (copy into the <strong>Backstory</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>You are a senior Python engineer who writes clean, reproducible data pipelines.
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>You embed GENERATION_ORDER and STRATEGY_MAP from prior tasks, implement per-table
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>generator functions, enforce FK relationships with pandas, and produce an
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>evaluation script with statistical tests and a Markdown report. Both scripts have
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>argparse CLIs and read all schema logic from schema_manifest.json at runtime.
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>You MUST call the Artifact Files Read/Write Tool to persist both files — listing
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>paths in text output alone is not sufficient. Do not run or execute the scripts.
+</code></pre></div>
+<p><strong>Goal</strong> (copy into the <strong>Goal</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Write two complete, executable, fixed-seed Python scripts with timestamped
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>filenames (generate_synthetic_data_YYYYMMDD_HHMMSS.py and
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>evaluate_synthetic_data_YYYYMMDD_HHMMSS.py) to /generated_scripts/ using the
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Artifact Files Read/Write Tool. Do not run the scripts.
+</code></pre></div>
+<p><strong>Tools / MCP:</strong> <strong>Artifact Files Read/Write Tool</strong> (required)</p>
+<hr />
+<h2 id="b4-add-four-tasks-sequential">B4 — Add four tasks (sequential)<a class="headerlink" href="#b4-add-four-tasks-sequential" title="Permanent link">&para;</a></h2>
+<p>Click <strong>Save &amp; Next</strong> to advance to <strong>Add Tasks</strong>. Create one task per agent in order.
+Assign each task to its corresponding agent using the <strong>Select Agent</strong> dropdown.</p>
+<blockquote>
+<p>Agent Studio requires <strong>two fields</strong> for every task: <strong>Description</strong> (what to do) and
+<strong>Expected Output</strong> (what the agent must return). Copy each block below into the
+matching UI field — do not merge them into a single field.</p>
+</blockquote>
+<p>Set <strong>Context</strong> as shown for each task.</p>
+<h3 id="task-1-schema-relationship-scan">Task 1 — Schema Relationship Scan<a class="headerlink" href="#task-1-schema-relationship-scan" title="Permanent link">&para;</a></h3>
+<p><strong>Agent:</strong> Schema and Relationship Scanner | <strong>Context:</strong> <em>(none)</em></p>
+<p><strong>Description</strong> (copy into the <strong>Description</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Profile the tables in {target_tables} in database {database}. For each table:
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>1. DESCRIBE the table — record EVERY column name, type, nullable.
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>2. SELECT COUNT(*) for row count.
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>3. For key columns (ids, dates, amounts, currencies, codes): GROUP BY top-20 for
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>   string/varchar columns; MIN/MAX/AVG only for numeric/timestamp types from
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>   DESCRIBE (skip AVG on strings).
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>4. Flag PII-risk columns by name patterns (cif, name, email, phone, addr, mobile, nric).
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>5. Infer FK relationships from column-name matches; validate with JOIN COUNT queries.
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>6. For wide tables (&gt;200 cols), add wide_tables with columns_to_populate as a JSON
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>   array of column names to actively synthesise.
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>Write schema_manifest.json to /generated_scripts/schema_manifest.json using the
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>Artifact Files Read/Write Tool.
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>Input variables: {target_tables}, {database} (default &lt;your_database&gt;),
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>{rows_per_table} (default 1000), {seed} (default 42).
+</code></pre></div>
+<p><strong>Expected Output</strong> (copy into the <strong>Expected Output</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Confirmation that schema_manifest.json was written via Artifact Files Read/Write
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Tool, plus a summary of tables profiled, FK relationships, and generation_order.
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>columns_to_populate must be a list of column names, not an integer.
+</code></pre></div>
+<hr />
+<h3 id="task-2-generation-strategy">Task 2 — Generation Strategy<a class="headerlink" href="#task-2-generation-strategy" title="Permanent link">&para;</a></h3>
+<p><strong>Agent:</strong> Python Generation Strategist | <strong>Context:</strong> Task 1</p>
+<p><strong>Description</strong> (copy into the <strong>Description</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Using the schema manifest from the scan task, plan the Python generation approach
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>per table category:
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>- Lookup/reference: faker + manual code-description pairs
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>- Master/account: faker + SDV SingleTablePreset
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>- Transaction: SDV PARSynthesizer (time-series aware)
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>- Other: faker with appropriate providers
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>Identify special column rules: Luhn card numbers, SWIFT BIC, surrogate IDs,
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>locale-specific names/addresses. Output a generation strategy JSON.
+</code></pre></div>
+<p><strong>Expected Output</strong> (copy into the <strong>Expected Output</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>{
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  "strategy_map": [
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    {"table": "&lt;name&gt;", "category": "lookup|master|account|transaction",
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>     "library": "faker|sdv_preset|sdv_par", "providers": ["bank","person","address"],
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>     "special_columns": [{"column": "&lt;c&gt;", "rule": "&lt;rule&gt;"}]}
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  ]
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>}
+</code></pre></div>
+<hr />
+<h3 id="task-3-evaluation-strategy">Task 3 — Evaluation Strategy<a class="headerlink" href="#task-3-evaluation-strategy" title="Permanent link">&para;</a></h3>
+<p><strong>Agent:</strong> Statistical Evaluation Strategist | <strong>Context:</strong> Task 1</p>
+<p><strong>Description</strong> (copy into the <strong>Description</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Using the schema manifest, design the evaluation test plan for each table type:
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>- Numeric columns: KS test (scipy)
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>- Categorical columns: chi-squared (scipy)
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>- Multi-column: Pearson correlation matrix diff
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>- Null rates: absolute difference per column
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>- FK integrity: pandas merge orphan count
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>- PII leakage: regex scan (NRIC, phone, email)
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>- Temporal: no future dates, created &lt; updated where applicable
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>Output an evaluation plan JSON for the evaluate script author.
+</code></pre></div>
+<p><strong>Expected Output</strong> (copy into the <strong>Expected Output</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>{
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  "evaluation_plan": [
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    {"table": "&lt;name&gt;", "tests": ["ks","chi2","null_rate","fk_integrity","pii_regex","temporal"]}
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  ]
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>}
+</code></pre></div>
+<hr />
+<h3 id="task-4-code-writing">Task 4 — Code Writing<a class="headerlink" href="#task-4-code-writing" title="Permanent link">&para;</a></h3>
+<p><strong>Agent:</strong> Python Script Writer | <strong>Context:</strong> Tasks 1, 2, 3</p>
+<p><strong>Description</strong> (copy into the <strong>Description</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Write two complete Python scripts using the Artifact Files Read/Write Tool.
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Use timestamped filenames in this format (replace TS with current UTC timestamp
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>YYYYMMDD_HHMMSS):
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>/generated_scripts/generate_synthetic_data_TS.py
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>/generated_scripts/evaluate_synthetic_data_TS.py
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>generate script requirements:
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>- Reads schema_manifest.json at runtime (--manifest flag)
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>- Embeds GENERATION_ORDER and STRATEGY_MAP from the generation strategy task
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>- Per-table generator functions using faker/SDV per strategy
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>- FK enforcement: sample child FK values from parent key pools
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>- Wide-table parity: all manifest columns present; only columns_to_populate
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>  are actively synthesised; others get NULL/type-default
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>- argparse CLI: --manifest, --rows, --output, --tables, --seed
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>- Default rows from {rows_per_table}, default seed from {seed}
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>evaluate script requirements:
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>- Implements tests from the evaluation plan
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>- Reports Cols(gen/manifest) per table
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>- Produces Markdown scorecard; optional HTML via ydata-profiling
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>- PASS/FAIL FK integrity, PII scan, ML readiness summary
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>- argparse CLI: --manifest, --synthetic, --report, --strict
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>Both scripts must have if __name__ == "__main__" entrypoints and pin dependencies
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>in a header comment. Scripts must be database-agnostic.
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>You MUST call Artifact Files Read/Write Tool twice (once per script). Do not claim
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>files were written without tool confirmation. Do NOT execute the scripts.
+</code></pre></div>
+<p><strong>Expected Output</strong> (copy into the <strong>Expected Output</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Artifact Files Read/Write Tool confirmations for both timestamped script paths,
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>plus a JSON listing: script paths, tables covered, and libraries used.
+</code></pre></div>
+<p>Reference implementation shape: <code>synthetic_data_workflow_d3/generate_synthetic_data.py</code> and <code>evaluate_synthetic_data.py</code>.</p>
+<p>Once all four tasks are added:</p>
+<p><strong>How to read Figure 3</strong></p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Verify</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sequential, non-conversational</td>
+<td>Fixed task order; no manager agent</td>
+</tr>
+<tr>
+<td>Task 2 context → Task 1</td>
+<td>Generation strategy uses schema manifest</td>
+</tr>
+<tr>
+<td>Task 3 context → Task 1</td>
+<td>Evaluation plan uses schema manifest</td>
+</tr>
+<tr>
+<td>Task 4 context → Tasks 1+2+3</td>
+<td>Code writer embeds scan + both strategy outputs</td>
+</tr>
+<tr>
+<td>Agent 1 + iceberg-mcp-server</td>
+<td>Only scan task queries Impala live</td>
+</tr>
+<tr>
+<td>Agents 1 &amp; 4 + Artifact Files</td>
+<td>Manifest and both <code>.py</code> scripts persisted to session store</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="b5-run-the-workflow">B5 — Run the workflow<a class="headerlink" href="#b5-run-the-workflow" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Open <strong>Test</strong> tab.</li>
+<li>Set inputs (start scoped):</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>First-run value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>target_tables</code></td>
+<td><code>source_customers,source_accounts,source_transactions</code></td>
+</tr>
+<tr>
+<td><code>database</code></td>
+<td><code>&lt;your_database&gt;</code></td>
+</tr>
+<tr>
+<td><code>rows_per_table</code></td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<td><code>seed</code></td>
+<td><code>42</code></td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Click <strong>Run</strong>. Expect four task completions (scan → two strategy tasks → code writing).</li>
+</ol>
+<hr />
+<h2 id="b6-collect-outputs">B6 — Collect outputs<a class="headerlink" href="#b6-collect-outputs" title="Permanent link">&para;</a></h2>
+<p>Open the <strong>Artifact Files</strong> tab in the test session.</p>
+<p><img alt="Figure 4 — Download session artifacts; optional copy to /home/cdsw/generated_scripts/ for D3" src="../../images/synthetic_data_workflow_d2_5/script_artifacts.png" /></p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schema manifest</td>
+<td><code>/generated_scripts/schema_manifest.json</code></td>
+</tr>
+<tr>
+<td>Generate script</td>
+<td><code>/generated_scripts/generate_synthetic_data_&lt;timestamp&gt;.py</code></td>
+</tr>
+<tr>
+<td>Evaluate script</td>
+<td><code>/generated_scripts/evaluate_synthetic_data_&lt;timestamp&gt;.py</code></td>
+</tr>
+</tbody>
+</table>
+<p>Download all three. To run them later in a CAI project session, copy to:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/home/cdsw/generated_scripts
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Upload downloaded artifacts to /home/cdsw/generated_scripts/</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>ls<span class="w"> </span>-la<span class="w"> </span>/home/cdsw/generated_scripts/
+</code></pre></div>
+<h2 id="b7-acceptance-criteria">B7 — Acceptance criteria<a class="headerlink" href="#b7-acceptance-criteria" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manifest written</td>
+<td><code>schema_manifest.json</code> exists in Artifact Files</td>
+</tr>
+<tr>
+<td>Scripts written</td>
+<td>Both timestamped <code>.py</code> files exist (tool confirmation in Task 4 log)</td>
+</tr>
+<tr>
+<td>Scripts not executed in workflow</td>
+<td>No CSV output from the Agent Studio run alone</td>
+</tr>
+<tr>
+<td>Generate script</td>
+<td>Has <code>argparse</code>, <code>--manifest</code>, <code>--rows</code>, <code>--seed</code>, <code>if __name__</code> block</td>
+</tr>
+<tr>
+<td>Evaluate script</td>
+<td>Has <code>--manifest</code>, <code>--synthetic</code>, <code>--report</code>, <code>--strict</code></td>
+</tr>
+<tr>
+<td>FK coverage</td>
+<td><code>generation_order</code> in manifest covers all <code>{target_tables}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Review scripts manually. When ready, run them with D3 deterministic mode or invoke them directly in a CAI project session (see below).</p>
+<hr />
+<h2 id="optional-run-scripts-after-d25">Optional — Run scripts after D2.5<a class="headerlink" href="#optional-run-scripts-after-d25" title="Permanent link">&para;</a></h2>
+<p>This lab stops at script authoring. To execute generated scripts, use an existing CAI project with <code>synthetic_data_workflow_d3/</code> uploaded, or follow <a href="../synthetic_data_d3_workflow/">D3 setup</a>.</p>
+<p><strong>Deterministic D3 path</strong> (bundled <code>run_pipeline.py</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">MANIFEST_PATH</span><span class="o">=</span>/home/cdsw/generated_scripts/schema_manifest.json
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OUTPUT_DIR</span><span class="o">=</span>/home/cdsw/artifacts/synthetic_output
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">REPORT_PATH</span><span class="o">=</span>/home/cdsw/artifacts/eval_report.md
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>python<span class="w"> </span>synthetic_data_workflow_d3/run_pipeline.py<span class="w"> </span>generate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">  </span>--manifest<span class="w"> </span><span class="s2">"</span><span class="nv">$MANIFEST_PATH</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">  </span>--target-tables<span class="w"> </span>source_customers,source_accounts,source_transactions<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">  </span>--rows<span class="w"> </span><span class="m">1000</span><span class="w"> </span>--seed<span class="w"> </span><span class="m">42</span><span class="w"> </span>--output<span class="w"> </span><span class="s2">"</span><span class="nv">$OUTPUT_DIR</span><span class="s2">"</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>python<span class="w"> </span>synthetic_data_workflow_d3/run_pipeline.py<span class="w"> </span>evaluate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="w">  </span>--manifest<span class="w"> </span><span class="s2">"</span><span class="nv">$MANIFEST_PATH</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="w">  </span>--output<span class="w"> </span><span class="s2">"</span><span class="nv">$OUTPUT_DIR</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="w">  </span>--report<span class="w"> </span><span class="s2">"</span><span class="nv">$REPORT_PATH</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="w">  </span>--strict<span class="w"> </span>--use-scipy
+</code></pre></div>
+<p>Or invoke your <strong>agent-authored</strong> scripts directly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>python<span class="w"> </span>/home/cdsw/generated_scripts/generate_synthetic_data_&lt;timestamp&gt;.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span>--manifest<span class="w"> </span>/home/cdsw/generated_scripts/schema_manifest.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>--rows<span class="w"> </span><span class="m">1000</span><span class="w"> </span>--seed<span class="w"> </span><span class="m">42</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>--output<span class="w"> </span>/home/cdsw/artifacts/synthetic_output
+</code></pre></div>
+<blockquote>
+<p>Agent-authored scripts may differ from the bundled D3 reference scripts. Install deps from the script header comments (<code>pip install faker pandas scipy …</code>).</p>
+</blockquote>
+<hr />
+<h2 id="choosing-d25-vs-d3-agentic">Choosing D2.5 vs D3 agentic<a class="headerlink" href="#choosing-d25-vs-d3-agentic" title="Permanent link">&para;</a></h2>
+<p><img alt="Figure 5 — D3 agentic adds Agent 5 (verify + CML Job dispatch); D2.5 omits that step" src="../../images/synthetic_data_workflow_d3/agentic_architecture.png" /></p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>D2.5</th>
+<th>D3 <code>/agent/*</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Where does it run?</td>
+<td>Agent Studio UI only</td>
+<td>CAI Application (<code>synthetic_data_crew.py</code>)</td>
+</tr>
+<tr>
+<td>Need automatic CML Job dispatch?</td>
+<td>No</td>
+<td>Yes (Agent 5 / auto-dispatch)</td>
+</tr>
+<tr>
+<td>Want to edit scripts before any execution?</td>
+<td>Yes</td>
+<td>Scripts run unless credentials missing</td>
+</tr>
+<tr>
+<td>Production automation</td>
+<td>Use D3 after script review</td>
+<td>Use D3 agentic end-to-end</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task 1 AVG errors on string columns</td>
+<td>Non-fatal — re-run; ensure task text says MIN/MAX/AVG only on numeric/timestamp types</td>
+</tr>
+<tr>
+<td>Task 4 lists script paths but no files in Artifact Files</td>
+<td>Agent did not call Artifact Files Read/Write Tool — re-run Task 4 or entire workflow; strengthen Agent 4 backstory</td>
+</tr>
+<tr>
+<td><code>Template variable '…' not found</code></td>
+<td>Remove stray <code>{…}</code> braces from agent/task text; only the four workflow inputs are allowed</td>
+</tr>
+<tr>
+<td>Workflow timeout on <code>all</code> tables</td>
+<td>Reduce scope: 3-table FK chain first; increase timeout or use smaller <code>rows_per_table</code></td>
+</tr>
+<tr>
+<td>Scripts fail when run manually</td>
+<td>Review imports and manifest paths; compare with D3 reference scripts; install missing packages</td>
+</tr>
+<tr>
+<td>Want fully automated verify + run</td>
+<td>Use <a href="../synthetic_data_d3_workflow/">D3 agentic mode</a> (<code>/agent/kickoff</code>) instead</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="related-labs">Related labs<a class="headerlink" href="#related-labs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Lab</th>
+<th>Doc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D3 CML Job reference</td>
+<td><a href="../CML_JOBS/"><code>CML_JOBS.md</code></a></td>
+</tr>
+<tr>
+<td>D1 — Agent Studio CSV generation</td>
+<td><a href="../synthetic_data_d1_workflow/"><code>synthetic_data_d1_workflow.md</code></a></td>
+</tr>
+<tr>
+<td>D2 — Agent Studio + SDS</td>
+<td><a href="../synthetic_data_d2_workflow/"><code>synthetic_data_d2_workflow.md</code></a></td>
+</tr>
+<tr>
+<td>D3 — Production pipeline + CAI App</td>
+<td><a href="../synthetic_data_d3_workflow/"><code>synthetic_data_d3_workflow.md</code></a></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "navigation.footer", "content.code.annotate", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/username-replacer.js"></script>
+      
+    
+  </body>
+</html>

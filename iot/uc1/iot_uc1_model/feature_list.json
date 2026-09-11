@@ -1,0 +1,11 @@
+[
+  "vibration_rms_x",
+  "vibration_rms_y",
+  "vibration_rms_z",
+  "avg_rms",
+  "max_rms",
+  "anomaly_score",
+  "health_score",
+  "z_x_ratio",
+  "health_slope"
+]

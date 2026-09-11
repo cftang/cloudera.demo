@@ -1,0 +1,60 @@
+# ARTC IoT Use Cases — CML Job Chain
+#
+# Upload this directory to /home/cdsw/cai_integration/ in your CML project.
+#
+# Two jobs per use case:
+#
+#   UC1 — Predictive Maintenance (RUL regression)
+#     uc1_setup_and_train  →  install deps + train RandomForest RUL model → rul_model.pkl
+#     uc1_deploy_app       →  deploy UC1 RUL Prediction Service as CAI Application
+#
+#   UC2 — Predictive Quality (defect regression + risk classifier)
+#     uc2_setup_and_train  →  install deps + train XGBoost quality models → .pkl files
+#     uc2_deploy_app       →  deploy UC2 Quality Prediction Service as CAI Application
+#
+# Job dependency order (each deploy job depends on its matching setup+train job):
+#   uc1_setup_and_train → uc1_deploy_app
+#   uc2_setup_and_train → uc2_deploy_app
+#
+# Required env vars: CDSW_DOMAIN + CDSW_APIV2_KEY (auto-set in CAI Workbench)
+
+jobs:
+  uc1_setup_and_train:
+    name: "UC1 — Setup Env & Train RUL Model"
+    script: "cai_integration/setup_iot_env.py"
+    parent_job_key: null
+    timeout: 1200         # 20 min: pip install + RF training on demo data
+    cpu: 2
+    memory: 8
+    description: "Install UC1 deps (scikit-learn, joblib, pandas) and train RandomForest RUL regression model"
+    environment:
+      UC_ID: "uc1"
+
+  uc1_deploy_app:
+    name: "UC1 — Deploy RUL Prediction App"
+    script: "iot_uc1_model/deploy_app.py"
+    parent_job_key: "uc1_setup_and_train"
+    timeout: 300          # CAI API call; should finish in < 1 min
+    cpu: 1
+    memory: 2
+    description: "Create or update UC1 RUL Prediction Service CAI Application"
+
+  uc2_setup_and_train:
+    name: "UC2 — Setup Env & Train Quality Models"
+    script: "cai_integration/setup_iot_env.py"
+    parent_job_key: null
+    timeout: 1200         # 20 min: pip install + XGBoost training on demo data
+    cpu: 2
+    memory: 8
+    description: "Install UC2 deps (scikit-learn, xgboost, joblib, pandas) and train quality regressor + risk classifier"
+    environment:
+      UC_ID: "uc2"
+
+  uc2_deploy_app:
+    name: "UC2 — Deploy Quality Prediction App"
+    script: "iot_uc2_model/deploy_app.py"
+    parent_job_key: "uc2_setup_and_train"
+    timeout: 300
+    cpu: 1
+    memory: 2
+    description: "Create or update UC2 Quality Prediction Service CAI Application"

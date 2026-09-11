@@ -1,0 +1,102 @@
+Generate synthetic banking data for Singapore with three interconnected datasets: Customers, Accounts, and Transactions.
+This structure simulates a normalized relational database with proper foreign key relationships.
+
+**CRITICAL REFERENTIAL INTEGRITY REQUIREMENTS:**
+1. Each customer must have a unique cust_id
+2. Each account must reference a valid cust_id from the customers dataset
+3. Each transaction must reference a valid account_id from the accounts dataset
+4. A customer can have 1-5 accounts
+5. Each account should have 2-20 transactions
+
+**DATASET 1: CUSTOMERS**
+Fields:
+- cust_id: Unique customer identifier (format: C10001, C10002, etc.)
+- first_name: Customer's first name (synthetic)
+- last_name: Customer's last name (synthetic)
+- date_of_birth: Birth date (YYYY-MM-DD format, age between 18-80)
+- email: Email address (synthetic, format: name@domain.com)
+- phone: Phone number (Singapore format: XXXX-XXXX, 8 digits starting with 6, 8, or 9)
+- address: Street address (synthetic, Singapore location)
+- postal_code: Singapore postal code (6-digit format: XXXXXX)
+- nationality: Customer nationality (e.g., "Singaporean", "Malaysian", "Indian", "Chinese", "Filipino", "Indonesian", "Thai")
+- region: Singapore postal region code (two letters: SG followed by region indicator)
+- customer_since: Account opening date (YYYY-MM-DD)
+- customer_segment: One of ["Retail", "Small Business", "Young Professional", "Retiree", "High Net Worth"]
+- credit_score: Integer between 300-850
+
+**DATASET 2: ACCOUNTS**
+Fields:
+- account_id: Unique account identifier (format: A10001, A10002, etc.)
+- cust_id: Foreign key to customers.cust_id (MUST exist in customers dataset)
+- account_type: One of ["Checking", "Savings", "Business Checking", "Money Market", "Fixed Deposit"]
+- account_status: One of ["Active", "Inactive", "Closed", "Frozen"]
+- branch: Banking branch location (e.g., "Marina Bay Branch", "Orchard Branch", "Jurong Branch", "Tampines Branch", "Clementi Branch")
+- open_date: Account opening date (YYYY-MM-DD, must be >= customer_since)
+- current_balance: Decimal number in SGD (can be negative for overdrafts)
+- currency: "SGD"
+- interest_rate: Decimal percentage (0.01 to 4.5)
+- overdraft_limit: Decimal number in SGD (0 for savings, 1000-10000 for checking)
+
+**DATASET 3: TRANSACTIONS**
+Fields:
+- transaction_id: Unique transaction identifier (format: T10001, T10002, etc.)
+- account_id: Foreign key to accounts.account_id (MUST exist in accounts dataset)
+- transaction_date: Date of transaction (YYYY-MM-DD)
+- transaction_time: Time of transaction (HH:MM:SS)
+- transaction_type: One of ["Credit", "Debit"]
+- transaction_category: One of ["Groceries", "Salary", "ATM Withdrawal", "Transfer", "Interest", "Bill Payment", "Business Income", "Business Expense", "Rent", "Utilities"]
+- amount: Decimal number (negative for debits, positive for credits)
+- merchant_name: Name of merchant or source/destination
+- description: Brief transaction description
+- balance_after: Account balance after this transaction
+
+**CONSISTENCY REQUIREMENTS:**
+
+1. **Referential Integrity:**
+   - All cust_id values in accounts must exist in customers
+   - All account_id values in transactions must exist in accounts
+   - Never create orphan records
+
+2. **Temporal Consistency:**
+   - customer_since must be before all account open_date values for that customer
+   - Transaction dates must be on or after the account open_date
+   - Transactions should be in chronological order within each account
+   - balance_after should reflect cumulative effect of transactions
+
+3. **Business Logic:**
+   - Savings accounts cannot have negative balances
+   - Checking accounts can go negative up to overdraft_limit
+   - Interest rate should align with account type (Savings: 0.5-2%, Checking: 0-0.25%, Fixed Deposit: 2-4.5%)
+   - Account status "Closed" should have current_balance = 0
+   - Small Business segment should primarily have Business Checking accounts
+   - High Net Worth customers should have higher balances (>SGD 250,000 total)
+   - All balances in Singapore Dollars (SGD)
+
+4. **Data Quality:**
+   - No real personal information (use synthetic names, addresses in Singapore)
+   - Email should be derivable from first_name.last_name but don't use actual domains
+   - Phone numbers should follow Singapore format: 8 digits (6, 8, or 9 prefix) formatted as XXXX-XXXX
+   - Credit scores should align with customer segment (High Net Worth: 750+, Young Professional: 650-750)
+   - Transaction amounts should be realistic for the category in SGD
+   - Singapore postal codes: 6 digits (e.g., 018955, 039594)
+
+5. **Privacy Guidelines:**
+   - Avoid real PII
+   - Ensure examples are not leaked into synthetic data
+   - Use generic merchant names
+
+6. **Formatting Guidelines:**
+   - All monetary amounts as decimals with 2 decimal places
+   - Dates in YYYY-MM-DD format
+   - Times in HH:MM:SS format
+   - IDs must be unique across the entire dataset
+
+**OUTPUT FORMAT:**
+Generate JSON with the structure shown in the examples:
+{
+    "customer": {...},
+    "accounts": [{...}, {...}],
+    "transactions": [{...}, {...}, ...]
+}
+
+Each JSON object should represent one complete customer with all their accounts and transactions.

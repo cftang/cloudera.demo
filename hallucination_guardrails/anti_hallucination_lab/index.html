@@ -1,0 +1,3103 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hands-on lab demonstrating how Cloudera AI Agent Studio, RAG Studio, and Synthetic Data Studio interoperate — two focused demos plus a three-studio capstone.">
+      
+      
+      
+        <link rel="canonical" href="https://ferdinandzhong.github.io/handson-labs/hallucination_guardrails/anti_hallucination_lab/">
+      
+      
+        <link rel="prev" href="../../demos/iot/uc2_predictive_quality/">
+      
+      
+        <link rel="next" href="../anti_hallucination_lab_as3/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Semantic Grounding + Guardrails (POC) - Cloudera AI Studios Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#anti-hallucination-workflow-semantic-grounding-selective-guardrails-poc" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Cloudera AI Studios Lab" class="md-header__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cloudera AI Studios Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Semantic Grounding + Guardrails (POC)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../studios/agent_studio/" class="md-tabs__link">
+          
+  
+  
+  Studios
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/lab1_calculator_workflow/" class="md-tabs__link">
+          
+  
+  
+  Agent Studio Quickstart
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/agent_rag_demo/" class="md-tabs__link">
+          
+  
+  
+  RAG Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../synthetic_data_lab/SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-tabs__link">
+          
+  
+  
+  Synthetic Data Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/nl_to_sql/nl_to_sql_workflow/" class="md-tabs__link">
+          
+  
+  
+  NL-to-SQL Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/memory/digital_banking_chatbot/" class="md-tabs__link">
+          
+  
+  
+  Agent Memory Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/iot/uc1_predictive_maintenance/" class="md-tabs__link">
+          
+  
+  
+  IoT Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Vehicle Manufacturing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/rag_studio_tool/" class="md-tabs__link">
+          
+  
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cloudera AI Studios Lab" class="md-nav__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    Cloudera AI Studios Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Studios
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Studios
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/agent_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/rag_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/synthetic_data_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio Quickstart
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Studio Quickstart
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/lab1_calculator_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1: Build Your First Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/lab2_calculator_with_tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2: Workflow with a Custom Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RAG Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/agent_rag_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic RAG-App Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Synthetic Data Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/synthetic_data_d1_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D1: LLM-Driven Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/synthetic_data_d2_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D2: SDS Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/synthetic_data_d3_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D3: Production Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/SYNTHETIC_DATA_DEMO_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workshop Presenter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NL-to-SQL Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/nl_to_sql/nl_to_sql_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Agentic Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/nl_to_sql/nl_to_sql_workflow_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Memory Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Memory Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/memory/digital_banking_chatbot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Banking Chatbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IoT Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/iot/uc1_predictive_maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC1: Predictive Maintenance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/iot/uc2_predictive_quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC2: Predictive Quality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vehicle Manufacturing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Vehicle Manufacturing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Grounding + Guardrails (POC)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Grounding + Guardrails (POC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#downloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Downloads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-5-agents-sequential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture (5 agents, sequential)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-seed-data-ml-models-and-the-rag-knowledge-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Seed data, ML models, and the RAG knowledge base
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-prevention-semantic-grounding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Prevention: semantic grounding
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2 — Prevention: semantic grounding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-ontology-tbox-sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ontology (TBox) — sample
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#try-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try it
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-register-the-three-guardrail-tools-g1-g2-g4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Register the three guardrail tools (G1 / G2 / G4)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-create-the-5-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Create the 5 Agents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4 — Create the 5 Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-1-monitoring-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 1 — Monitoring Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-2-alert-triage-agent-g1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 2 — Alert Triage Agent (G1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-3-historical-data-analyst-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 3 — Historical Data Analyst (prevention)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-4-root-cause-investigator-g2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 4 — Root-Cause Investigator (G2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-5-recommendation-report-agent-g4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 5 — Recommendation &amp; Report Agent (G4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-create-the-5-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Create the 5 Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5 — Create the 5 Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-monitoring_task-monitoring-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1 — monitoring_task → Monitoring Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-alert_triage_task-alert-triage-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2 — alert_triage_task → Alert Triage Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-historical_analysis_task-historical-data-analyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3 — historical_analysis_task → Historical Data Analyst
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-root_cause_investigation-root-cause-investigator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4 — root_cause_investigation → Root-Cause Investigator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-recommendation_report_task-recommendation-report-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5 — recommendation_report_task → Recommendation &amp; Report Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-run-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Run &amp; verify
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6 — Run &amp; verify">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-counter-example-that-proves-the-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The counter-example that proves the point
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anti_hallucination_lab_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anti-Hallucination (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/rag_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/synthetic_data_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jailbreak_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jailbreak & Input Safety Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/nl_query_evaluator_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL Query Evaluator Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/ontology_grounding_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ontology Grounding Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g1_verdict_lock_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G1: Verdict Lock Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g2_claim_citation_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G2: Claim Citation Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g3_grounding_verifier_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G3: Grounding Verifier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g4_action_catalog_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G4: Action Catalog Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#downloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Downloads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-5-agents-sequential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture (5 agents, sequential)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-seed-data-ml-models-and-the-rag-knowledge-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Seed data, ML models, and the RAG knowledge base
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-prevention-semantic-grounding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Prevention: semantic grounding
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2 — Prevention: semantic grounding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-ontology-tbox-sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ontology (TBox) — sample
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#try-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try it
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-register-the-three-guardrail-tools-g1-g2-g4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Register the three guardrail tools (G1 / G2 / G4)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-create-the-5-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Create the 5 Agents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4 — Create the 5 Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-1-monitoring-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 1 — Monitoring Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-2-alert-triage-agent-g1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 2 — Alert Triage Agent (G1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-3-historical-data-analyst-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 3 — Historical Data Analyst (prevention)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-4-root-cause-investigator-g2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 4 — Root-Cause Investigator (G2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-5-recommendation-report-agent-g4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 5 — Recommendation &amp; Report Agent (G4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-create-the-5-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Create the 5 Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5 — Create the 5 Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-monitoring_task-monitoring-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1 — monitoring_task → Monitoring Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-alert_triage_task-alert-triage-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2 — alert_triage_task → Alert Triage Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-historical_analysis_task-historical-data-analyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3 — historical_analysis_task → Historical Data Analyst
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-root_cause_investigation-root-cause-investigator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4 — root_cause_investigation → Root-Cause Investigator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-recommendation_report_task-recommendation-report-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5 — recommendation_report_task → Recommendation &amp; Report Agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-run-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Run &amp; verify
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6 — Run &amp; verify">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-counter-example-that-proves-the-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The counter-example that proves the point
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="anti-hallucination-workflow-semantic-grounding-selective-guardrails-poc">Anti-Hallucination Workflow: Semantic Grounding + Selective Guardrails (POC)<a class="headerlink" href="#anti-hallucination-workflow-semantic-grounding-selective-guardrails-poc" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">About this lab</p>
+<p>A streamlined, <strong>5-agent</strong> anti-hallucination hardening of the battery-pack QA workflow. It adds a
+<strong>prevention layer</strong> (semantic grounding) and a <strong>verification layer</strong> (selective guardrails +
+abstention), using three deterministic guardrails <strong>G1 / G2 / G4</strong>. When evidence is insufficient it
+<strong>abstains rather than fabricates</strong> — the abstention decision is gated by <strong>G2</strong>. The custom tools it
+uses are documented under the <strong>Tools</strong> section.</p>
+</div>
+<p>This lab drives hallucination down <strong>not</strong> by using a bigger model, but by two things:</p>
+<ol>
+<li><strong>Prevention (knowledge layer)</strong> — the agent reads <em>accurate</em> data: canonical entity resolution +
+   glossary-constrained NL-to-SQL (<code>ontology-grounding-tool</code>), plus authoritative document retrieval.</li>
+<li><strong>Verification (selective guardrails)</strong> — deterministic checks at key boundaries:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Rail</th>
+<th>Where</th>
+<th>What</th>
+<th>Tool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>G1</strong></td>
+<td>Triage</td>
+<td><code>severity</code>/<code>defect_type</code> come <strong>only</strong> from the ML tool; the LLM can't override</td>
+<td><a href="../../tools/g1_verdict_lock_tool/"><code>g1-verdict-lock-tool</code></a></td>
+</tr>
+<tr>
+<td><strong>G2</strong></td>
+<td>Investigation</td>
+<td>every root-cause claim must cite an SOP clause or a real data row; unsourced / <code>DOC-GEN-*</code>-only claims are dropped</td>
+<td><a href="../../tools/g2_claim_citation_tool/"><code>g2-claim-citation-tool</code></a></td>
+</tr>
+<tr>
+<td><strong>G4</strong></td>
+<td>Report</td>
+<td>MES action codes come only from the approved catalog</td>
+<td><a href="../../tools/g4_action_catalog_tool/"><code>g4-action-catalog-tool</code></a></td>
+</tr>
+<tr>
+<td><strong>Abstention</strong></td>
+<td>Report</td>
+<td>if G2 leaves no compliant claims (or grounding was ambiguous), the report agent <strong>abstains / escalates</strong> instead of guessing</td>
+<td>gated by G2</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Design boundaries</p>
+<p>Report is <strong>text + work order</strong> (no charts / operations dashboard); <strong>each run is independent</strong> (no
+cross-session memory). For the fuller verification layer — an independent grounding verifier with
+partial/conflicting-evidence handling — see the <a href="../../tools/g3_grounding_verifier_tool/"><code>g3-grounding-verifier-tool</code></a>.</p>
+</div>
+<hr />
+<h2 id="downloads">Downloads<a class="headerlink" href="#downloads" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Grab everything</p>
+<p><strong><a download="download" href="../downloads/vehicle_manufacturing_lab_assets.zip">⬇ vehicle_manufacturing_lab_assets.zip</a></strong> — the complete asset bundle: data + setup scripts, the ML model (pre-trained <code>.pkl</code> + serving app), the prediction tool, all five guardrail/ontology tools, and the <code>kb_docs/</code> RAG corpus. Unzip into your Cloudera AI project and follow the steps below.</p>
+</div>
+<p>Or grab individual pieces:</p>
+<p><strong>Data &amp; setup scripts</strong> — <code>battery_demo_data/</code></p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create Iceberg tables</td>
+<td><a download="download" href="../downloads/battery_demo_data/create_impala_tables_battery.py">create_impala_tables_battery.py</a></td>
+</tr>
+<tr>
+<td>Load demo data</td>
+<td><a download="download" href="../downloads/battery_demo_data/load_data_to_impala_battery.py">load_data_to_impala_battery.py</a></td>
+</tr>
+<tr>
+<td>Governed semantic layer (<code>dim_*</code> + views)</td>
+<td><a download="download" href="../downloads/battery_demo_data/create_ontology_layer_battery.py">create_ontology_layer_battery.py</a></td>
+</tr>
+<tr>
+<td>Build the RAG corpus (<code>kb_docs/</code>)</td>
+<td><a download="download" href="../downloads/battery_demo_data/generate_kb_docs.py">generate_kb_docs.py</a></td>
+</tr>
+<tr>
+<td>(Re)generate demo data</td>
+<td><a download="download" href="../downloads/battery_demo_data/generate_demo_data_battery.py">generate_demo_data_battery.py</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>ML model &amp; serving</strong> — <code>battery_model/</code> <em>(the pre-trained <code>.pkl</code> files are in the bundle zip)</em></p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Train the models</td>
+<td><a download="download" href="../downloads/battery_model/train_battery_model.py">train_battery_model.py</a></td>
+</tr>
+<tr>
+<td>Serving app (FastAPI)</td>
+<td><a download="download" href="../downloads/battery_model/app.py">app.py</a></td>
+</tr>
+<tr>
+<td>Application entry point</td>
+<td><a download="download" href="../downloads/battery_model/run_app.py">run_app.py</a></td>
+</tr>
+<tr>
+<td>Deploy as a CAI Application</td>
+<td><a download="download" href="../downloads/battery_model/deploy_app.py">deploy_app.py</a></td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td><a download="download" href="../downloads/battery_model/requirements.txt">requirements.txt</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Battery prediction tool</strong> — Agent Studio custom tool</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tool source</td>
+<td><a download="download" href="../downloads/battery_prediction_tool/tool.py">tool.py</a></td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td><a download="download" href="../downloads/battery_prediction_tool/requirements.txt">requirements.txt</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Guardrail &amp; ontology tools</strong> — download each (source + <code>requirements.txt</code> + <code>ontology.yaml</code>) from its tool page:
+<a href="../../tools/ontology_grounding_tool/">Ontology Grounding</a> ·
+<a href="../../tools/g1_verdict_lock_tool/">G1 Verdict Lock</a> ·
+<a href="../../tools/g2_claim_citation_tool/">G2 Claim Citation</a> ·
+<a href="../../tools/g4_action_catalog_tool/">G4 Action Catalog</a>
+(and <a href="../../tools/g3_grounding_verifier_tool/">G3 Grounding Verifier</a> for the fuller verification layer).</p>
+<hr />
+<h2 id="architecture-5-agents-sequential">Architecture (5 agents, sequential)<a class="headerlink" href="#architecture-5-agents-sequential" title="Permanent link">&para;</a></h2>
+<p><img alt="Overall anti-hallucination workflow — 5 sequential agents with G1/G2/G4 guardrails" src="../../images/battery_hallucination_workflow/overall_diagram.png" /></p>
+<p><em>Monitoring → Triage (G1) → Historical Data Analyst (grounding) → Root-Cause Investigator (G2) → Recommendation &amp; Report (G4 + abstention).</em></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Agent</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Monitoring / alert</td>
+<td><code>iceberg-mcp-server</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Alert triage</td>
+<td><code>battery-prediction-tool</code> + <code>g1-verdict-lock-tool</code> (<strong>G1</strong>)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Historical Data Analyst (grounding)</td>
+<td><code>ontology-grounding-tool</code> + <code>iceberg-mcp-server</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Root-Cause Investigator (claims)</td>
+<td><code>rag-retrieval-tool</code> + <code>g2-claim-citation-tool</code> (<strong>G2</strong>)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Recommendation &amp; Report (policy)</td>
+<td><code>artifact-files-tool</code> + <code>g4-action-catalog-tool</code> (<strong>G4</strong>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Workflow inputs (Test Session):</strong> <code>machine_id</code> and <code>alert_timestamp</code> — the two values an operator
+supplies. <code>defect_rate</code> / <code>risk_level</code> are <strong>produced</strong> by the prediction tool in triage, not entered.</p>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A Cloudera AI project with the <strong>battery-pack demo data</strong> loaded into <code>iot_car_battery_db</code>
+  (six Iceberg tables), the <code>iceberg-mcp-server</code>, and the <strong>Battery Quality Model App</strong> +
+  <code>battery-prediction-tool</code>.</li>
+<li>A <strong>RAG Studio</strong> knowledge base (<code>battery-knowledge-base</code>) registered in Agent Studio as
+  <code>rag-retrieval-tool</code> — built in Step 1.</li>
+<li>The three guardrail tools and the prevention tool registered as Agent Studio Custom Tools:
+  <a href="../../tools/ontology_grounding_tool/"><code>ontology-grounding-tool</code></a>,
+  <a href="../../tools/g1_verdict_lock_tool/"><code>g1-verdict-lock-tool</code></a>,
+  <a href="../../tools/g2_claim_citation_tool/"><code>g2-claim-citation-tool</code></a>,
+  <a href="../../tools/g4_action_catalog_tool/"><code>g4-action-catalog-tool</code></a>.</li>
+</ul>
+<hr />
+<h2 id="step-1-seed-data-ml-models-and-the-rag-knowledge-base">Step 1 — Seed data, ML models, and the RAG knowledge base<a class="headerlink" href="#step-1-seed-data-ml-models-and-the-rag-knowledge-base" title="Permanent link">&para;</a></h2>
+<p>In your project's <code>battery_demo_data/</code> folder, create the tables and load the demo data, then train
+(or reuse the packaged) models:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>battery_demo_data
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python<span class="w"> </span>create_impala_tables_battery.py<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>python<span class="w"> </span>load_data_to_impala_battery.py
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># models are packaged as .pkl; retrain only if you changed the data:</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># (cd ../battery_model &amp;&amp; python train_battery_model.py)</span>
+</code></pre></div>
+<p><strong>Build the RAG corpus</strong> — the document bodies aren't shipped, so generate them from the catalog:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>generate_kb_docs.py<span class="w">     </span><span class="c1"># -&gt; kb_docs/*.md  (5 authoritative + 25 DOC-GEN generic)</span>
+</code></pre></div>
+<p>Then in <strong>RAG Studio</strong>: create knowledge base <code>battery-knowledge-base</code>, <strong>upload the whole <code>kb_docs/</code>
+folder</strong>, publish the retrieval endpoint, and register it in Agent Studio as <code>rag-retrieval-tool</code>.
+The <code>DOC-GEN-*</code> files are the generic distractors <strong>G2 must reject</strong>.</p>
+<hr />
+<h2 id="step-2-prevention-semantic-grounding">Step 2 — Prevention: semantic grounding<a class="headerlink" href="#step-2-prevention-semantic-grounding" title="Permanent link">&para;</a></h2>
+<p>Place <a href="../../tools/ontology_grounding_tool/"><code>ontology-grounding-tool</code></a> on the Historical Data Analyst
+agent, <strong>ahead of querying</strong>. It resolves colloquial entities/metric words to a canonical
+<code>part_number</code> + canonical property and emits a <strong>constrained SELECT</strong> against the governed views
+(<code>v_part_semantic</code> / <code>v_quality_events_semantic</code>), executed via <code>iceberg-mcp-server</code>. A polysemous
+term it can't disambiguate returns <code>ambiguous=true</code> (no <code>query_plan</code>) so the agent <strong>asks rather than
+guesses</strong>.</p>
+<h3 id="the-ontology-tbox-sample">The ontology (TBox) — sample<a class="headerlink" href="#the-ontology-tbox-sample" title="Permanent link">&para;</a></h3>
+<p>The tool reads a bundled, git-versioned <code>ontology.yaml</code>. It maps colloquial identifiers to canonical
+entities, defines glossary terms, and marks polysemous terms that require a business context:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">entities</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">PART-2026-BAT-MOD-07</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">canonical_part_number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PART-2026-BAT-MOD-07</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">target_view</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v_part_semantic</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">status_filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RELEASED</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">aliases</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">MOD-07</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">module 7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">7号模组</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">bracket 07</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">battery module 07</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="c1"># pack-line machine ids resolve too (PACK-02/03/05/07/11)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">PACK-07</span><span class="p">:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">canonical_part_number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PACK-07</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">target_view</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v_quality_events_semantic</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nt">aliases</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">PACK-07</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pack 07</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">7号电池包</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nt">glossary</span><span class="p">:</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="c1"># single-sense: colloquial term -&gt; canonical property + governed view</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="nt">material</span><span class="p">:</span><span class="w">        </span><span class="p p-Indicator">{</span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="nv">material_grade</span><span class="p p-Indicator">,</span><span class="nt">     view</span><span class="p">:</span><span class="w"> </span><span class="nv">v_part_semantic</span><span class="p p-Indicator">}</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="nt">thermal_anomaly</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="nv">temperature_delta</span><span class="p p-Indicator">,</span><span class="nt">  view</span><span class="p">:</span><span class="w"> </span><span class="nv">module_eol_test_v</span><span class="p p-Indicator">,</span><span class="nt"> threshold</span><span class="p">:</span><span class="w"> </span><span class="s">"&gt;3σ</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">&gt;31°C"</span><span class="p p-Indicator">}</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="c1"># polysemous: same word, different property per business context.</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="c1"># No resolving context -&gt; ambiguous=true, and the agent must ask (never guess).</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="nt">stock</span><span class="p">:</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="nt">contexts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">ERP</span><span class="p">:</span><span class="w"> </span><span class="nv">account_stock</span><span class="p p-Indicator">,</span><span class="nt"> WMS</span><span class="p">:</span><span class="w"> </span><span class="nv">physical_stock</span><span class="p p-Indicator">,</span><span class="nt"> OMS</span><span class="p">:</span><span class="w"> </span><span class="nv">sellable_stock</span><span class="p p-Indicator">}</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="nt">axioms</span><span class="p">:</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="nt">authoritative_prefixes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"SOP-"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"COA-"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"ECN-"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"DRW-"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"SPEC-"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"WPS-"</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span><span class="nt">generic_prefixes</span><span class="p">:</span><span class="w">       </span><span class="p p-Indicator">[</span><span class="s">"DOC-GEN-"</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="nt">require_status</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RELEASED</span>
+</code></pre></div>
+<h3 id="try-it">Try it<a class="headerlink" href="#try-it" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># resolve + emit a constrained SELECT</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>python<span class="w"> </span>tool.py<span class="w"> </span>--user-params<span class="w"> </span><span class="s1">'{}'</span><span class="w"> </span>--tool-params<span class="w"> </span><span class="s1">'{"entity":"MOD-07","term":"material","context":"MES"}'</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># polysemous term with no context -&gt; ambiguous=true (ask, don't guess)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>python<span class="w"> </span>tool.py<span class="w"> </span>--user-params<span class="w"> </span><span class="s1">'{}'</span><span class="w"> </span>--tool-params<span class="w"> </span><span class="s1">'{"term":"stock"}'</span>
+</code></pre></div>
+<p>A resolved call returns the canonical entity, the canonical property, and a governed-view SELECT
+filtered to <code>status='RELEASED'</code>:</p>
+<p><img alt="Ontology grounding tool output — resolved canonical entity, property, and constrained query_plan" src="../../images/battery_hallucination_workflow/ontology_query_tool_output.png" /></p>
+<hr />
+<h2 id="step-3-register-the-three-guardrail-tools-g1-g2-g4">Step 3 — Register the three guardrail tools (G1 / G2 / G4)<a class="headerlink" href="#step-3-register-the-three-guardrail-tools-g1-g2-g4" title="Permanent link">&para;</a></h2>
+<p>In Agent Studio, <strong>Tools → Create Custom Tool</strong>, and register each (defaults are fine):</p>
+<ul>
+<li><a href="../../tools/g1_verdict_lock_tool/"><strong>G1</strong> — <code>g1-verdict-lock-tool</code></a> — locks <code>severity</code>/<code>defect_type</code> to the ML output.</li>
+<li><a href="../../tools/g2_claim_citation_tool/"><strong>G2</strong> — <code>g2-claim-citation-tool</code></a> — every claim must carry a valid <code>source_id</code>.</li>
+<li><a href="../../tools/g4_action_catalog_tool/"><strong>G4</strong> — <code>g4-action-catalog-tool</code></a> — MES actions restricted to the approved catalog.</li>
+</ul>
+<hr />
+<h2 id="step-4-create-the-5-agents">Step 4 — Create the 5 Agents<a class="headerlink" href="#step-4-create-the-5-agents" title="Permanent link">&para;</a></h2>
+<p>Create a <strong>Sequential</strong> workflow <code>Anti-Hallucination QA</code> (Manager Agent <strong>OFF</strong>) and add the five
+agents below in order. <a download="download" href="../downloads/agents.yaml">Download agents.yaml</a></p>
+<p><img alt="The five agents as created in Agent Studio" src="../../images/battery_hallucination_workflow/all_agents.png" /></p>
+<h3 id="agent-1-monitoring-agent">Agent 1 — Monitoring Agent<a class="headerlink" href="#agent-1-monitoring-agent" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Monitoring / Orchestration Agent</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td>Snapshot read + threshold check — the workflow entry point</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>Receive the external trigger (<code>{machine_id}</code>, <code>{alert_timestamp}</code>, and a metric snapshot); call <code>iceberg-mcp-server</code> to read the latest <code>sensor_readings</code> snapshot and compare to thresholds (temperature &gt; 31°C or voltage_std &gt; 0.015 = breach); package the alert context (machine_id, event_time, temperature, temperature_delta, voltage_std, press_force, cell_lot, alert_triggered=true) and hand off to the Alert Triage Agent; otherwise emit <code>alert_triggered=false</code>.</td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You are the first stage of the battery-pack (PACK) assembly-line quality workflow, standing at the data entry point. The line streams per-station sensor readings into <code>iot_car_battery_db</code>. Your remit is narrow: pull the latest snapshot for <code>{machine_id}</code>, confirm a genuine threshold breach rather than jitter, and hand a clean, structured alert context to the next agent. You do not interpret or conclude.</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td><code>iceberg-mcp-server</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="agent-2-alert-triage-agent-g1">Agent 2 — Alert Triage Agent (<strong>G1</strong>)<a class="headerlink" href="#agent-2-alert-triage-agent-g1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Alert Triage Agent</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td>ML re-score + verdict lock</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>Receive the breach alert for <code>{machine_id}</code> at <code>{alert_timestamp}</code>; call <code>battery-prediction-tool</code> to re-score the current snapshot (yielding defect_rate and risk_level), assign a severity, and route the investigation: HIGH (defect_rate ≥ 0.16), MEDIUM (0.08–0.12), INVESTIGATE (anomalous pattern). <strong>G1:</strong> immediately after, call <code>g1-verdict-lock-tool</code> on the ML output to lock <code>severity</code> and <code>defect_type</code> to the model's values — the LLM may not override or edit these two fields.</td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You are the shop-floor first responder. You live by one rule: an alert is not a fact, and the authority for a numeric verdict comes from the model, never from a language model's "feel." You re-score with the prediction tool (IsolationForest anomaly_score + XGBoost risk_level), set severity, decide which tables/metrics the analyst should focus on, then pin severity/defect_type with G1. You only triage and route — no recommendations.</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td><code>battery-prediction-tool</code>, <code>g1-verdict-lock-tool</code>, <code>iceberg-mcp-server</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="agent-3-historical-data-analyst-prevention">Agent 3 — Historical Data Analyst (prevention)<a class="headerlink" href="#agent-3-historical-data-analyst-prevention" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Historical Data Analyst</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td>Semantic grounding + governed querying</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>First call <code>ontology-grounding-tool</code> to resolve <code>{machine_id}</code>, colloquial metric words, and cell_lot to canonical entities/properties and obtain a constrained SELECT against the governed views; if <code>ambiguous=true</code>, flag <code>needs_clarification</code> and stop inferring. Then, via <code>iceberg-mcp-server</code>, run a 30-day same-machine baseline z-score and a same-cell_lot cross-comparison, and emit a quantitative evidence bundle (<code>conclusion=FACTS_ONLY</code>) plus <code>evidence_sources</code> (table/column/row per number).</td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You are a data analyst devoted to quantitative facts, with one creed: "only state numbers that have a source." Hallucination often starts at the source — mapping "module 7" or "stock" onto the wrong entity or metric. So you resolve first, query only governed RELEASED views, and when a term can't be disambiguated you flag <code>needs_clarification</code> and ask rather than guess. Root cause belongs to the downstream investigator; you never conclude early.</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td><code>ontology-grounding-tool</code>, <code>iceberg-mcp-server</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="agent-4-root-cause-investigator-g2">Agent 4 — Root-Cause Investigator (<strong>G2</strong>)<a class="headerlink" href="#agent-4-root-cause-investigator-g2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Root-Cause Investigator</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td>Authoritative retrieval + cited claim contract</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>Take the analyst's evidence bundle; use <code>rag-retrieval-tool</code> to retrieve authoritative documents (thermal-management SOPs, incoming COAs, supplier ECNs, engineering drawings DRW), restricting doc_id to authoritative prefixes <code>SOP-* / COA-* / ECN-* / DRW-*</code>, top_k=5; synthesize the root cause into a structured claim contract <code>claims[]</code> (each with claim / source_ids / confidence). <strong>G2:</strong> call <code>g2-claim-citation-tool</code> on <code>claims[]</code> — every claim must carry a valid source_id (an SOP clause or a real data row); repair or drop any non_compliant claim, no unsourced assertions.</td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You are a senior process engineer who threads scattered evidence into a traceable causal chain. What you deliver is independently verifiable "evidence + claims", where every judgment can be followed by its source_id back to an authoritative document clause or a real data row. If retrieval only hits generic docs (<code>DOC-GEN-*</code>), you never draw a root cause from them — that is exactly how hallucination creeps in. You hand the G2-checked <code>claims[]</code> to the report agent.</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td><code>rag-retrieval-tool</code>, <code>g2-claim-citation-tool</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="agent-5-recommendation-report-agent-g4">Agent 5 — Recommendation &amp; Report Agent (<strong>G4</strong>)<a class="headerlink" href="#agent-5-recommendation-report-agent-g4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Recommendation &amp; Report Agent</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td>Response policy + MES work order / abstention</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>Using the G2-checked <code>claims[]</code> and the evidence bundle, apply the response policy: all claims compliant → <code>answer_with_citations</code> (full report + work_order); partly compliant → <code>answer_supported_only</code> (write only the supported part, escalate the rest); no compliant claims or <code>needs_clarification=true</code> → <code>abstain</code> (produce an abstention_notice, no work order). <strong>G4:</strong> before writing the work order, call <code>g4-action-catalog-tool</code> on the proposed actions[] — only the catalog's valid_actions may be issued. Write the report and <code>work_order_{machine_id}.json</code> via <code>artifact-files-tool</code>.</td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You are the manufacturing engineering lead who owns the MES action catalog and is accountable for what reaches the floor. Your criterion is evidence sufficiency, not plausibility: enough evidence → a fully cited report; partial → write that part and escalate the rest; insufficient → don't write a root cause or work order, produce an abstention_notice instead. "I can't confirm, escalated" beats a plausible but unsourced conclusion — abstention is compliance, not failure.</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td><code>artifact-files-tool</code>, <code>g4-action-catalog-tool</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="step-5-create-the-5-tasks">Step 5 — Create the 5 Tasks<a class="headerlink" href="#step-5-create-the-5-tasks" title="Permanent link">&para;</a></h2>
+<p>Create one task per agent, in order — each task's <code>context</code> chains it to the previous one.
+<a download="download" href="../downloads/tasks.yaml">Download tasks.yaml</a></p>
+<h3 id="task-1-monitoring_task-monitoring-agent">Task 1 — <code>monitoring_task</code> → Monitoring Agent<a class="headerlink" href="#task-1-monitoring_task-monitoring-agent" title="Permanent link">&para;</a></h3>
+<p><strong>Description:</strong></p>
+<blockquote>
+<p>Call <code>iceberg-mcp-server</code> to read the latest snapshot of <code>{machine_id}</code> from <code>iot_car_battery_db.sensor_readings</code> and compare to thresholds (temperature &gt; 31°C or voltage_std &gt; 0.015 = breach). On breach, package the alert context; otherwise emit <code>alert_triggered=false</code>.</p>
+</blockquote>
+<p><strong>Expected output:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"machine_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PACK-07"</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">"event_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-06-24T13:20:00"</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">33.4</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">"temperature_delta"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.9</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">"voltage_std"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.021</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="nt">"press_force"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.05</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="nt">"cell_lot"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LOT-2026-0619"</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="nt">"alert_triggered"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="task-2-alert_triage_task-alert-triage-agent">Task 2 — <code>alert_triage_task</code> → Alert Triage Agent<a class="headerlink" href="#task-2-alert_triage_task-alert-triage-agent" title="Permanent link">&para;</a></h3>
+<p><strong>Context:</strong> <code>monitoring_task</code></p>
+<p><strong>Description:</strong></p>
+<blockquote>
+<p>Call <code>battery-prediction-tool</code> to re-score the current snapshot, set severity by defect_rate (HIGH / MEDIUM / INVESTIGATE), and name the tables/metrics the analyst should query. <strong>G1:</strong> call <code>g1-verdict-lock-tool</code> on the ML output to lock <code>severity</code>/<code>defect_type</code> — the LLM may not change them.</p>
+</blockquote>
+<p><strong>Expected output</strong> <em>(severity/defect_type locked by G1):</em></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">"machine_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PACK-07"</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">"severity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HIGH"</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">"defect_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"module_electrical_consistency_anomaly"</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">"risk_level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HIGH"</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.933</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nt">"ml_locked"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="nt">"route_to_analyst"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">"tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"sensor_readings"</span><span class="p">,</span><span class="w"> </span><span class="s2">"quality_events"</span><span class="p">],</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nt">"metrics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"temperature"</span><span class="p">,</span><span class="w"> </span><span class="s2">"temperature_delta"</span><span class="p">,</span><span class="w"> </span><span class="s2">"voltage_std"</span><span class="p">]</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="task-3-historical_analysis_task-historical-data-analyst">Task 3 — <code>historical_analysis_task</code> → Historical Data Analyst<a class="headerlink" href="#task-3-historical_analysis_task-historical-data-analyst" title="Permanent link">&para;</a></h3>
+<p><strong>Context:</strong> <code>alert_triage_task</code></p>
+<p><strong>Description:</strong></p>
+<blockquote>
+<ol>
+<li>Call <code>ontology-grounding-tool</code> to resolve <code>{machine_id}</code>, colloquial metric words, and cell_lot and obtain a constrained SELECT; if <code>ambiguous=true</code> → set <code>needs_clarification=true</code> and stop querying.</li>
+<li>Via <code>iceberg-mcp-server</code>, run the 30-day baseline z-score and the same-cell_lot cross-comparison.</li>
+<li>Package the evidence bundle with <code>evidence_sources</code> (table/column/event_time/value per row).
+Facts only; <code>conclusion</code> is always <code>FACTS_ONLY</code>.</li>
+</ol>
+</blockquote>
+<p><strong>Expected output:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">"canonical_part_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PART-2026-BAT-MOD-07"</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">"cell_lot"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LOT-2026-0619"</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">"temperature_baseline_mu"</span><span class="p">:</span><span class="w"> </span><span class="mf">28.6</span><span class="p">,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">"temperature_baseline_sigma"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7</span><span class="p">,</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">"temperature_peak"</span><span class="p">:</span><span class="w"> </span><span class="mf">33.4</span><span class="p">,</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">"z_score"</span><span class="p">:</span><span class="w"> </span><span class="mf">6.9</span><span class="p">,</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">"voltage_std_normal"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.011</span><span class="p">,</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nt">"voltage_std_peak"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.021</span><span class="p">,</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="nt">"peer_packs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"PACK-03"</span><span class="p">,</span><span class="w"> </span><span class="s2">"PACK-05"</span><span class="p">],</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="nt">"evidence_sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="p">{</span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sensor_readings"</span><span class="p">,</span><span class="w"> </span><span class="nt">"column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"temperature"</span><span class="p">,</span><span class="w"> </span><span class="nt">"event_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-06-24T13:20:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">33.4</span><span class="p">}</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="nt">"needs_clarification"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="nt">"conclusion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FACTS_ONLY"</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="task-4-root_cause_investigation-root-cause-investigator">Task 4 — <code>root_cause_investigation</code> → Root-Cause Investigator<a class="headerlink" href="#task-4-root_cause_investigation-root-cause-investigator" title="Permanent link">&para;</a></h3>
+<p><strong>Context:</strong> <code>historical_analysis_task</code></p>
+<p><strong>Description:</strong></p>
+<blockquote>
+<ol>
+<li>Use <code>rag-retrieval-tool</code> over authoritative docs, restricting doc_id to authoritative prefixes <code>SOP-* / COA-* / ECN-* / DRW-*</code>, top_k=5.</li>
+<li>Synthesize the evidence bundle + retrieved docs into a claim contract <code>claims[]</code> (each: claim / source_ids / confidence).</li>
+<li><strong>G2:</strong> call <code>g2-claim-citation-tool</code> on <code>claims[]</code>; drop or re-source any non_compliant claim; <code>DOC-GEN-*</code>-only hits may not be used as a root-cause basis.</li>
+</ol>
+</blockquote>
+<p><strong>Expected output</strong> <em>(G2-checked):</em></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">"claims"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">      </span><span class="nt">"claim"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thermal-runaway risk stems from high incoming DCR of cell lot LOT-2026-0619"</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">      </span><span class="nt">"source_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"COA-0619"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ECN-2026-0311"</span><span class="p">,</span><span class="w"> </span><span class="s2">"z_score=6.9"</span><span class="p">],</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">      </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.86</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="nt">"rag_docs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"SOP-THM-042"</span><span class="p">,</span><span class="w"> </span><span class="s2">"COA-0619"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ECN-2026-0311"</span><span class="p">],</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="nt">"g2_all_compliant"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="nt">"dropped_claims"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="task-5-recommendation_report_task-recommendation-report-agent">Task 5 — <code>recommendation_report_task</code> → Recommendation &amp; Report Agent<a class="headerlink" href="#task-5-recommendation_report_task-recommendation-report-agent" title="Permanent link">&para;</a></h3>
+<p><strong>Context:</strong> <code>root_cause_investigation</code></p>
+<p><strong>Description:</strong></p>
+<blockquote>
+<p>Input: the G2-checked <code>claims[]</code> and the evidence bundle.
+1. Decide <code>response_policy</code> from G2 results: all compliant → <code>answer_with_citations</code>; partly compliant → <code>answer_supported_only</code>; no compliant claims or <code>needs_clarification=true</code> → <code>abstain</code>.
+2. <strong>G4:</strong> call <code>g4-action-catalog-tool</code> on the proposed actions[]; keep only valid_actions.
+3. Emit per policy: <code>answer_with_citations</code> → report + <code>work_order_{machine_id}.json</code> (cited); <code>answer_supported_only</code> → supported part only + escalate note; <code>abstain</code> → abstention_notice, no work order.</p>
+</blockquote>
+<p><strong>Expected output — grounded (<code>answer_with_citations</code>):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">"machine_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PACK-07"</span><span class="p">,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">"response_policy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"answer_with_citations"</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">"root_cause"</span><span class="p">:</span><span class="w"> </span><span class="s2">"High incoming DCR of cell lot LOT-2026-0619 drove the module thermal anomaly and elevated voltage spread"</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">"actions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="p">{</span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QLT-ISOLATE-LOT"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Isolate lot LOT-2026-0619 and re-inspect in-process modules"</span><span class="p">,</span><span class="w"> </span><span class="nt">"priority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P1"</span><span class="p">},</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="p">{</span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QLT-RECHECK-DCR"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tighten incoming DCR re-test for this lot"</span><span class="p">,</span><span class="w"> </span><span class="nt">"priority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P2"</span><span class="p">}</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="nt">"evidence_refs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"SOP-THM-042 §4.2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"COA-0619"</span><span class="p">,</span><span class="w"> </span><span class="s2">"z_score=6.9"</span><span class="p">],</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.86</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Expected output — abstain</strong> <em>(e.g. PACK-11, no authoritative root-cause doc):</em></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">"response_policy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abstain"</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"No authoritative source supports a root cause; retrieval hit only DOC-GEN-* generic docs"</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">"missing_evidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"No authoritative SOP/COA/ECN for PACK-11 intermittent voltage spread"</span><span class="p">],</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="nt">"supported_facts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"voltage_std intermittently elevated (z_score=3.1), but no authoritative root-cause doc"</span><span class="p">],</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="nt">"escalate_to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"process engineer"</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="step-6-run-verify">Step 6 — Run &amp; verify<a class="headerlink" href="#step-6-run-verify" title="Permanent link">&para;</a></h2>
+<p>Run the workflow in Agent Studio's <strong>Test Session</strong>. It has two inputs — enter a real incident:</p>
+<ul>
+<li><strong>Perfect (grounded report):</strong> <code>machine_id = PACK-07</code>, <code>alert_timestamp = 2026-06-24T13:20:00Z</code>
+  — a real HIGH incident (defect_rate ≈ 0.19) whose cell lot <code>LOT-2026-0619</code> has authoritative docs.</li>
+<li><strong>Abstention (the headline):</strong> <code>machine_id = PACK-11</code>, <code>alert_timestamp = 2026-06-24T09:20:00Z</code>
+  — a real INVESTIGATE case whose root cause has <strong>no</strong> authoritative doc.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prevention resolves + emits SQL</td>
+<td><code>MOD-07</code> → <code>PART-2026-BAT-MOD-07</code>, constrained SELECT vs <code>v_part_semantic</code>, <code>status='RELEASED'</code></td>
+</tr>
+<tr>
+<td>Prevention flags ambiguity</td>
+<td><code>stock</code> (no context) → <code>ambiguous=true</code>, no <code>query_plan</code> → agent asks</td>
+</tr>
+<tr>
+<td>RAG corpus present</td>
+<td><code>kb_docs/</code> = 30 files (5 authoritative + 25 <code>DOC-GEN-*</code>)</td>
+</tr>
+<tr>
+<td>G1 lock</td>
+<td>triage <code>severity</code>/<code>defect_type</code> == ML output, not LLM-altered</td>
+</tr>
+<tr>
+<td>G2 citation gate</td>
+<td>every claim has a valid <code>source_id</code>; <code>DOC-GEN-*</code>-only claims dropped</td>
+</tr>
+<tr>
+<td>G4 action catalog</td>
+<td>work order contains only approved MES action codes</td>
+</tr>
+<tr>
+<td><strong>Abstain (PACK-11)</strong></td>
+<td>root cause only in <code>DOC-GEN-*</code> → G2 drops it → <strong>abstention_notice</strong>, no fabricated root cause</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-counter-example-that-proves-the-point">The counter-example that proves the point<a class="headerlink" href="#the-counter-example-that-proves-the-point" title="Permanent link">&para;</a></h3>
+<p>Ask about <strong>PACK-11</strong> — its intermittent voltage-spread has no single authoritative root-cause doc.
+Retrieval hits only <code>DOC-GEN-*</code> generic docs → <strong>G2 drops the unsourced claim</strong> → the report agent
+<strong>abstains and escalates</strong> instead of fabricating a plausible root cause. That is the anti-hallucination
+win: the answer is only ever as good as the authoritative evidence, and when there is none, the system
+escalates instead of guessing.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../demos/iot/uc2_predictive_quality/" class="md-footer__link md-footer__link--prev" aria-label="Previous: UC2: Predictive Quality">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                UC2: Predictive Quality
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../anti_hallucination_lab_as3/" class="md-footer__link md-footer__link--next" aria-label="Next: Anti-Hallucination (Agent Studio 3.0)">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Anti-Hallucination (Agent Studio 3.0)
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "navigation.footer", "content.code.annotate", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/username-replacer.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,55 @@
+# tasks.yaml — Anti-Hallucination QA (5 tasks)
+
+monitoring_task:
+  description: >
+    Call iceberg-mcp-server to read the latest snapshot of {machine_id} from
+    iot_car_battery_db.sensor_readings and compare to thresholds (temperature > 31°C or
+    voltage_std > 0.015 = breach). On breach package the alert context; otherwise emit alert_triggered=false.
+  expected_output: Alert-context JSON (see sample ① alert_context).
+  agent: monitoring_orchestration
+
+alert_triage_task:
+  description: >
+    Call battery-prediction-tool to re-score the current snapshot, set severity by defect_rate
+    (HIGH/MEDIUM/INVESTIGATE), and name the tables/metrics the analyst should query.
+    【G1】call g1-verdict-lock-tool on the ML output to lock severity/defect_type; the LLM may not change them.
+  expected_output: Triage JSON (see sample ② triage — locked severity/defect_type + routing).
+  agent: alert_triage
+  context: [monitoring_task]
+
+historical_analysis_task:
+  description: >
+    1. Call ontology-grounding-tool to resolve {machine_id}, colloquial metric words, and cell_lot and
+       obtain a constrained SELECT; if ambiguous=true → set needs_clarification=true and stop querying.
+    2. Via iceberg-mcp-server, run the 30-day baseline z-score and the same-cell_lot cross-comparison.
+    3. Package the evidence bundle with evidence_sources (table/column/event_time/value per row).
+    (strict) facts only; conclusion is always "FACTS_ONLY".
+  expected_output: Evidence-bundle JSON (see sample ③ evidence_bundle).
+  agent: historical_data_analyst
+  context: [alert_triage_task]
+
+root_cause_investigation:
+  description: >
+    1. Use rag-retrieval-tool over authoritative docs, restricting doc_id to authoritative prefixes
+       SOP-* / COA-* / ECN-* / DRW-*, top_k=5.
+    2. Synthesize the evidence bundle + retrieved docs into a claim contract claims[]
+       (each: claim / source_ids / confidence).
+    3. 【G2】call g2-claim-citation-tool on claims[]; drop or re-source any non_compliant claim;
+       DOC-GEN-*-only hits may not be used as a root-cause basis.
+  expected_output: Claim-contract JSON (see sample ④ claims).
+  agent: root_cause_investigator
+  context: [historical_analysis_task]
+
+recommendation_report_task:
+  description: >
+    Input: root_cause_investigation.claims[] (already G2-checked) and historical_analysis_task.evidence_bundle.
+    1. Decide response_policy from G2 results: all compliant → answer_with_citations; partly compliant →
+       answer_supported_only; no compliant claims or needs_clarification=true → abstain.
+    2. 【G4】call g4-action-catalog-tool on proposed actions[]; keep only valid_actions.
+    3. Emit per policy: answer_with_citations → report + work_order_{machine_id}.json (cited);
+       answer_supported_only → supported part only + escalate note; abstain → abstention_notice, no work order.
+  expected_output: >
+    A cited report + work_order JSON (see sample ⑤a) or an abstention_notice JSON (see sample ⑤b),
+    written via artifact-files-tool.
+  agent: recommendation_report
+  context: [root_cause_investigation]

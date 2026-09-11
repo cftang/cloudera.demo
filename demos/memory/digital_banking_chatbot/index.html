@@ -1,0 +1,3957 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hands-on lab demonstrating how Cloudera AI Agent Studio, RAG Studio, and Synthetic Data Studio interoperate — two focused demos plus a three-studio capstone.">
+      
+      
+      
+        <link rel="canonical" href="https://ferdinandzhong.github.io/handson-labs/demos/memory/digital_banking_chatbot/">
+      
+      
+        <link rel="prev" href="../../nl_to_sql/nl_to_sql_workflow_as3/">
+      
+      
+        <link rel="next" href="../../iot/uc1_predictive_maintenance/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Digital Banking Chatbot - Cloudera AI Studios Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#digital-banking-chatbot-with-cross-session-memory" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Cloudera AI Studios Lab" class="md-header__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cloudera AI Studios Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Digital Banking Chatbot
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../studios/agent_studio/" class="md-tabs__link">
+          
+  
+  
+  Studios
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../lab1_calculator_workflow/" class="md-tabs__link">
+          
+  
+  
+  Agent Studio Quickstart
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../agent_rag_demo/" class="md-tabs__link">
+          
+  
+  
+  RAG Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../synthetic_data_lab/SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-tabs__link">
+          
+  
+  
+  Synthetic Data Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../nl_to_sql/nl_to_sql_workflow/" class="md-tabs__link">
+          
+  
+  
+  NL-to-SQL Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Agent Memory Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../iot/uc1_predictive_maintenance/" class="md-tabs__link">
+          
+  
+  
+  IoT Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../hallucination_guardrails/anti_hallucination_lab/" class="md-tabs__link">
+          
+  
+  
+  Vehicle Manufacturing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../tools/rag_studio_tool/" class="md-tabs__link">
+          
+  
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Cloudera AI Studios Lab" class="md-nav__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    Cloudera AI Studios Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Studios
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Studios
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../studios/agent_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../studios/rag_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../studios/synthetic_data_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio Quickstart
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Studio Quickstart
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1_calculator_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1: Build Your First Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2_calculator_with_tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2: Workflow with a Custom Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RAG Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agent_rag_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic RAG-App Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Synthetic Data Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../synthetic_data_lab/SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../synthetic_data_lab/synthetic_data_d1_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D1: LLM-Driven Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../synthetic_data_lab/synthetic_data_d2_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D2: SDS Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../synthetic_data_lab/synthetic_data_d3_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D3: Production Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../synthetic_data_lab/SYNTHETIC_DATA_DEMO_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workshop Presenter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NL-to-SQL Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nl_to_sql/nl_to_sql_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Agentic Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nl_to_sql/nl_to_sql_workflow_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Memory Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Memory Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Banking Chatbot
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Banking Chatbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-problem-does-this-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Problem Does This Solve?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-story-two-sessions-one-customer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Story: Two Sessions, One Customer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Story: Two Sessions, One Customer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-data-behind-every-answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The data behind every answer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-1-why-is-my-account-locked-first-contact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session 1 — "Why is my account locked?" (First Contact)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-2-why-is-my-account-still-frozen-cross-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session 2 — "Why is my account still frozen?" (Cross-Session)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-chromadb-vector-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy ChromaDB (vector database)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploy ChromaDB (vector database)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-the-deployment-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download the deployment scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-the-deploy-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run the deploy job
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-0-register-the-two-mcp-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0 — Register the Two MCP Servers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 0 — Register the Two MCP Servers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lightmem-mcp-lightmem-chroma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LightMem MCP — lightmem-chroma
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iceberg-mcp-iceberg-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iceberg MCP — iceberg-mcp-server
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-create-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Create the Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-configure-workflow-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Configure Workflow Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-add-all-four-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Add All Four Agents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3 — Add All Four Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-1-memory-scout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 1 — Memory Scout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-2-data-analyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 2 — Data Analyst
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-3-risk-analyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 3 — Risk Analyst
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-4-support-advisor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 4 — Support Advisor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-add-all-four-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Add All Four Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4 — Add All Four Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-memory-retrieval-intent-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1 — Memory Retrieval &amp; Intent Classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-database-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2 — Database Query
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-pattern-analysis-risk-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3 — Pattern Analysis &amp; Risk Assessment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-respond-report-store-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4 — Respond, Report &amp; Store Memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-configure-mcp-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Configure MCP Parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5 — Configure MCP Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#iceberg-mcp-iceberg-mcp-server-agent-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iceberg MCP — iceberg-mcp-server (Agent 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lightmem-mcp-lightmem-chroma-agents-1-and-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LightMem MCP — lightmem-chroma (Agents 1 and 4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-test-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Test the Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6 — Test the Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario-a-first-contact-db-query-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario A — First Contact (DB Query Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-b-cross-session-follow-up-with-prior-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario B — Cross-Session Follow-up (With Prior Memory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6b-deploy-and-access-via-the-agent-workflow-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6b — Deploy and Access via the Agent Workflow Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-review-the-trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 — Review the Trace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-the-synthetic-banking-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix — The Synthetic Banking Dataset
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix — The Synthetic Banking Dataset">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#whats-in-the-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's in the dataset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-data-is-generated-and-loaded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the data is generated and loaded
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-sarah-williams-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Sarah Williams scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IoT Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../iot/uc1_predictive_maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC1: Predictive Maintenance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../iot/uc2_predictive_quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC2: Predictive Quality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vehicle Manufacturing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Vehicle Manufacturing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hallucination_guardrails/anti_hallucination_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Grounding + Guardrails (POC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hallucination_guardrails/anti_hallucination_lab_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anti-Hallucination (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/rag_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/synthetic_data_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/jailbreak_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jailbreak & Input Safety Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/nl_query_evaluator_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL Query Evaluator Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/ontology_grounding_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ontology Grounding Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/g1_verdict_lock_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G1: Verdict Lock Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/g2_claim_citation_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G2: Claim Citation Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/g3_grounding_verifier_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G3: Grounding Verifier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/g4_action_catalog_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G4: Action Catalog Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-problem-does-this-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Problem Does This Solve?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-story-two-sessions-one-customer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Story: Two Sessions, One Customer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Story: Two Sessions, One Customer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-data-behind-every-answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The data behind every answer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-1-why-is-my-account-locked-first-contact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session 1 — "Why is my account locked?" (First Contact)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-2-why-is-my-account-still-frozen-cross-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session 2 — "Why is my account still frozen?" (Cross-Session)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-chromadb-vector-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy ChromaDB (vector database)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploy ChromaDB (vector database)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download-the-deployment-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download the deployment scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-the-deploy-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run the deploy job
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-0-register-the-two-mcp-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0 — Register the Two MCP Servers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 0 — Register the Two MCP Servers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lightmem-mcp-lightmem-chroma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LightMem MCP — lightmem-chroma
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iceberg-mcp-iceberg-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iceberg MCP — iceberg-mcp-server
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-create-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Create the Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-configure-workflow-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Configure Workflow Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-add-all-four-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Add All Four Agents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3 — Add All Four Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-1-memory-scout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 1 — Memory Scout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-2-data-analyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 2 — Data Analyst
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-3-risk-analyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 3 — Risk Analyst
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-4-support-advisor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 4 — Support Advisor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-add-all-four-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Add All Four Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4 — Add All Four Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-memory-retrieval-intent-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1 — Memory Retrieval &amp; Intent Classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-database-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2 — Database Query
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-pattern-analysis-risk-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3 — Pattern Analysis &amp; Risk Assessment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-respond-report-store-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4 — Respond, Report &amp; Store Memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-configure-mcp-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Configure MCP Parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5 — Configure MCP Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#iceberg-mcp-iceberg-mcp-server-agent-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Iceberg MCP — iceberg-mcp-server (Agent 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lightmem-mcp-lightmem-chroma-agents-1-and-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LightMem MCP — lightmem-chroma (Agents 1 and 4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-test-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Test the Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6 — Test the Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario-a-first-contact-db-query-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario A — First Contact (DB Query Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scenario-b-cross-session-follow-up-with-prior-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario B — Cross-Session Follow-up (With Prior Memory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6b-deploy-and-access-via-the-agent-workflow-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6b — Deploy and Access via the Agent Workflow Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-review-the-trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 — Review the Trace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-the-synthetic-banking-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix — The Synthetic Banking Dataset
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix — The Synthetic Banking Dataset">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#whats-in-the-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's in the dataset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-data-is-generated-and-loaded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the data is generated and loaded
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-sarah-williams-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Sarah Williams scenario
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="digital-banking-chatbot-with-cross-session-memory">Digital Banking Chatbot with Cross-Session Memory<a class="headerlink" href="#digital-banking-chatbot-with-cross-session-memory" title="Permanent link">&para;</a></h1>
+<p><img alt="A Banking Chatbot That Remembers You — Persistent Cross-Session Intelligence powered by AI Agent Studio" src="../../../images/banking_chatbot_pptx/slide-01.jpg" /></p>
+<h2 id="what-problem-does-this-solve">What Problem Does This Solve?<a class="headerlink" href="#what-problem-does-this-solve" title="Permanent link">&para;</a></h2>
+<p>Every time a customer contacts a standard AI support chatbot, the session starts from zero.</p>
+<blockquote>
+<p><em>"I already explained this last time."</em><br />
+<em>"Why do I have to go through this again?"</em><br />
+<em>"I did what you asked. Why is nothing fixed?"</em></p>
+</blockquote>
+<p>These aren't complaints about attitude — they're complaints about <strong>memory</strong>. A stateless AI sees this message, this session, and nothing before it. Every contact is a first contact.</p>
+<p><img alt="Every support call starts from zero — what a standard AI sees vs. what it misses" src="../../../images/banking_chatbot_pptx/slide-02.jpg" /></p>
+<p>This demo shows a <strong>four-agent pipeline</strong> in Cloudera AI Agent Studio that fixes exactly that. The same customer contacts support twice, days apart — and the second time, the agent already knows their story.</p>
+<hr />
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>User message {input}
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        ▼
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>┌──────────────────┐
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   AGENT 1        │  ← LightMem MCP: retrieve_memory
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   Memory Scout   │    Classify intent · extract identifiers
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└────────┬─────────┘    Summarise prior context from memory
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>         │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>         ▼
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>┌──────────────────┐
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   AGENT 2        │  ← iceberg-mcp-server (live Impala queries)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   Data Analyst   │    Accounts · transactions · cards · loans · cases
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>└────────┬─────────┘
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>         │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>         ▼
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>┌──────────────────┐
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   AGENT 3        │    Pure LLM reasoning over Agents 1 + 2 outputs
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   Risk Analyst   │    Detect cross-session patterns · assign risk tier
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└────────┬─────────┘    Determine escalation path · define response strategy
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>         │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>         ▼
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>┌──────────────────┐
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   AGENT 4        │  ← LightMem MCP: get_timestamp + add_memory
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   Support Advisor│    Compose customer response · store memory note
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>└──────────────────┘
+</code></pre></div>
+<p><strong>Memory bookends the pipeline:</strong> Agent 1 reads from memory <em>before</em> any data query; Agent 4 writes to memory <em>after</em> every interaction. Agent 3 — the key innovation — does not touch any database at all. It reasons purely over what Agents 1 and 2 found, connecting patterns across time.</p>
+<p><img alt="Four specialists, one seamless conversation — full agentic chatbot architecture with VectorDB, LightMem, Impala Data Lakehouse, and MCP" src="../../../images/banking_chatbot_pptx/slide-03.jpg" /></p>
+<hr />
+<h2 id="the-story-two-sessions-one-customer">The Story: Two Sessions, One Customer<a class="headerlink" href="#the-story-two-sessions-one-customer" title="Permanent link">&para;</a></h2>
+<h3 id="the-data-behind-every-answer">The data behind every answer<a class="headerlink" href="#the-data-behind-every-answer" title="Permanent link">&para;</a></h3>
+<p>Agent 2 queries six live tables — and Agent 3 looks for patterns across them:</p>
+<p><img alt="The data behind every answer — 200 customers, 1,020 transactions, account lock and freeze reasons" src="../../../images/banking_chatbot_pptx/slide-04.jpg" /></p>
+<blockquote>
+<p>The <code>banking_chatbot_db</code> behind these queries is fully synthetic. See the <strong>Appendix — The Synthetic Banking Dataset</strong> at the end of this guide for how it is generated and loaded.</p>
+</blockquote>
+<h3 id="session-1-why-is-my-account-locked-first-contact">Session 1 — "Why is my account locked?" (First Contact)<a class="headerlink" href="#session-1-why-is-my-account-locked-first-contact" title="Permanent link">&para;</a></h3>
+<p>Sarah Williams forgets her password, tries five times, and locks herself out. She contacts the chatbot, frustrated.</p>
+<p><img alt="Day 1 — &quot;Why is my account locked?&quot; — first contact, system starts cold, four agents light up in sequence" src="../../../images/banking_chatbot_pptx/slide-05.jpg" /></p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Action</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Memory Scout</td>
+<td><code>retrieve_memory</code></td>
+<td>0 results — no prior history</td>
+</tr>
+<tr>
+<td>Data Analyst</td>
+<td>Query <code>accounts</code></td>
+<td>Lock reason: <code>FAILED_LOGINS</code></td>
+</tr>
+<tr>
+<td>Risk Analyst</td>
+<td>Pattern detection</td>
+<td>Risk tier: <code>MEDIUM</code> — security lock, no fraud signal</td>
+</tr>
+<tr>
+<td>Support Advisor</td>
+<td>Compose response</td>
+<td>Explains lock, outlines verification steps, saves memory note</td>
+</tr>
+</tbody>
+</table>
+<p>The chatbot quietly stores a structured note — not the full transcript, but a dense, parseable summary the next agent can retrieve instantly:</p>
+<p><img alt="What the agent remembers — structured note stored after Session 1, with CUSTOMER, SESSION, INTENT, ISSUE, ACTION TAKEN fields" src="../../../images/banking_chatbot_pptx/slide-07.jpg" /></p>
+<h3 id="session-2-why-is-my-account-still-frozen-cross-session">Session 2 — "Why is my account still frozen?" (Cross-Session)<a class="headerlink" href="#session-2-why-is-my-account-still-frozen-cross-session" title="Permanent link">&para;</a></h3>
+<p>Four days later, Sarah is back. She submitted her ID the same day — but her account is still locked and she has bills due.</p>
+<p><img alt="A few days later — the memory catches up; CROSS-SESSION LINK and SUPERSEDES fields chain the two notes together" src="../../../images/banking_chatbot_pptx/slide-08.jpg" /></p>
+<p><img alt="Session 2 — &quot;Why is my account still frozen?&quot; — Agent 1 retrieves prior note, Agent 3 detects anomalous delay, escalation triggered" src="../../../images/banking_chatbot_pptx/slide-06.jpg" /></p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Action</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Memory Scout</td>
+<td><code>retrieve_memory</code></td>
+<td>Prior note found — verification directed, follow-up expected</td>
+</tr>
+<tr>
+<td>Data Analyst</td>
+<td>Query <code>accounts</code></td>
+<td>Still <code>LOCKED</code> — no reinstatement record</td>
+</tr>
+<tr>
+<td>Risk Analyst</td>
+<td>Pattern detection</td>
+<td><strong>Cross-session pattern detected:</strong> customer completed requested action, 4-day delay is anomalous → <strong>escalate</strong></td>
+</tr>
+<tr>
+<td>Support Advisor</td>
+<td>Compose response</td>
+<td>References first call by date, validates frustration, escalates to security team</td>
+</tr>
+</tbody>
+</table>
+<p>No re-explanation needed. The agent already knows she held up her end.</p>
+<div class="admonition info">
+<p class="admonition-title">Why this matters</p>
+<p>Without memory: Session 2 is handled as a standalone account inquiry.<br />
+With memory: Session 2 triggers an escalation because the system knows she already did everything right.</p>
+</div>
+<p><img alt="The same customer. A completely different outcome. Memory is the difference between resolving a case and re-opening it." src="../../../images/banking_chatbot_pptx/slide-12.jpg" /></p>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Agent Studio application launched in your Cloudera AI project</li>
+<li>Access to create CAI Jobs and Applications in your project</li>
+<li><strong>ChromaDB vector database</strong> deployed — see below (required before registering LightMem MCP)</li>
+<li><strong>LightMem MCP</strong> (<code>lightmem-chroma</code>) registered — see Step 0 below</li>
+<li><strong>Iceberg MCP</strong> (<code>iceberg-mcp-server</code>) registered — see Step 0 below</li>
+<li>OpenAI API key (provided by instructor)</li>
+</ul>
+<h3 id="deploy-chromadb-vector-database">Deploy ChromaDB (vector database)<a class="headerlink" href="#deploy-chromadb-vector-database" title="Permanent link">&para;</a></h3>
+<p>The LightMem MCP server stores and retrieves memories in a ChromaDB vector database. Each participant deploys their own instance so memory collections stay isolated.</p>
+<h4 id="download-the-deployment-scripts">Download the deployment scripts<a class="headerlink" href="#download-the-deployment-scripts" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Download</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deploy job script</td>
+<td><a download="download" href="../downloads/chroma_cai_app/deploy_chroma.py">deploy_chroma.py</a></td>
+</tr>
+<tr>
+<td>Application entry point</td>
+<td><a download="download" href="../downloads/chroma_cai_app/run_chroma.py">run_chroma.py</a></td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td><a download="download" href="../downloads/chroma_cai_app/requirements.txt">requirements.txt</a></td>
+</tr>
+</tbody>
+</table>
+<p>Upload the <code>chroma_cai_app/</code> folder to your CAI project root (alongside Agent Studio), preserving the directory structure:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/home/cdsw/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>└── chroma_cai_app/
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ├── deploy_chroma.py
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    ├── run_chroma.py
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    └── requirements.txt
+</code></pre></div>
+<p>Optionally install dependencies before running the deploy job:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>chroma_cai_app/requirements.txt
+</code></pre></div>
+<h4 id="run-the-deploy-job">Run the deploy job<a class="headerlink" href="#run-the-deploy-job" title="Permanent link">&para;</a></h4>
+<ol>
+<li>In your CAI project, go to <strong>Jobs → New Job</strong>.</li>
+<li>Configure the job:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Deploy Chroma</code></td>
+</tr>
+<tr>
+<td><strong>Script</strong></td>
+<td><code>chroma_cai_app/deploy_chroma.py</code></td>
+</tr>
+<tr>
+<td><strong>Editor</strong></td>
+<td>VS Code</td>
+</tr>
+<tr>
+<td><strong>Kernel</strong></td>
+<td>Python 3.11</td>
+</tr>
+</tbody>
+</table>
+<p>The deploy script (<code>deploy_chroma.py</code>) launches ChromaDB as a standalone CAI Application. It reads an <code>app_suffix</code> environment variable to generate a unique application name per participant.</p>
+<ol>
+<li>Under <strong>Environment Variables</strong>, add:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>app_suffix</code></td>
+<td>A unique identifier for you (e.g. <code>db-2</code>, your initials)</td>
+</tr>
+</tbody>
+</table>
+<p>Use a suffix that is unique to you — this prevents your Chroma application from conflicting with other participants' instances.</p>
+<ol>
+<li>Click <strong>Run</strong> (or <strong>Create and Run</strong>) and wait for the job to complete.</li>
+<li>Go to <strong>Applications</strong> in your CAI project. You should see a running application named <code>Chroma Vector DB - &lt;your_suffix&gt;</code>.</li>
+<li>Copy the application URL — you will use it as <code>CHROMA_HOST</code> when configuring LightMem MCP in Step 0 and in the workflow <strong>Configure</strong> step.</li>
+</ol>
+<p>Use the full HTTPS application URL (for example <code>https://chroma-db-2-&lt;project-id&gt;.ml-xxxx.cloudera.site</code>) with no trailing slash.</p>
+<hr />
+<h2 id="step-0-register-the-two-mcp-servers">Step 0 — Register the Two MCP Servers<a class="headerlink" href="#step-0-register-the-two-mcp-servers" title="Permanent link">&para;</a></h2>
+<p>Before creating the workflow, register both MCP servers in <strong>Tools Catalog → MCP Servers → Register</strong>.</p>
+<h3 id="lightmem-mcp-lightmem-chroma">LightMem MCP — <code>lightmem-chroma</code><a class="headerlink" href="#lightmem-mcp-lightmem-chroma" title="Permanent link">&para;</a></h3>
+<p>Install from the <a href="https://github.com/FerdinandZhong/LightMem">LightMem GitHub repository</a> (<code>mcp-light-chroma</code> branch) — not the PyPI <code>lightmem[chroma]</code> package:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">"lightmem"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uvx"</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"git+https://github.com/FerdinandZhong/LightMem.git@mcp-light-chroma"</span><span class="p">,</span><span class="w"> </span><span class="s2">"lightmem-mcp"</span><span class="p">],</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="nt">"OPENAI_API_KEY"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${OPENAI_API_KEY}"</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="nt">"CHROMA_HOST"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${CHROMA_HOST}"</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="nt">"LIGHTMEM_COLLECTION_NAME"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${LIGHTMEM_COLLECTION_NAME}"</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>Agent Studio does not save environment variable values for security reasons. Use <code>${VAR_NAME}</code> placeholders here — actual values are entered when configuring the workflow.</p>
+</blockquote>
+<p>After registration, the server appears in the catalog as <strong><code>lightmem-chroma</code></strong>. It exposes these tools:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>add_memory</code></td>
+<td>Store a new memory entry (user input + assistant reply)</td>
+</tr>
+<tr>
+<td><code>retrieve_memory</code></td>
+<td>Semantic search over stored memories</td>
+</tr>
+<tr>
+<td><code>get_timestamp</code></td>
+<td>Get the current timestamp for memory metadata</td>
+</tr>
+<tr>
+<td><code>configure_lightmem</code></td>
+<td>Update LightMem runtime configuration</td>
+</tr>
+<tr>
+<td><code>show_lightmem_instance</code></td>
+<td>Display the current LightMem instance details</td>
+</tr>
+<tr>
+<td><code>offline_update</code></td>
+<td>Batch update memory entries offline</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OPENAI_API_KEY</code></td>
+<td>Provided by instructor</td>
+</tr>
+<tr>
+<td><code>CHROMA_HOST</code></td>
+<td>URL of your ChromaDB application from the prerequisite step <strong>or</strong> the shared URL provided by the instructor</td>
+</tr>
+<tr>
+<td><code>LIGHTMEM_COLLECTION_NAME</code></td>
+<td>Choose your own name (e.g. <code>banking_test</code>) to start fresh, or <code>banking_chatbot_memory</code> to access pre-loaded memories</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Testing with and without memory</p>
+<ul>
+<li><strong>Own ChromaDB + unique collection name</strong> → pipeline completes with no prior context; all sessions are first-contact.</li>
+<li><strong>Shared ChromaDB + <code>banking_chatbot_memory</code></strong> → Agent 1 retrieves prior notes and the system demonstrates cross-session pattern detection.</li>
+</ul>
+</div>
+<h3 id="iceberg-mcp-iceberg-mcp-server">Iceberg MCP — <code>iceberg-mcp-server</code><a class="headerlink" href="#iceberg-mcp-iceberg-mcp-server" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">"iceberg-mcp-server"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uvx"</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"git+https://github.com/cloudera/iceberg-mcp-server@main"</span><span class="p">,</span><span class="w"> </span><span class="s2">"run-server"</span><span class="p">],</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="nt">"IMPALA_HOST"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${IMPALA_HOST}"</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="nt">"IMPALA_PORT"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${IMPALA_PORT}"</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">        </span><span class="nt">"IMPALA_USER"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${IMPALA_USER}"</span><span class="p">,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">        </span><span class="nt">"IMPALA_PASSWORD"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${IMPALA_PASSWORD}"</span><span class="p">,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">        </span><span class="nt">"IMPALA_DATABASE"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${IMPALA_DATABASE}"</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IMPALA_HOST</code></td>
+<td>Provided by instructor</td>
+</tr>
+<tr>
+<td><code>IMPALA_PORT</code></td>
+<td><code>443</code></td>
+</tr>
+<tr>
+<td><code>IMPALA_USER</code></td>
+<td>Your CDP profile username</td>
+</tr>
+<tr>
+<td><code>IMPALA_PASSWORD</code></td>
+<td>Your CDP workload password</td>
+</tr>
+<tr>
+<td><code>IMPALA_DATABASE</code></td>
+<td><code>banking_chatbot_db</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="step-1-create-the-workflow">Step 1 — Create the Workflow<a class="headerlink" href="#step-1-create-the-workflow" title="Permanent link">&para;</a></h2>
+<p>In Agent Studio, click <strong>Agentic Workflows → Create Workflow</strong>.</p>
+<ul>
+<li><strong>Workflow Name</strong>: <code>Digital Banking Chatbot with Memory</code></li>
+<li>Click <strong>Create Workflow</strong></li>
+</ul>
+<p><img alt="Create the workflow" src="../../../images/digital_banking_chatbot_workflow/create_the_chatbot_workflow.png" /></p>
+<hr />
+<h2 id="step-2-configure-workflow-settings">Step 2 — Configure Workflow Settings<a class="headerlink" href="#step-2-configure-workflow-settings" title="Permanent link">&para;</a></h2>
+<p>In the <strong>Add Agents</strong> editor:</p>
+<table>
+<thead>
+<tr>
+<th>Toggle</th>
+<th>Setting</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Is Conversational</strong></td>
+<td><strong>OFF</strong></td>
+<td>Each customer message is a self-contained pipeline run</td>
+</tr>
+<tr>
+<td><strong>Manager Agent</strong></td>
+<td><strong>OFF</strong></td>
+<td>Sequential pipeline — no routing needed</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="step-3-add-all-four-agents">Step 3 — Add All Four Agents<a class="headerlink" href="#step-3-add-all-four-agents" title="Permanent link">&para;</a></h2>
+<p>Click <strong>Create or Edit Agents</strong> to open the agent panel. Create all four agents using the definitions below. After filling in each agent's details, click <strong>Create Agent</strong> before moving to the next.</p>
+<h3 id="agent-1-memory-scout">Agent 1 — Memory Scout<a class="headerlink" href="#agent-1-memory-scout" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Memory Scout</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Prior Context Retrieval &amp; Intent Classification Specialist</code></td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You are the first point of contact in the support pipeline. Your job is to look back before anyone looks forward. You retrieve everything the bank knows about this customer from prior interactions, classify what they need now, and hand a fully contextualised brief to the agents that follow. You never compose responses — your only output is structured context.</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>(1) Retrieve prior customer memory via MCP (<code>retrieve_memory</code>) before anything else. (2) Classify the message intent. (3) Extract identifiers from the message or infer them from memory. (4) Produce a structured context brief for downstream agents.</td>
+</tr>
+<tr>
+<td><strong>MCP to add</strong></td>
+<td><code>lightmem-chroma</code> — select only the <strong><code>retrieve_memory</code></strong> function</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Create Memory Scout Agent" src="../../../images/digital_banking_chatbot_workflow/create_the_first_agent_for_memory_retrieval.png" /></p>
+<hr />
+<h3 id="agent-2-data-analyst">Agent 2 — Data Analyst<a class="headerlink" href="#agent-2-data-analyst" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Data Analyst</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Live Banking Database Query Specialist</code></td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You translate the Memory Scout's structured brief into precise database lookups. You know the schema and write efficient SQL. You do not analyse or interpret — you retrieve the freshest live data and hand it on.</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>(1) Use Agent 1's intent and extracted_identifiers to execute the right queries. (2) Retrieve complete, current records for all relevant entities. (3) Return structured query results for downstream analysis.</td>
+</tr>
+<tr>
+<td><strong>MCP to add</strong></td>
+<td><code>iceberg-mcp-server</code> — add all available functions (<code>execute_query</code>, <code>get_schema</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Create Data Analyst Agent" src="../../../images/digital_banking_chatbot_workflow/create_the_second_agent_for_db_query.png" /></p>
+<p><img alt="Add Iceberg MCP to Data Analyst" src="../../../images/digital_banking_chatbot_workflow/add_iceberg_mcp_to_second_agent.png" /></p>
+<p><strong>Database tables available in <code>banking_chatbot_db</code>:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Key Columns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>customers</code></td>
+<td><code>customer_id</code>, <code>full_name</code>, <code>email</code>, <code>phone</code>, <code>kyc_status</code></td>
+</tr>
+<tr>
+<td><code>accounts</code></td>
+<td><code>account_id</code>, <code>customer_id</code>, <code>account_type</code>, <code>account_number_masked</code>, <code>current_balance</code>, <code>available_balance</code>, <code>status</code>, <code>lock_reason</code></td>
+</tr>
+<tr>
+<td><code>transactions</code></td>
+<td><code>transaction_id</code>, <code>account_id</code>, <code>customer_id</code>, <code>amount</code>, <code>status</code>, <code>initiated_at</code>, <code>failure_reason</code>, <code>notes</code></td>
+</tr>
+<tr>
+<td><code>loans</code></td>
+<td><code>loan_id</code>, <code>customer_id</code>, <code>loan_type</code>, <code>outstanding_balance</code>, <code>monthly_payment</code>, <code>next_payment_date</code>, <code>payments_overdue</code>, <code>status</code></td>
+</tr>
+<tr>
+<td><code>cards</code></td>
+<td><code>card_id</code>, <code>account_id</code>, <code>customer_id</code>, <code>card_type</code>, <code>card_number_masked</code>, <code>status</code>, <code>block_reason</code>, <code>credit_limit</code></td>
+</tr>
+<tr>
+<td><code>support_cases</code></td>
+<td><code>case_id</code>, <code>customer_id</code>, <code>case_type</code>, <code>status</code>, <code>priority</code>, <code>account_id</code>, <code>created_at</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="agent-3-risk-analyst">Agent 3 — Risk Analyst<a class="headerlink" href="#agent-3-risk-analyst" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Risk Analyst</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Cross-Session Pattern Detection &amp; Escalation Strategy Specialist</code></td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You see what individual sessions cannot. By combining live data from the database with the customer's prior interaction history from memory, you detect whether the current issue is a new, isolated problem — or part of a larger pattern that has been building across sessions. Your risk assessments drive escalation decisions and shape how the Support Advisor responds.</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>(1) Synthesise Agent 1 (prior memory) with Agent 2 (live data) to detect cross-session patterns. (2) Assign a risk tier: LOW, MEDIUM, HIGH, or CRITICAL. (3) Produce a response strategy brief for the Support Advisor.</td>
+</tr>
+<tr>
+<td><strong>Tools / MCP</strong></td>
+<td>None — pure LLM reasoning over Agents 1 and 2 outputs</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Create Risk Analyst Agent" src="../../../images/digital_banking_chatbot_workflow/create_the_third_agent_for_analysis.png" /></p>
+<hr />
+<h3 id="agent-4-support-advisor">Agent 4 — Support Advisor<a class="headerlink" href="#agent-4-support-advisor" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Support Advisor</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Customer Response Composition &amp; Memory Persistence Specialist</code></td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You are the voice of the bank. You take everything the pipeline has uncovered — prior history, live data, risk analysis — and turn it into a clear, empathetic, actionable response that protects the customer. You are also the pipeline's memory keeper: the last thing you do in every interaction is store a structured memory note so the next session starts with full context.</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>(1) Compose a customer response that integrates prior context, live data, and risk analysis. (2) Acknowledge prior interactions explicitly — the customer should feel remembered. (3) If a cross-session pattern was detected, surface it clearly and empathetically. (4) Store a structured memory note via MCP <code>add_memory</code> after every interaction.</td>
+</tr>
+<tr>
+<td><strong>MCP to add</strong></td>
+<td><code>lightmem-chroma</code> — select <strong><code>get_timestamp</code></strong> and <strong><code>add_memory</code></strong> functions</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Create Support Advisor Agent" src="../../../images/digital_banking_chatbot_workflow/create_the_fourth_agent_for_response_and_memory_storage.png" /></p>
+<hr />
+<h2 id="step-4-add-all-four-tasks">Step 4 — Add All Four Tasks<a class="headerlink" href="#step-4-add-all-four-tasks" title="Permanent link">&para;</a></h2>
+<p>Click <strong>Save &amp; Next</strong> to advance to <strong>Add Tasks</strong>. Create one task per agent.</p>
+<hr />
+<h3 id="task-1-memory-retrieval-intent-classification">Task 1 — Memory Retrieval &amp; Intent Classification<a class="headerlink" href="#task-1-memory-retrieval-intent-classification" title="Permanent link">&para;</a></h3>
+<p><strong>Assigned to:</strong> Memory Scout</p>
+<p><strong>Task Description:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Given the customer's message {input}, first extract the customer's identifying
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>information (name, customer ID, phone number, or email) from the message and
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>classify the intent. Call retrieve_memory using "&lt;customer_name&gt; &lt;classified_intent_label&gt;"
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>as the query — for example "Sarah Williams account access" or "Maria Garcia fraud report".
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Never copy raw situation keywords verbatim from the customer's message
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>(e.g. "account locked", "card declined", "login failed") — these cause semantic
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>leakage, matching records from other customers with similar situations.
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>The intent label must come from your own classification, not the customer's wording.
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  Correct:  retrieve_memory(query="Sarah Williams account access", limit=5)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  Wrong:    retrieve_memory(query="Sarah Williams account locked login failed card declined")
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>After retrieval, verify identity: check that the CUSTOMER: field in each returned note
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>matches the customer who sent this message. Discard any note where the name or ID does
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>not match. If no matching note is found, set prior_context_flag = null and proceed as
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>first-time contact.
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>Classify the message into one of five intent categories:
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  ACCOUNT_STATUS | TRANSACTION_INQUIRY | LOAN_INQUIRY | CARD_INQUIRY | FRAUD_REPORT
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>Produce a structured context brief for the next agent.
+</code></pre></div></p>
+<p><strong>Expected Output:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">"intent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACCOUNT_STATUS"</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">"extracted_identifiers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nt">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sarah Williams"</span><span class="p">},</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">"prior_sessions"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">"memories_retrieved"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">"open_unresolved_cases"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">"prior_context_flag"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><img alt="Create First Task" src="../../../images/digital_banking_chatbot_workflow/create_first_task_connecting_to_first_agent.png" /></p>
+<hr />
+<h3 id="task-2-database-query">Task 2 — Database Query<a class="headerlink" href="#task-2-database-query" title="Permanent link">&para;</a></h3>
+<p><strong>Assigned to:</strong> Data Analyst</p>
+<p><strong>Task Description:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Using the intent and identifiers from Agent 1, execute the appropriate queries
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>against iceberg-mcp-server (database: banking_chatbot_db):
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  ACCOUNT_STATUS:      query accounts + open support_cases
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  TRANSACTION_INQUIRY: retrieve the transaction(s) plus failure/dispute details
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  FRAUD_REPORT:        retrieve last 20 transactions + open fraud cases + account status
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  CARD_INQUIRY:        join cards with accounts
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  LOAN_INQUIRY:        retrieve loan records; compute arrears as
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>                       monthly_payment × payments_overdue
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Return all results as structured data for downstream agents.
+</code></pre></div></p>
+<p><strong>Expected Output:</strong> Structured JSON with query results matching the intent type.</p>
+<hr />
+<h3 id="task-3-pattern-analysis-risk-assessment">Task 3 — Pattern Analysis &amp; Risk Assessment<a class="headerlink" href="#task-3-pattern-analysis-risk-assessment" title="Permanent link">&para;</a></h3>
+<p><strong>Assigned to:</strong> Risk Analyst</p>
+<p><strong>Task Description:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Synthesise Agent 1's prior session history with Agent 2's live data to detect
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cross-session patterns — such as a prior fraud case followed by a social engineering
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>contact, or a prior account lock followed by a password-reset request.
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Assign a risk tier: LOW, MEDIUM, HIGH, or CRITICAL.
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Determine the appropriate escalation path.
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>Produce a response strategy brief for the Support Advisor specifying:
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  - what facts to lead with
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  - which prior context to reference explicitly
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  - how to frame any cross-session connection
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  - tone adjustments
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  - any critical safety instructions the customer must receive
+</code></pre></div></p>
+<p><strong>Expected Output:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">"risk_tier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MEDIUM"</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">"cross_session_pattern_detected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">"escalation_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STANDARD"</span><span class="p">,</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="nt">"response_strategy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nt">"lead_with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Account locked due to failed login attempts"</span><span class="p">,</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nt">"tone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Calm and helpful."</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><img alt="Adding Tasks 2 and 3" src="../../../images/digital_banking_chatbot_workflow/add_other_tasks_connecting_to_corresponding_agents.png" /></p>
+<hr />
+<h3 id="task-4-respond-report-store-memory">Task 4 — Respond, Report &amp; Store Memory<a class="headerlink" href="#task-4-respond-report-store-memory" title="Permanent link">&para;</a></h3>
+<p><strong>Assigned to:</strong> Support Advisor</p>
+<p><strong>Task Description:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Using all prior agent outputs, compose a warm, direct, and actionable customer-facing
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>response:
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  - Lead with explicit safety instructions for any fraud or scam scenario
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  - Reference prior case numbers and session dates when memory exists —
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    the customer should never feel like they are starting from zero
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  - Surface cross-session connections empathetically when Agent 3 detected a pattern
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  - Proactively offer escalation for any CRITICAL, HIGH, or fraud-related risk tier
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>After composing the response, store a memory note in two steps — do not skip either:
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>Step 1: Call get_timestamp with no arguments. Save the returned timestamp string.
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>Step 2: Call add_memory using the timestamp from Step 1:
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>  - user_input = "Customer: &lt;full_name&gt; (&lt;customer_id&gt;) - &lt;intent&gt; - &lt;one-phrase issue summary&gt;"
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>  - assistant_reply = the structured memory note (template below)
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>  - timestamp = the value returned by Step 1
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>  - force_extract = true
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>  - force_segment = false
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>Memory note format:
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>  CUSTOMER: &lt;full_name&gt; (&lt;customer_id&gt;).
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>  SESSION: &lt;YYYY-MM-DD&gt;.
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>  INTENT: &lt;intent category&gt;.
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>  ISSUE: &lt;one-sentence description&gt;.
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>  KEY DETAILS: &lt;account IDs, masked numbers, amounts, dates&gt;.
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>  ACTION TAKEN: &lt;what was done or communicated&gt;.
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>  FOLLOW-UP EXPECTED: &lt;Yes/No — and if Yes, what trigger to watch for&gt;.
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>  CROSS-SESSION LINK: &lt;None, or pattern type and linked session date/case reference&gt;.
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>  RISK LEVEL: &lt;LOW | MEDIUM | HIGH | CRITICAL&gt;.
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>  ESCALATED: &lt;Yes/No&gt;.
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>  CASE REF: &lt;case_id if opened or referenced, else omit&gt;.
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>  SUPERSEDES: &lt;prior note date and account if follow-up, else omit&gt;.
+</code></pre></div></p>
+<p>Once all four tasks are added:</p>
+<p><img alt="All Four Tasks Added" src="../../../images/digital_banking_chatbot_workflow/finish_adding_tasks.png" /></p>
+<hr />
+<h2 id="step-5-configure-mcp-parameters">Step 5 — Configure MCP Parameters<a class="headerlink" href="#step-5-configure-mcp-parameters" title="Permanent link">&para;</a></h2>
+<p>Click <strong>Save &amp; Next</strong> to advance to <strong>Configure</strong>.</p>
+<h3 id="iceberg-mcp-iceberg-mcp-server-agent-2">Iceberg MCP — iceberg-mcp-server (Agent 2)<a class="headerlink" href="#iceberg-mcp-iceberg-mcp-server-agent-2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IMPALA_HOST</code></td>
+<td>Provided by instructor</td>
+</tr>
+<tr>
+<td><code>IMPALA_PORT</code></td>
+<td><code>443</code></td>
+</tr>
+<tr>
+<td><code>IMPALA_USER</code></td>
+<td>Your CDP profile username</td>
+</tr>
+<tr>
+<td><code>IMPALA_PASSWORD</code></td>
+<td>Your CDP workload password</td>
+</tr>
+<tr>
+<td><code>IMPALA_DATABASE</code></td>
+<td><code>banking_chatbot_db</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="lightmem-mcp-lightmem-chroma-agents-1-and-4">LightMem MCP — lightmem-chroma (Agents 1 and 4)<a class="headerlink" href="#lightmem-mcp-lightmem-chroma-agents-1-and-4" title="Permanent link">&para;</a></h3>
+<p>Fill in the same values for both agents that use this MCP:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OPENAI_API_KEY</code></td>
+<td>Provided by instructor</td>
+</tr>
+<tr>
+<td><code>CHROMA_HOST</code></td>
+<td>Your ChromaDB URL (empty testing) <strong>or</strong> the shared URL (pre-loaded memories)</td>
+</tr>
+<tr>
+<td><code>LIGHTMEM_COLLECTION_NAME</code></td>
+<td>Your chosen collection name, or <code>banking_chatbot_memory</code> for existing data</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Configure MCP Parameters" src="../../../images/digital_banking_chatbot_workflow/configure_the_mcp_clients.png" /></p>
+<p>Click <strong>Save &amp; Next</strong> to proceed to <strong>Test</strong>.</p>
+<hr />
+<h2 id="step-6-test-the-workflow">Step 6 — Test the Workflow<a class="headerlink" href="#step-6-test-the-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="scenario-a-first-contact-db-query-only">Scenario A — First Contact (DB Query Only)<a class="headerlink" href="#scenario-a-first-contact-db-query-only" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Hi, I'm Sarah Williams. I've been trying to log into my account
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>for the past hour and it keeps saying my password is wrong. Now I'm getting
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>a message that my account is locked. My debit card is also being declined.
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>I haven't done anything suspicious — I just forgot my password and kept retrying.
+</code></pre></div>
+<p><strong>Expected behaviour:</strong>
+- Agent 1 retrieves no prior memory (first contact)
+- Agent 2 queries the database — finds account locked due to <code>FAILED_LOGINS</code>
+- Agent 3 assigns risk tier <code>MEDIUM</code> (no cross-session pattern)
+- Agent 4 explains the lock, outlines verification steps, stores a memory note</p>
+<p><img alt="Test Scenario A — DB Query Result" src="../../../images/digital_banking_chatbot_workflow/test_the_workshop_db_query_samples.png" /></p>
+<hr />
+<h3 id="scenario-b-cross-session-follow-up-with-prior-memory">Scenario B — Cross-Session Follow-up (With Prior Memory)<a class="headerlink" href="#scenario-b-cross-session-follow-up-with-prior-memory" title="Permanent link">&para;</a></h3>
+<div class="admonition tip">
+<p class="admonition-title">Switch to the shared ChromaDB first</p>
+<p>Update <code>CHROMA_HOST</code> and <code>LIGHTMEM_COLLECTION_NAME</code> to point at the shared pre-loaded
+collection before running this scenario. Then re-run the workflow with the message below.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Hi, I just got a call from someone saying they're from the bank's fraud department.
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>They said my account is still under investigation and they need me to transfer $500
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>to a "safe account" to protect my money. It felt weird. Should I do it?
+</code></pre></div>
+<p><strong>Expected behaviour:</strong>
+- Agent 1 retrieves the prior note for this customer (FRAUD_ALERT, open case)
+- Agent 2 confirms the account is still locked
+- Agent 3 detects a <strong><code>COORDINATED_ATTACK</code></strong> pattern — <code>CRITICAL</code> risk tier
+- Agent 4 leads with immediate safety instructions, references the prior case, explains the two-event pattern, escalates urgently, stores a new note with <code>SUPERSEDES</code></p>
+<p><img alt="Test Scenario B — Cross-Session Memory Retrieval" src="../../../images/digital_banking_chatbot_workflow/test_follow_up_question_and_get_memory.png" /></p>
+<hr />
+<h2 id="step-6b-deploy-and-access-via-the-agent-workflow-portal">Step 6b — Deploy and Access via the Agent Workflow Portal<a class="headerlink" href="#step-6b-deploy-and-access-via-the-agent-workflow-portal" title="Permanent link">&para;</a></h2>
+<p>Once testing is satisfactory, click <strong>Deploy</strong> to publish the workflow as a live endpoint.</p>
+<p>The chatbot is accessed through a <strong>dynamic Agent Workflow UI</strong> — a single portal that
+connects to any Agent Studio workflow at runtime. You paste in the workflow URL and API
+key, and the portal builds the correct interface automatically.</p>
+<p><img alt="One portal, any workflow — paste a URL and API key, the portal fetches the workflow config and builds the right interface" src="../../../images/banking_chatbot_pptx/slide-09.jpg" /></p>
+<p>The portal and the workflow run in separate Cloudera AI environments and connect at
+runtime — the Inference Service hosts the UI; the CAI Workbench cluster hosts the four
+agents.</p>
+<p><img alt="The deployment stack — CAI Inference Service hosts the portal UI; CAI Workbench hosts the four-agent pipeline" src="../../../images/banking_chatbot_pptx/slide-10.jpg" /></p>
+<hr />
+<h2 id="step-7-review-the-trace">Step 7 — Review the Trace<a class="headerlink" href="#step-7-review-the-trace" title="Permanent link">&para;</a></h2>
+<p>Open the <strong>Logs</strong> tab to see every MCP call and LLM turn. The <strong>Flow Diagram</strong> lights up each agent node as it runs; the <strong>Playback</strong> bar lets you scrub through the full execution.</p>
+<p><img alt="Workflow Trace Details" src="../../../images/digital_banking_chatbot_workflow/tracng_of_the_workflow.png" /></p>
+<table>
+<thead>
+<tr>
+<th>Trace Step</th>
+<th>Agent</th>
+<th>What to check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>retrieve_memory_use</code></td>
+<td>Memory Scout</td>
+<td>Query uses <code>"&lt;name&gt; &lt;intent_label&gt;"</code> — not raw situation keywords</td>
+</tr>
+<tr>
+<td><code>get_schema_use</code> + <code>execute_query</code></td>
+<td>Data Analyst</td>
+<td>Correct tables queried for the intent type</td>
+</tr>
+<tr>
+<td><code>Cross-Session Pattern Detection</code></td>
+<td>Risk Analyst</td>
+<td><code>risk_tier</code> and <code>pattern_type</code> in the output</td>
+</tr>
+<tr>
+<td><code>get_timestamp</code> + <code>add_memory</code></td>
+<td>Support Advisor</td>
+<td>Memory note stored at end of every run</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>What you observed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sequential pipeline</strong></td>
+<td>No manager agent — four specialists run in order, each consuming the previous agent's output</td>
+</tr>
+<tr>
+<td><strong>Memory bookends</strong></td>
+<td>Agent 1 reads memory before any query; Agent 4 writes memory after every response</td>
+</tr>
+<tr>
+<td><strong>Identity + intent query</strong></td>
+<td>Agent 1 queries with <code>"&lt;name&gt; &lt;intent_label&gt;"</code> — never raw situation keywords — to prevent semantic leakage across customers</td>
+</tr>
+<tr>
+<td><strong>Cross-session intelligence</strong></td>
+<td>The same <code>LIGHTMEM_COLLECTION_NAME</code> across sessions is what enables pattern detection</td>
+</tr>
+<tr>
+<td><strong>Agent 3 is LLM-only</strong></td>
+<td>The most powerful agent calls no tools — it just reasons over what the other two found</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ChromaDB job fails</td>
+<td>Confirm <code>chroma_cai_app/deploy_chroma.py</code> is uploaded to the project root; set a unique <code>app_suffix</code> env var on the job</td>
+</tr>
+<tr>
+<td>Chroma application not running</td>
+<td>Wait 1–2 minutes after the deploy job completes; check <strong>Applications</strong> for <code>Chroma Vector DB - &lt;your_suffix&gt;</code></td>
+</tr>
+<tr>
+<td>Agent 1 returns no memory</td>
+<td>Expected with own empty ChromaDB — switch to shared URL with <code>banking_chatbot_memory</code> to test retrieval</td>
+</tr>
+<tr>
+<td>Agent 2 query fails</td>
+<td>Verify <code>IMPALA_HOST</code>, credentials, and <code>IMPALA_DATABASE = banking_chatbot_db</code></td>
+</tr>
+<tr>
+<td>Memory retrieved for wrong customer</td>
+<td>Agent 1 must use <code>"&lt;name&gt; &lt;intent_label&gt;"</code> as query; verify <code>CUSTOMER:</code> field in each returned note and discard mismatches</td>
+</tr>
+<tr>
+<td>Agent 4 does not store memory</td>
+<td>Check <code>OPENAI_API_KEY</code> and <code>CHROMA_HOST</code> are set for Agent 4's MCP configuration</td>
+</tr>
+<tr>
+<td>Cross-session pattern not detected</td>
+<td>Both sessions must use the same <code>CHROMA_HOST</code> and <code>LIGHTMEM_COLLECTION_NAME</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="appendix-the-synthetic-banking-dataset">Appendix — The Synthetic Banking Dataset<a class="headerlink" href="#appendix-the-synthetic-banking-dataset" title="Permanent link">&para;</a></h2>
+<p>The <code>banking_chatbot_db</code> that the Data Analyst (Agent 2) queries is <strong>fully synthetic</strong> — there is no real customer data. Instructors provision a shared, pre-loaded copy, so during the lab you simply point the Iceberg MCP at it. This appendix documents how that database is built, so you can recreate or extend it in your own environment.</p>
+<p><img alt="The synthetic banking dataset — six related tables covering customers, accounts, transactions, loans, cards, and support cases" src="../../../images/digital_banking_chatbot_workflow/synthetic_data_overview.png" /></p>
+<h3 id="whats-in-the-dataset">What's in the dataset<a class="headerlink" href="#whats-in-the-dataset" title="Permanent link">&para;</a></h3>
+<p>Six related tables — the same schema the Data Analyst queries in Step 3:</p>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Rows</th>
+<th>What it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>customers</code></td>
+<td>200</td>
+<td>Identity + KYC registry</td>
+</tr>
+<tr>
+<td><code>accounts</code></td>
+<td>205</td>
+<td>Checking / savings / money-market / credit accounts, with <code>status</code> and <code>lock_reason</code></td>
+</tr>
+<tr>
+<td><code>transactions</code></td>
+<td>1,020</td>
+<td>Debit / credit / payment history with <code>status</code> and <code>failure_reason</code></td>
+</tr>
+<tr>
+<td><code>loans</code></td>
+<td>15</td>
+<td>Active and historical loans</td>
+</tr>
+<tr>
+<td><code>cards</code></td>
+<td>20</td>
+<td>Debit / credit cards with <code>status</code> and <code>block_reason</code></td>
+</tr>
+<tr>
+<td><code>support_cases</code></td>
+<td>11</td>
+<td>Open and historical support cases</td>
+</tr>
+</tbody>
+</table>
+<p>A small, hand-authored core (customers <code>CUST-B001</code>–<code>CUST-B020</code> and their linked accounts, cards, loans, and cases) carries the demo's scripted scenarios; the rest is bulk-generated filler that gives the tables realistic query volume.</p>
+<h3 id="the-scripts">The scripts<a class="headerlink" href="#the-scripts" title="Permanent link">&para;</a></h3>
+<p>All files live in <code>extra_materials/</code> and share the same connection block at the top (<code>IMPALA_HOST</code>, <code>IMPALA_PORT</code>, <code>USERNAME</code>, <code>PASSWORD</code>, <code>DATABASE</code>) — set those for your CDP environment before running.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+<th>Download</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>create_tables_impala.sql</code></td>
+<td>Canonical DDL — the six <code>CREATE TABLE</code> definitions (stored as PARQUET), plus <code>LOAD DATA</code> and example queries</td>
+<td><a download="download" href="../downloads/synthetic_db/create_tables_impala.sql">create_tables_impala.sql</a></td>
+</tr>
+<tr>
+<td><code>create_impala_tables_banking.py</code></td>
+<td>Creates the six tables by executing the DDL from the <code>.sql</code> file (single source of truth)</td>
+<td><a download="download" href="../downloads/synthetic_db/create_impala_tables_banking.py">create_impala_tables_banking.py</a></td>
+</tr>
+<tr>
+<td><code>generate_more_data.py</code></td>
+<td>Bulk-generates synthetic customers, accounts, and transactions to reach demo volume</td>
+<td><a download="download" href="../downloads/synthetic_db/generate_more_data.py">generate_more_data.py</a></td>
+</tr>
+<tr>
+<td><code>load_data_to_impala_banking.py</code></td>
+<td>Loads the six CSVs into the Impala tables and runs post-load verification queries</td>
+<td><a download="download" href="../downloads/synthetic_db/load_data_to_impala_banking.py">load_data_to_impala_banking.py</a></td>
+</tr>
+<tr>
+<td><code>test_impala_connection.py</code></td>
+<td>Connectivity smoke test (handshake → auth → row-count spot-check → latency)</td>
+<td><a download="download" href="../downloads/synthetic_db/test_impala_connection.py">test_impala_connection.py</a></td>
+</tr>
+</tbody>
+</table>
+<p>Data files (CSV):</p>
+<ul>
+<li><a download="download" href="../downloads/synthetic_db/customers.csv">customers.csv</a></li>
+<li><a download="download" href="../downloads/synthetic_db/accounts.csv">accounts.csv</a></li>
+<li><a download="download" href="../downloads/synthetic_db/transactions.csv">transactions.csv</a></li>
+<li><a download="download" href="../downloads/synthetic_db/loans.csv">loans.csv</a></li>
+<li><a download="download" href="../downloads/synthetic_db/cards.csv">cards.csv</a></li>
+<li><a download="download" href="../downloads/synthetic_db/support_cases.csv">support_cases.csv</a></li>
+</ul>
+<h3 id="how-the-data-is-generated-and-loaded">How the data is generated and loaded<a class="headerlink" href="#how-the-data-is-generated-and-loaded" title="Permanent link">&para;</a></h3>
+<p>Run the scripts from the <code>extra_materials/</code> directory, after editing the connection block in each:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># 1. Verify connectivity to your Impala / CDW gateway</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>python<span class="w"> </span>test_impala_connection.py
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># 2. Create the six tables in banking_chatbot_db</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>python<span class="w"> </span>create_impala_tables_banking.py
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># 3. (optional) Expand the seed CSVs to full demo volume</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>python<span class="w"> </span>generate_more_data.py
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># 4. Load the CSVs into the tables</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>python<span class="w"> </span>load_data_to_impala_banking.py
+</code></pre></div>
+<p><code>generate_more_data.py</code> is seeded (<code>random.seed(42)</code>), so regeneration is reproducible. It <strong>appends</strong> bulk rows to the shipped CSVs — customers from <code>CUST-B021</code>, accounts from <code>ACC-100031</code>, transactions from <code>TXN-2026-000071</code> — to reach the 200 / 205 / 1,020-row volumes above, so run it <strong>once</strong> against a fresh checkout.</p>
+<h3 id="the-sarah-williams-scenario">The Sarah Williams scenario<a class="headerlink" href="#the-sarah-williams-scenario" title="Permanent link">&para;</a></h3>
+<p>The flagship walkthrough (Sessions 1 and 2 above) follows <strong>Sarah Williams (<code>CUST-B007</code>)</strong>, whose checking account <code>ACC-100013</code> is frozen on <strong>2026-05-14</strong> after five failed login attempts, with a follow-up on <strong>2026-05-18</strong>. That timeline is baked directly into the seed CSVs and pinned by an idempotent <code>patch_sarah_records()</code> step inside <code>generate_more_data.py</code> — so the CSVs stay the single source of truth and no separate patch step is required.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../nl_to_sql/nl_to_sql_workflow_as3/" class="md-footer__link md-footer__link--prev" aria-label="Previous: NL-to-SQL (Agent Studio 3.0)">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                NL-to-SQL (Agent Studio 3.0)
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../iot/uc1_predictive_maintenance/" class="md-footer__link md-footer__link--next" aria-label="Next: UC1: Predictive Maintenance">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                UC1: Predictive Maintenance
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "navigation.footer", "content.code.annotate", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/username-replacer.js"></script>
+      
+    
+  </body>
+</html>
