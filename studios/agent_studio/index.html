@@ -1,0 +1,3401 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hands-on lab demonstrating how Cloudera AI Agent Studio, RAG Studio, and Synthetic Data Studio interoperate — two focused demos plus a three-studio capstone.">
+      
+      
+      
+        <link rel="canonical" href="https://ferdinandzhong.github.io/handson-labs/studios/agent_studio/">
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../rag_studio/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Agent Studio - Cloudera AI Studios Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#agent-studio" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Cloudera AI Studios Lab" class="md-header__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cloudera AI Studios Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Agent Studio
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Studios
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/lab1_calculator_workflow/" class="md-tabs__link">
+          
+  
+  
+  Agent Studio Quickstart
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/agent_rag_demo/" class="md-tabs__link">
+          
+  
+  
+  RAG Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../synthetic_data_lab/SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-tabs__link">
+          
+  
+  
+  Synthetic Data Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/nl_to_sql/nl_to_sql_workflow/" class="md-tabs__link">
+          
+  
+  
+  NL-to-SQL Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/memory/digital_banking_chatbot/" class="md-tabs__link">
+          
+  
+  
+  Agent Memory Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/iot/uc1_predictive_maintenance/" class="md-tabs__link">
+          
+  
+  
+  IoT Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../hallucination_guardrails/anti_hallucination_lab/" class="md-tabs__link">
+          
+  
+  
+  Vehicle Manufacturing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/rag_studio_tool/" class="md-tabs__link">
+          
+  
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cloudera AI Studios Lab" class="md-nav__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    Cloudera AI Studios Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Studios
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Studios
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-an-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is an Agent?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-setup-project-session-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Setup: Project, Session &amp; Studio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Setup: Project, Session &amp; Studio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-create-a-cai-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Create a CAI project
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-project-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Project settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-start-a-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Start a Session
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-launch-the-agent-studio-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Launch the Agent Studio application
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-deployment-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Deployment Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registering-llms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering LLMs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registering LLMs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-your-own-llm-dont-depend-on-a-shared-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy your own LLM (don't depend on a shared endpoint)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tested-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tested Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-a-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building a Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building a Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create the Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add Agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-add-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Add Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Configure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-deploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Deploy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools-catalog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools Catalog
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tools Catalog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tool-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-a-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing a Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-model-context-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP (Model Context Protocol)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCP (Model Context Protocol)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-an-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering an MCP server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-env-block-your-configurable-keys-user_key1-user_key2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The env block = your configurable keys (user_key1, user_key2, …)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-your-own-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring your own MCP server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mcp-servers-used-across-the-demos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP servers used across the demos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observability-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observability &amp; Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tool-tool-instance-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool / Tool Instance Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demo-tracks-using-agent-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo Tracks Using Agent Studio
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rag_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic_data_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio Quickstart
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Studio Quickstart
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/lab1_calculator_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1: Build Your First Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/lab2_calculator_with_tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2: Workflow with a Custom Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RAG Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/agent_rag_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic RAG-App Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Synthetic Data Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/synthetic_data_d1_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D1: LLM-Driven Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/synthetic_data_d2_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D2: SDS Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/synthetic_data_d3_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D3: Production Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/SYNTHETIC_DATA_DEMO_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workshop Presenter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NL-to-SQL Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/nl_to_sql/nl_to_sql_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Agentic Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/nl_to_sql/nl_to_sql_workflow_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Memory Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Memory Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/memory/digital_banking_chatbot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Banking Chatbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IoT Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/iot/uc1_predictive_maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC1: Predictive Maintenance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/iot/uc2_predictive_quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC2: Predictive Quality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vehicle Manufacturing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Vehicle Manufacturing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hallucination_guardrails/anti_hallucination_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Grounding + Guardrails (POC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hallucination_guardrails/anti_hallucination_lab_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anti-Hallucination (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/rag_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/synthetic_data_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jailbreak_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jailbreak & Input Safety Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/nl_query_evaluator_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL Query Evaluator Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/ontology_grounding_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ontology Grounding Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g1_verdict_lock_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G1: Verdict Lock Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g2_claim_citation_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G2: Claim Citation Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g3_grounding_verifier_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G3: Grounding Verifier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g4_action_catalog_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G4: Action Catalog Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-an-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is an Agent?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-setup-project-session-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Setup: Project, Session &amp; Studio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Setup: Project, Session &amp; Studio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-create-a-cai-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Create a CAI project
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-project-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Project settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-start-a-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Start a Session
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-launch-the-agent-studio-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Launch the Agent Studio application
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-deployment-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Deployment Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registering-llms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering LLMs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registering LLMs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-your-own-llm-dont-depend-on-a-shared-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy your own LLM (don't depend on a shared endpoint)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tested-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tested Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-a-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building a Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building a Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create the Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add Agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-add-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Add Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Configure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-deploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Deploy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools-catalog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools Catalog
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tools Catalog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tool-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-a-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing a Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-model-context-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP (Model Context Protocol)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCP (Model Context Protocol)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-an-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering an MCP server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-env-block-your-configurable-keys-user_key1-user_key2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The env block = your configurable keys (user_key1, user_key2, …)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-your-own-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring your own MCP server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mcp-servers-used-across-the-demos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP servers used across the demos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observability-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observability &amp; Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tool-tool-instance-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool / Tool Instance Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demo-tracks-using-agent-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo Tracks Using Agent Studio
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="agent-studio">Agent Studio<a class="headerlink" href="#agent-studio" title="Permanent link">&para;</a></h1>
+<p>Cloudera AI Agent Studio is a <strong>flexible low-code to high-code platform</strong> for building,
+testing, and deploying agentic AI workflows — all through an intuitive UI. It wraps the
+CrewAI engine behind a guided workflow builder so you can create multi-agent pipelines,
+register tools and MCP servers, and deploy as production endpoints without writing
+framework code.</p>
+<p><img alt="Agent Studio Overview" src="../../images/agent_studio/agent_studio_overall_introduction.png" /></p>
+<hr />
+<h2 id="key-capabilities">Key Capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Agentic workflow builder</strong></td>
+<td>Create agents with tasks, tools, and roles — with AI assistance</td>
+</tr>
+<tr>
+<td><strong>Built-in and custom tools</strong></td>
+<td>Use pre-built tools or build your own in Python</td>
+</tr>
+<tr>
+<td><strong>LLM provider flexibility</strong></td>
+<td>Connect to Cloudera AI Inferencing, Azure OpenAI, Gemini, Anthropic, or any OpenAI-compatible endpoint</td>
+</tr>
+<tr>
+<td><strong>Test panel</strong></td>
+<td>Run workflows with test inputs; visualize execution with interactive flow diagrams, real-time logs, and playback mode</td>
+</tr>
+<tr>
+<td><strong>Workflow deployment</strong></td>
+<td>Deploy tested workflows as long-running model endpoints with auto-generated UI</td>
+</tr>
+<tr>
+<td><strong>Observability</strong></td>
+<td>Built-in monitoring via Phoenix — trace every agent, tool, and LLM call</td>
+</tr>
+<tr>
+<td><strong>Templates</strong></td>
+<td>Save and reuse workflow and tool templates across projects</td>
+</tr>
+<tr>
+<td><strong>MCP (Model Context Protocol)</strong></td>
+<td>Extend agents with plug-and-play external tools without custom connectors</td>
+</tr>
+<tr>
+<td><strong>Guardrails</strong></td>
+<td>Secure workflows with input safety and policy validation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="what-is-an-agent">What is an Agent?<a class="headerlink" href="#what-is-an-agent" title="Permanent link">&para;</a></h2>
+<p>An agent is a system that can <strong>reason and plan, use tools, and carry out multi-step tasks
+with little human help</strong>. In Agent Studio, each agent is an LLM paired with a role,
+backstory, goal, and a set of tools. The LLM converts natural language instructions into
+a sequence of steps, and the tools execute those steps against external systems.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>   User ◄──────────► Agent ◄──────────► LLM
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  "Book me a                          Converts NL to
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  flight to Hawaii"                   steps required
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                          │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                          ▼
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                        Tools
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                   (API calls, DB queries,
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                    file operations, etc.)
+</code></pre></div>
+<hr />
+<h2 id="environment-setup-project-session-studio">Environment Setup: Project, Session &amp; Studio<a class="headerlink" href="#environment-setup-project-session-studio" title="Permanent link">&para;</a></h2>
+<p>Agent Studio runs <strong>inside a Cloudera AI (CAI) project</strong> as a CAI Application. Before you
+can build a workflow you need a project, a runtime, and the Agent Studio application
+launched. In an instructor-led bootcamp these components are <strong>pre-provisioned</strong> — for
+your own demo (e.g. Claim Processing) you create and configure them yourself, in the order
+below.</p>
+<h3 id="1-create-a-cai-project">1. Create a CAI project<a class="headerlink" href="#1-create-a-cai-project" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Open <strong>Cloudera AI Workbench</strong> and click <strong>New Project</strong>.</li>
+<li>Give the project a name (e.g. <code>Claim Processing Demo</code>), select a <strong>Python 3.10 runtime</strong>,
+   and click <strong>Create Project</strong>.</li>
+</ol>
+<h3 id="2-project-settings">2. Project settings<a class="headerlink" href="#2-project-settings" title="Permanent link">&para;</a></h3>
+<p>Configure the project under <strong>Project Settings</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Where</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Runtime</strong></td>
+<td>Project Settings → Runtime</td>
+<td>Python 3.10 is the tested runtime for Agent Studio and its tools</td>
+</tr>
+<tr>
+<td><strong>Environment variables</strong></td>
+<td>Project Settings → Advanced → Environment Variables</td>
+<td>Project-wide config/secrets available to every session, job, and application in the project</td>
+</tr>
+<tr>
+<td><strong><code>RUNTIME_IDENTIFIER</code></strong></td>
+<td>Project-level env var</td>
+<td>Set this if a script or job cannot auto-discover a Python 3.10 runtime</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-start-a-session">3. Start a Session<a class="headerlink" href="#3-start-a-session" title="Permanent link">&para;</a></h3>
+<p>A <strong>Session</strong> is your interactive workbench for uploading files, editing tool code, and
+running setup scripts:</p>
+<ol>
+<li>Go to <strong>Sessions → New Session</strong>, select the <strong>JupyterLab</strong> editor, and start it.</li>
+<li>Open a <strong>terminal</strong> inside the session to run commands and inspect environment values.</li>
+<li>
+<p>Retrieve your project ID (required by some deployment scripts):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$CDSW_PROJECT_ID</span>
+</code></pre></div>
+</li>
+</ol>
+<h3 id="4-launch-the-agent-studio-application">4. Launch the Agent Studio application<a class="headerlink" href="#4-launch-the-agent-studio-application" title="Permanent link">&para;</a></h3>
+<p><img alt="Where to launch Agent Studio" src="../../images/agent_studio/where_to_launch_agent_studio.png" /></p>
+<p>Agent Studio is deployed as a CAI Application inside the project.</p>
+<ol>
+<li>In the project, navigate to <strong>AI Studios</strong> in the left sidebar.</li>
+<li>Find <strong>Agent Studio</strong> in the AI Studios catalog and click <strong>Launch</strong>.</li>
+<li>Select the latest Agent Studio runtime.</li>
+</ol>
+<p><img alt="Install Agent Studio runtime" src="../../images/agent_studio/install_agent_studio.png" /></p>
+<p><strong>Key environment variable:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AGENT_STUDIO_NUM_WORKFLOW_RUNNERS</code></td>
+<td><code>5</code></td>
+<td>Number of workflow runner processes. Increase if multiple users will run workflows concurrently.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="supported-deployment-types">Supported Deployment Types<a class="headerlink" href="#supported-deployment-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Deployment</th>
+<th>Infrastructure</th>
+<th>Agent Studio Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Private Cloud GA</strong> (1.5.5-SP3)</td>
+<td>ECS and OCP</td>
+<td>3.0.0-b28 (part of PVC release)</td>
+</tr>
+<tr>
+<td><strong>Public Cloud Technical Preview</strong></td>
+<td>AWS, Azure</td>
+<td>2.3.0-b40</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">The five things to configure before building a workflow</p>
+<p>Every demo in this lab assumes these are in place: <strong>(1) Studio</strong> launched as an
+application, <strong>(2) Project settings</strong> (runtime + env vars), <strong>(3) a Session</strong> for file
+uploads and tool edits, <strong>(4) at least one registered LLM</strong> (see below), and <strong>(5) any
+MCP servers</strong> your agents need (see <a href="#mcp-model-context-protocol">MCP</a>).</p>
+</div>
+<hr />
+<h2 id="registering-llms">Registering LLMs<a class="headerlink" href="#registering-llms" title="Permanent link">&para;</a></h2>
+<p><img alt="Add LLM to Agent Studio" src="../../images/agent_studio/add_LLM_to_agent_studio.png" /></p>
+<p>Go to <strong>LLMs</strong> in the Agent Studio top navigation to register language models. Agent Studio supports:</p>
+<ul>
+<li><strong>Cloudera AI Inferencing (CAII)</strong> — self-hosted, NVIDIA-optimized, and open-source LLMs</li>
+<li><strong>Azure OpenAI</strong> — GPT-4o, GPT-4o-mini, o1</li>
+<li><strong>Google Gemini</strong></li>
+<li><strong>Anthropic Claude</strong></li>
+<li><strong>OpenAI</strong> and any <strong>OpenAI-compatible</strong> endpoint</li>
+</ul>
+<p>Click <strong>Register New Model</strong>, select the provider, and fill in the connection fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>What to enter</th>
+<th>Where it comes from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Provider</strong></td>
+<td>CAII, Azure OpenAI, Gemini, Anthropic, OpenAI, or OpenAI-compatible</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Endpoint / Base URL</strong></td>
+<td>For CAII and OpenAI-compatible endpoints, the inference base URL <strong>including <code>/v1</code></strong></td>
+<td>Your CAII endpoint dashboard or provider</td>
+</tr>
+<tr>
+<td><strong>Model ID</strong></td>
+<td>The served model name (e.g. <code>nvidia/llama-3.3-nemotron-super-49b-v1.5</code>)</td>
+<td>The endpoint that serves it</td>
+</tr>
+<tr>
+<td><strong>API key</strong></td>
+<td>The provider key or the <strong>JWT token</strong> from the endpoint dashboard</td>
+<td>Endpoint dashboard → Access / API Key tab, or your admin</td>
+</tr>
+<tr>
+<td><strong>Default model</strong></td>
+<td>Optionally set as the workflow default</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="deploy-your-own-llm-dont-depend-on-a-shared-endpoint">Deploy your own LLM (don't depend on a shared endpoint)<a class="headerlink" href="#deploy-your-own-llm-dont-depend-on-a-shared-endpoint" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Owning the model behind your demo</p>
+<p>If your workflow points at an LLM endpoint <strong>owned by someone else</strong>, your demo breaks
+the moment that endpoint is stopped, rescaled, or its key is rotated. For a demo you
+control, <strong>deploy your own model endpoint</strong> and register that.</p>
+<ul>
+<li><strong>Deploy an LLM</strong> with <strong>Cloudera AI Inferencing (CAII)</strong> — self-hosted NVIDIA-optimized
+  or open-source models served as a dedicated endpoint. Once running, copy its base URL
+  (ending in <code>/v1</code>), model ID, and JWT/API key from the endpoint dashboard and register
+  it in <strong>LLMs → Register New Model</strong>.</li>
+<li><strong>Need help provisioning CAII / model endpoints?</strong> Endpoint URLs, model access, and
+  keys are owned by your <strong>environment administrator</strong> (in labs, the instructor). Contact
+  them to stand up a dedicated endpoint so your demo does not share a validating or
+  transient model.</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">LLM vs. a model served as a tool</p>
+<p>Registering an <strong>LLM</strong> is for the reasoning models your agents <em>think</em> with. A <strong>custom
+or classical model</strong> (e.g. a scikit-learn regressor for damage/settlement scoring) is
+instead deployed as a <strong>CAI Application REST endpoint</strong> and called from an agent via a
+<strong>custom tool</strong> — not registered under <strong>LLMs</strong>. See the
+<a href="../../demos/iot/uc1_predictive_maintenance/">IoT Predictive Maintenance demo</a> for the
+end-to-end "deploy a model → wrap it in a tool" pattern.</p>
+</div>
+<h3 id="tested-models">Tested Models<a class="headerlink" href="#tested-models" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Models</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CAII</strong></td>
+<td><code>nvidia/llama-3.3-nemotron-super-49b-v1.5</code>, <code>nvidia/nemotron-3-super-120b-a12b</code></td>
+</tr>
+<tr>
+<td><strong>Azure OpenAI</strong></td>
+<td><code>gpt-4o-mini</code>, <code>gpt-4o</code>, <code>o1</code></td>
+</tr>
+<tr>
+<td><strong>AWS Bedrock</strong></td>
+<td><code>claude-haiku-4-5</code>, <code>claude-opus-4-6</code>, <code>claude-opus-4-7</code>, <code>claude-opus-4-8</code>, <code>claude-sonnet-4-6</code></td>
+</tr>
+<tr>
+<td><strong>OpenAI Compatible</strong></td>
+<td><code>vertex_ai/gemini-3-flash-preview</code>, <code>azure/gpt-5.2</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="building-a-workflow">Building a Workflow<a class="headerlink" href="#building-a-workflow" title="Permanent link">&para;</a></h2>
+<p>The workflow builder guides you through five steps: <strong>Add Agents → Add Tasks → Configure → Test → Deploy</strong>.</p>
+<h3 id="step-1-create-the-workflow">Step 1: Create the Workflow<a class="headerlink" href="#step-1-create-the-workflow" title="Permanent link">&para;</a></h3>
+<p>Click <strong>Agentic Workflows → Create Workflow</strong>. Choose:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Options</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Process type</strong></td>
+<td>Sequential, Hierarchical</td>
+<td>Sequential runs tasks in order; Hierarchical uses a Manager Agent</td>
+</tr>
+<tr>
+<td><strong>Conversational</strong></td>
+<td>On / Off</td>
+<td>On = multi-turn chat; Off = pipeline-style single run</td>
+</tr>
+<tr>
+<td><strong>Manager Agent</strong></td>
+<td>Default or Custom</td>
+<td>Hierarchical only — custom manager gives full control over delegation</td>
+</tr>
+<tr>
+<td><strong>Smart Workflow</strong></td>
+<td>On / Off</td>
+<td>Enables AI-assisted agent and task authoring</td>
+</tr>
+</tbody>
+</table>
+<h3 id="step-2-add-agents">Step 2: Add Agents<a class="headerlink" href="#step-2-add-agents" title="Permanent link">&para;</a></h3>
+<p>For each agent, fill in four fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td>Display label; used when wiring task context</td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td>One-line professional identity used in the system prompt</td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>Paragraph persona that shapes reasoning and tool-calling style</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>What this agent must produce; scopes its decision-making</td>
+</tr>
+</tbody>
+</table>
+<p>After creating an agent, attach tools from the Tools Catalog. Set <code>UserParameters</code> (API keys, base URLs) directly in the agent editor.</p>
+<h3 id="step-3-add-tasks">Step 3: Add Tasks<a class="headerlink" href="#step-3-add-tasks" title="Permanent link">&para;</a></h3>
+<p>For each task:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Description</strong></td>
+<td>Detailed instructions; may reference <code>{workflow_variables}</code></td>
+</tr>
+<tr>
+<td><strong>Expected Output</strong></td>
+<td>JSON or prose template telling the LLM what shape to return</td>
+</tr>
+<tr>
+<td><strong>Context</strong></td>
+<td>Which prior tasks' outputs this task receives as additional context</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Every <code>{word}</code> in agent and task text must have a matching <strong>Input Variable</strong> declared at the workflow level. Undeclared variables cause a <code>Template variable not found</code> error at run time.</p>
+</div>
+<h3 id="step-4-configure">Step 4: Configure<a class="headerlink" href="#step-4-configure" title="Permanent link">&para;</a></h3>
+<p>Set <code>UserParameters</code> for each tool — API keys, base URLs, model IDs, timeouts.</p>
+<h3 id="step-5-test">Step 5: Test<a class="headerlink" href="#step-5-test" title="Permanent link">&para;</a></h3>
+<p>The Test panel lets you fill in run-time input values and click <strong>Run</strong>. It provides:</p>
+<ul>
+<li><strong>Flow Diagram</strong> — interactive visualization of agent nodes and execution state</li>
+<li><strong>Logs tab</strong> — streams every tool call, MCP request, and LLM turn in real time</li>
+<li><strong>Playback mode</strong> — scrub through the execution timeline to inspect specific steps</li>
+<li><strong>Monitoring tab</strong> — links to Phoenix observability dashboard</li>
+</ul>
+<h3 id="step-6-deploy">Step 6: Deploy<a class="headerlink" href="#step-6-deploy" title="Permanent link">&para;</a></h3>
+<p>Once tested, deploy the workflow as a <strong>long-running model endpoint</strong>. Agent Studio:</p>
+<ul>
+<li>Packages the workflow as a production endpoint</li>
+<li>Auto-generates a user-facing front-end UI</li>
+<li>Exposes an API for connection from custom UIs</li>
+</ul>
+<hr />
+<h2 id="tools-catalog">Tools Catalog<a class="headerlink" href="#tools-catalog" title="Permanent link">&para;</a></h2>
+<p>The Tools Catalog stores reusable tool definitions at the Agent Studio level — not per workflow.</p>
+<h3 id="tool-types">Tool Types<a class="headerlink" href="#tool-types" title="Permanent link">&para;</a></h3>
+<p><strong>Pre-built tools</strong> — ready to use out of the box, including CDW Tool, Calculator Tool, Jira Integration Tool, Web Search Tool, Webpage Scraper Tool, Email Tool, Slack Tool, and more.</p>
+<p><strong>Custom Python tools</strong> — upload a directory containing <code>tool.py</code>. The file must expose:
+- <code>UserParameters</code> — a Pydantic model for static config (API keys, endpoints). Rendered as an editable form in the workflow editor.
+- <code>ToolParameters</code> — per-call arguments passed by the agent at runtime.
+- <code>run_tool(config, args)</code> — the function Agent Studio calls.
+- <code>OUTPUT_KEY</code> — the string key wrapping the tool's return value.</p>
+<p><strong>MCP tools</strong> — registered via a server name, command, and connection arguments. Agent Studio launches the server process and exposes all its tools to any agent.</p>
+<h3 id="testing-a-tool">Testing a Tool<a class="headerlink" href="#testing-a-tool" title="Permanent link">&para;</a></h3>
+<p>Validate a tool before relying on it in a workflow. Some Agent Studio versions include a
+<strong>Tool Playground</strong> to run a tool in isolation; where it is not available, run the tool's
+<code>tool.py</code> directly from a Workbench session terminal (each tool ships with a CLI entry
+point), or simply run the workflow and inspect the tool call in the <strong>Logs</strong> tab.</p>
+<hr />
+<h2 id="mcp-model-context-protocol">MCP (Model Context Protocol)<a class="headerlink" href="#mcp-model-context-protocol" title="Permanent link">&para;</a></h2>
+<p>MCP is a <strong>standard protocol that enables easy access to external tools and services</strong>
+from within agentic workflows.</p>
+<p><strong>Key benefits:</strong></p>
+<ul>
+<li>Eliminate custom connectors — any MCP-compatible server plugs straight in</li>
+<li>Plug-and-play access to internal, external, or Cloudera-hosted tools</li>
+<li>Faster agent development with a reusable tool catalog</li>
+</ul>
+<h3 id="registering-an-mcp-server">Registering an MCP server<a class="headerlink" href="#registering-an-mcp-server" title="Permanent link">&para;</a></h3>
+<p>Go to <strong>Tools Catalog → MCP Servers → Register</strong> and paste a server config JSON. Agent
+Studio launches the server process and exposes all of its functions to any agent you
+attach it to. Two launch styles are common:</p>
+<table>
+<thead>
+<tr>
+<th><code>command</code></th>
+<th>Runtime</th>
+<th>Typical use</th>
+<th>Example servers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uvx</code></td>
+<td>Python — installs from PyPI or a git repo</td>
+<td>Cloudera and Python MCP servers</td>
+<td><code>iceberg-mcp-server</code>, <code>impala-mcp-server</code>, <code>lightmem-chroma</code></td>
+</tr>
+<tr>
+<td><code>npx</code></td>
+<td>Node.js — installs an npm package</td>
+<td>Third-party JavaScript MCP servers</td>
+<td><code>twitter-mcp</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cloudera-hosted example — <code>iceberg-mcp-server</code></strong> (Python / <code>uvx</code>, from a git repo):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">"iceberg-mcp-server"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uvx"</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"git+https://github.com/cloudera/iceberg-mcp-server@main"</span><span class="p">,</span><span class="w"> </span><span class="s2">"run-server"</span><span class="p">],</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="nt">"IMPALA_HOST"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${IMPALA_HOST}"</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="nt">"IMPALA_PORT"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${IMPALA_PORT}"</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="nt">"IMPALA_USER"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${IMPALA_USER}"</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="nt">"IMPALA_PASSWORD"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${IMPALA_PASSWORD}"</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="nt">"IMPALA_DATABASE"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${IMPALA_DATABASE}"</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Third-party example — <code>twitter-mcp</code></strong> (Node / <code>npx</code>, from an npm package):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">"twitter-mcp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"@enescinar/twitter-mcp"</span><span class="p">],</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="nt">"API_KEY"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${API_KEY}"</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="nt">"API_SECRET_KEY"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${API_SECRET_KEY}"</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="nt">"ACCESS_TOKEN"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${ACCESS_TOKEN}"</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">        </span><span class="nt">"ACCESS_TOKEN_SECRET"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${ACCESS_TOKEN_SECRET}"</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="the-env-block-your-configurable-keys-user_key1-user_key2">The <code>env</code> block = your configurable keys (<code>user_key1</code>, <code>user_key2</code>, …)<a class="headerlink" href="#the-env-block-your-configurable-keys-user_key1-user_key2" title="Permanent link">&para;</a></h3>
+<p>Every value inside an MCP server's <code>env</code> block is a <strong>parameter you supply at configure
+time</strong> — the <code>${...}</code> placeholders (the "user_key1 / User_key2" style fields shown in the
+UI). They are declared in the JSON and filled in <strong>per-workflow</strong> in the <strong>Configure</strong>
+step, so credentials are never hardcoded in the catalog:</p>
+<table>
+<thead>
+<tr>
+<th>In the JSON (<code>env</code>)</th>
+<th>In the workflow</th>
+<th>Value comes from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"IMPALA_HOST": "${IMPALA_HOST}"</code></td>
+<td>Editable field in <strong>Configure</strong></td>
+<td>Your Data Hub / CDW Impala endpoint</td>
+</tr>
+<tr>
+<td><code>"IMPALA_PASSWORD": "${IMPALA_PASSWORD}"</code></td>
+<td>Editable secret field</td>
+<td>Your CDP <strong>workload</strong> password (not SSO)</td>
+</tr>
+<tr>
+<td><code>"OPENAI_API_KEY": "${OPENAI_API_KEY}"</code></td>
+<td>Editable secret field</td>
+<td>Your model provider key</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Where credentials come from</p>
+<p>Endpoint URLs and shared keys are provided by your <strong>environment administrator</strong> (in
+instructor-led labs, the instructor). <code>IMPALA_USER</code> is your CDP profile username and
+<code>IMPALA_PASSWORD</code> is your CDP <strong>workload</strong> password.</p>
+</div>
+<h3 id="configuring-your-own-mcp-server">Configuring your own MCP server<a class="headerlink" href="#configuring-your-own-mcp-server" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Identify the MCP server package — a git repo / PyPI package (run with <code>uvx</code>) or an npm
+   package (run with <code>npx</code>).</li>
+<li>In <strong>Tools Catalog → MCP Servers → Register</strong>, paste the JSON with <code>command</code>, <code>args</code>,
+   and an <code>env</code> block declaring each secret as a <code>${PLACEHOLDER}</code>.</li>
+<li>Save — Agent Studio validates and launches the server; its status turns <strong>Ready</strong>.</li>
+<li>Attach it to an agent (agent editor → <strong>Add MCP Servers</strong>) and select the functions the
+   agent may call.</li>
+<li>In the workflow <strong>Configure</strong> step, fill in the <code>${...}</code> values for that run.</li>
+</ol>
+<h3 id="mcp-servers-used-across-the-demos">MCP servers used across the demos<a class="headerlink" href="#mcp-servers-used-across-the-demos" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>MCP Server</th>
+<th>Command</th>
+<th>Purpose</th>
+<th>Where used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iceberg-mcp-server</code></td>
+<td><code>uvx</code> (git)</td>
+<td>Query Iceberg tables via Impala (<code>execute_query</code>, <code>get_schema</code>)</td>
+<td><a href="../../demos/memory/digital_banking_chatbot/">Banking chatbot</a>, <a href="../../demos/iot/uc1_predictive_maintenance/">IoT</a>, <a href="../../demos/nl_to_sql/nl_to_sql_workflow/">NL-to-SQL</a></td>
+</tr>
+<tr>
+<td><code>impala-mcp-server</code></td>
+<td><code>uvx</code> (git)</td>
+<td>Live schema lookups (<code>list_tables</code>, <code>describe_table</code>)</td>
+<td><a href="../../demos/nl_to_sql/nl_to_sql_workflow/">NL-to-SQL</a></td>
+</tr>
+<tr>
+<td><code>lightmem-chroma</code></td>
+<td><code>uvx</code> (<a href="https://github.com/FerdinandZhong/LightMem">LightMem</a> <code>mcp-light-chroma</code> branch)</td>
+<td>Cross-session memory (<code>retrieve_memory</code>, <code>add_memory</code>, <code>get_timestamp</code>)</td>
+<td><a href="../../demos/memory/digital_banking_chatbot/">Banking chatbot</a></td>
+</tr>
+<tr>
+<td><code>twitter-mcp</code></td>
+<td><code>npx</code> (npm)</td>
+<td>Post/search tweets — bootcamp illustration only</td>
+<td>Lab 3 (bootcamp)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="observability-monitoring">Observability &amp; Monitoring<a class="headerlink" href="#observability-monitoring" title="Permanent link">&para;</a></h2>
+<p>Agent Studio includes built-in observability via <strong>Phoenix</strong> — accessible directly from the Test panel's Monitoring tab.</p>
+<p><strong>What you can track:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Latency</strong></td>
+<td>End-to-end and per-step timing</td>
+</tr>
+<tr>
+<td><strong>Token usage</strong></td>
+<td>Input and output tokens per LLM call</td>
+</tr>
+<tr>
+<td><strong>Tool calls</strong></td>
+<td>Every tool invocation with inputs and outputs</td>
+</tr>
+<tr>
+<td><strong>Agent traces</strong></td>
+<td>Full execution trace across all agents in the workflow</td>
+</tr>
+<tr>
+<td><strong>LLM turns</strong></td>
+<td>Individual prompts, responses, and reasoning steps</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="tool-tool-instance-failures">Tool / Tool Instance Failures<a class="headerlink" href="#tool-tool-instance-failures" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Error / State</th>
+<th>Meaning</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tool dependencies fail to install (airgapped env)</td>
+<td>PyPI mirror not configured</td>
+<td>Check <code>UV_DEFAULT_INDEX</code> env var; confirm internal mirror includes required packages</td>
+</tr>
+<tr>
+<td>Tool status: <strong>PREPARING</strong> (stuck)</td>
+<td>Pod restarted mid-build — startup reconciler should reset within minutes</td>
+<td>Wait 5–10 min; if still stuck, restart Agent Studio</td>
+</tr>
+<tr>
+<td>Tool status: <strong>FAILED</strong></td>
+<td>Tool's Python environment failed to build (bad requirements or syntax error)</td>
+<td>Open the tool in a Workbench session; check <code>tool.py</code> and <code>requirements.txt</code> for errors</td>
+</tr>
+</tbody>
+</table>
+<h3 id="workflow-failures">Workflow Failures<a class="headerlink" href="#workflow-failures" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Error / State</th>
+<th>Meaning</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"No workflow runners currently available to test workflow!"</td>
+<td>All 5 runner processes are busy</td>
+<td>Wait for running workflows to finish; or ask admin to increase <code>AGENT_STUDIO_NUM_WORKFLOW_RUNNERS</code></td>
+</tr>
+<tr>
+<td>"Workflow '...' is not ready for testing!"</td>
+<td>One or more tools are not in READY state</td>
+<td>Check all tool statuses; re-run the tool's <code>tool.py</code> from a session or review the tool build logs</td>
+</tr>
+<tr>
+<td>"MCP initialization timed out. Please try the prompt again."</td>
+<td>MCP server process didn't start in time</td>
+<td>Retry; if persistent, check MCP server config and required env vars</td>
+</tr>
+<tr>
+<td><code>crew_kickoff_failed</code> event in trace</td>
+<td>Unhandled exception during execution</td>
+<td>Check the trace in Ops for the full error and stack trace</td>
+</tr>
+<tr>
+<td><code>Template variable not found</code></td>
+<td>A <code>{variable}</code> in agent/task text has no matching Input Variable</td>
+<td>Add the missing variable in the workflow's Input Variables section</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="demo-tracks-using-agent-studio">Demo Tracks Using Agent Studio<a class="headerlink" href="#demo-tracks-using-agent-studio" title="Permanent link">&para;</a></h2>
+<p>Agent Studio orchestrates all three demo tracks in this lab:</p>
+<table>
+<thead>
+<tr>
+<th>Demo</th>
+<th>What Agent Studio does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../demos/agent_rag_demo/">Agentic RAG-App Evaluation</a></td>
+<td>5-agent pipeline: ground-truth generation → quality verification → document upload → RAG query → evaluation</td>
+</tr>
+<tr>
+<td><a href="../../synthetic_data_lab/synthetic_data_d2_workflow/">D2: SDS Integration</a></td>
+<td>4-agent pipeline: schema scan → prompt build → SDS generation → SDS evaluation</td>
+</tr>
+<tr>
+<td><a href="../../demos/nl_to_sql/nl_to_sql_workflow/">NL-to-SQL Agentic Workflow</a></td>
+<td>6-agent hierarchical + conversational pipeline: safety → feasibility → SQL generation → validation → execution → formatting</td>
+</tr>
+</tbody>
+</table>
+<p>In all demos, Agent Studio is the <strong>central coordinator</strong> — it supplies input variables,
+routes context between tasks, calls tools, and surfaces results in the Test panel.
+RAG Studio and Synthetic Data Studio remain separate CAI Applications that only receive
+API calls from Agent Studio.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../.." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../rag_studio/" class="md-footer__link md-footer__link--next" aria-label="Next: RAG Studio">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                RAG Studio
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "navigation.footer", "content.code.annotate", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/username-replacer.js"></script>
+      
+    
+  </body>
+</html>

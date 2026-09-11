@@ -1,0 +1,192 @@
+# Ontology (TBox) for the battery-pack POC — the semantic layer of the prevention thesis.
+#
+# Bundled + git-versioned. ontology_grounding/tool.py reads this by default; override via
+# UserParameters.ontology_config_path (absolute path) to point at a governed TBox in
+# pilot/production (e.g. exported from the Atlas business glossary). This is the single
+# source of truth for authoritative_prefixes (G3 duplicates them for the POC — see
+# ../g3_grounding_verifier/tool.py; in pilot G3 reads them from here).
+#
+# entities  — canonical part registry + colloquial aliases (resolution / TBox instances).
+# glossary  — colloquial term -> canonical property; polysemous terms carry a `contexts` map.
+# views     — governed semantic views the emitted query_plan targets (see
+#             ../../battery_demo_data/create_ontology_layer_battery.py).
+# axioms    — soft rules + authoritative/generic doc prefixes.
+
+version: 1
+default_view: v_part_semantic
+
+entities:
+  PART-2026-BAT-MOD-07:
+    canonical_part_number: PART-2026-BAT-MOD-07
+    target_view: v_part_semantic
+    status_filter: RELEASED
+    aliases:
+      - MOD-07
+      - mod 07
+      - module 07
+      - module 7
+      - bracket 07
+      - bracket #07
+      - battery module 07
+      - 电池模组支架
+      - 模组支架
+      - 7号模组
+      - 7 号模组
+  PART-2026-BAT-PACK-01:
+    canonical_part_number: PART-2026-BAT-PACK-01
+    target_view: v_part_semantic
+    status_filter: RELEASED
+    aliases:
+      - PACK-01
+      - pack 01
+      - pack assembly
+      - battery pack
+      - 电池包总成
+      - 电池包
+  PART-2026-BAT-CELL-HOLD:
+    canonical_part_number: PART-2026-BAT-CELL-HOLD
+    target_view: v_part_semantic
+    status_filter: RELEASED
+    aliases:
+      - CELL-HOLD
+      - cell holder
+      - 电芯支架
+  PART-2026-BAT-BUSBAR:
+    canonical_part_number: PART-2026-BAT-BUSBAR
+    target_view: v_part_semantic
+    status_filter: RELEASED
+    aliases:
+      - BUSBAR
+      - busbar
+      - 汇流排
+  PART-2026-BAT-GEN-01:
+    canonical_part_number: PART-2026-BAT-GEN-01
+    target_view: v_part_semantic
+    status_filter: RELEASED
+    aliases:
+      - GEN-01
+      - generic part
+      - 通用件
+
+  # Pack-line machine identifiers (as seen in sensor_readings / quality_predictions).
+  # Resolving a machine_id confirms it's a known line asset (resolved=true) so the analyst
+  # doesn't guess; the machine_id is then used as a direct filter on the time-series data,
+  # while metric terms (e.g. thermal_anomaly) drive the governed-view query_plan.
+  PACK-07:
+    canonical_part_number: PACK-07
+    target_view: v_quality_events_semantic
+    status_filter: null
+    aliases: [PACK-07, pack 07, pack-07, 7号电池包]
+  PACK-11:
+    canonical_part_number: PACK-11
+    target_view: v_quality_events_semantic
+    status_filter: null
+    aliases: [PACK-11, pack 11, pack-11, 11号电池包]
+  PACK-03:
+    canonical_part_number: PACK-03
+    target_view: v_quality_events_semantic
+    status_filter: null
+    aliases: [PACK-03, pack 03, pack-03, 3号电池包]
+  PACK-02:
+    canonical_part_number: PACK-02
+    target_view: v_quality_events_semantic
+    status_filter: null
+    aliases: [PACK-02, pack 02, pack-02, 2号电池包]
+  PACK-05:
+    canonical_part_number: PACK-05
+    target_view: v_quality_events_semantic
+    status_filter: null
+    aliases: [PACK-05, pack 05, pack-05, 5号电池包]
+
+glossary:
+  # --- single-sense terms: colloquial word -> canonical property + governed view ---
+  material:
+    property: material_grade
+    view: v_part_semantic
+  material_grade:
+    property: material_grade
+    view: v_part_semantic
+  weight:
+    property: weight_kg
+    view: v_part_semantic
+  max_temp:
+    property: max_operating_temp_c
+    view: v_part_semantic
+  thermal_anomaly:
+    property: temperature_delta
+    view: module_eol_test_v
+    threshold: ">3σ or >31°C"
+  voltage_spread:
+    property: voltage_std
+    view: module_eol_test_v
+    threshold: ">0.015"
+  batch:
+    property: cell_lot
+    view: v_quality_events_semantic
+    source: quality_events.raw_payload.cell_lot
+  defect:
+    property: defect_code
+    view: v_quality_events_semantic
+
+  # --- polysemous terms: same word, different property per business context ---
+  # No resolving context -> tool returns ambiguous=true and the agent must ask (Case C).
+  stock:
+    contexts:
+      ERP: account_stock
+      WMS: physical_stock
+      OMS: sellable_stock
+  fit_issue:
+    contexts:
+      dimensional: dimensional
+      torque: torque
+      material: material
+
+views:
+  v_part_semantic:
+    key_column: part_number
+    status_column: status
+    columns:
+      - part_number
+      - object_name
+      - part_type
+      - version
+      - status
+      - material_grade
+      - alloy_family
+      - surface_treatment
+      - max_operating_temp_c
+      - weight_kg
+  v_quality_events_semantic:
+    key_column: module_id
+    status_column: null
+    columns:
+      - event_time
+      - machine_id
+      - work_order_id
+      - module_id
+      - cell_lot
+      - defect_code
+      - defect_name
+      - defect_category
+  # Existing Story 01 view (create_impala_tables_battery.py) — per-module EoL test metrics.
+  module_eol_test_v:
+    key_column: module_id
+    status_column: null
+    columns:
+      - test_id
+      - module_id
+      - machine_id
+      - cell_lot
+      - test_date
+      - temperature_delta
+      - voltage_std
+      - dcr
+      - is_anomaly
+      - anomaly_type
+
+axioms:
+  # Single source of truth for the authoritative/generic doc split (G3 mirrors these).
+  authoritative_prefixes: ["SOP-", "COA-", "ECN-", "DRW-", "SPEC-", "WPS-"]
+  generic_prefixes: ["DOC-GEN-"]
+  # Only RELEASED, current-version entities may be cited as evidence.
+  require_status: RELEASED

@@ -1,0 +1,101 @@
+:root > * {
+
+  /* Primary color shades */
+  --md-primary-fg-color: #ff550D; /* Cloudera Orange  */
+  --md-primary-fg-color--light: #ff8856; /* Lighter Cloudera Orange */
+  --md-primary-fg-color--dark: #305868;
+  --md-primary-bg-color: #FFFFFF;
+  --md-primary-bg-color--light: #F3F5F7;
+  --md-text-link-color: #5555F9; /* Blue Nova  */
+
+  /* Accent color shades */
+  --md-accent-fg-color: #5555F9; /* Blue Nova  */
+  --md-accent-fg-color--transparent: hsla(189, 100%, 37%, 0.1);
+  --md-accent-bg-color: #FFFFFF;
+  --md-accent-bg-color--light: #F3F5F7;
+
+  /* Footer */
+  --md-footer-bg-color: #5555F9; /* Blue Nova  */
+  --md-footer-bg-color--dark: #120046; /* Twilight */
+  --md-footer-fg-color: #CDDBE4;
+  --md-footer-fg-color--light: #F3F5F7;
+  --md-footer-fg-color--lighter: hsla(0, 0%, 100%, 0.3);
+  }
+
+/* Footer copyright links */
+.md-copyright__highlight a {
+  color: #5555F9 !important; /* Blue Nova */
+  text-decoration: underline;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.md-copyright__highlight a:hover {
+  opacity: 0.8;
+}
+
+/* Reduce top margin for main content */
+.md-main__inner {
+  margin-top: 0.5rem;
+}
+
+/* Card Grid for 001-automation-bootcamp */
+.md-typeset #sko .grid {
+    grid-gap: .4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(min(100%,20rem),1fr));
+    margin: 1em 0;
+}
+
+.md-typeset .prereq-complete {
+  text-align: center;
+  font-size: 1.1rem;
+  border: .05rem solid var(--md-default-fg-color--lightest);
+  border-radius: .1rem;
+}
+
+.md-typeset .prereq-complete a {
+  padding: 12px 10px;
+  background-color: var(--md-primary-fg-color);
+  color: #fff;
+  border-radius: 5px;
+  transition: background 0.3s ease-in-out;
+}
+.md-typeset .prereq-complete h2 {
+  margin: 0.6em;
+}
+
+/* Username input  */
+[data-md-color-scheme="slate"] .username-input-container {
+     background: #1f2020;
+     border-color: #404040;
+}
+
+.username-input-container input {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    flex-grow: 1; /* Input takes available space */
+    background-color: white;
+    color: black;
+    font-size: large;
+}
+
+.username-input-container button {
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: var(--md-primary-fg-color--light, #4051b5); /* Use theme primary color if available */
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.username-input-container button:hover {
+     background-color: var(--md-primary-fg-color, #303fa1);
+}
+
+.username-input-container button#user-username-clear {
+    background-color: #999;
+    font-size: 0.8em;
+}

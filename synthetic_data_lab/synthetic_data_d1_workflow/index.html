@@ -1,0 +1,4121 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hands-on lab demonstrating how Cloudera AI Agent Studio, RAG Studio, and Synthetic Data Studio interoperate — two focused demos plus a three-studio capstone.">
+      
+      
+      
+        <link rel="canonical" href="https://ferdinandzhong.github.io/handson-labs/synthetic_data_lab/synthetic_data_d1_workflow/">
+      
+      
+        <link rel="prev" href="../SYNTHETIC_DATA_WORKFLOWS_SUMMARY/">
+      
+      
+        <link rel="next" href="../synthetic_data_d2_workflow/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>D1: LLM-Driven Generation - Cloudera AI Studios Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#building-the-synthetic-data-generation-workflow-direction-1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Cloudera AI Studios Lab" class="md-header__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cloudera AI Studios Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              D1: LLM-Driven Generation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../studios/agent_studio/" class="md-tabs__link">
+          
+  
+  
+  Studios
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/lab1_calculator_workflow/" class="md-tabs__link">
+          
+  
+  
+  Agent Studio Quickstart
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/agent_rag_demo/" class="md-tabs__link">
+          
+  
+  
+  RAG Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-tabs__link">
+          
+  
+  
+  Synthetic Data Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/nl_to_sql/nl_to_sql_workflow/" class="md-tabs__link">
+          
+  
+  
+  NL-to-SQL Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/memory/digital_banking_chatbot/" class="md-tabs__link">
+          
+  
+  
+  Agent Memory Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../demos/iot/uc1_predictive_maintenance/" class="md-tabs__link">
+          
+  
+  
+  IoT Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../hallucination_guardrails/anti_hallucination_lab/" class="md-tabs__link">
+          
+  
+  
+  Vehicle Manufacturing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/rag_studio_tool/" class="md-tabs__link">
+          
+  
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cloudera AI Studios Lab" class="md-nav__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    Cloudera AI Studios Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Studios
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Studios
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/agent_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/rag_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/synthetic_data_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio Quickstart
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Studio Quickstart
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/lab1_calculator_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1: Build Your First Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/lab2_calculator_with_tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2: Workflow with a Custom Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RAG Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/agent_rag_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic RAG-App Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Synthetic Data Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D1: LLM-Driven Generation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D1: LLM-Driven Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-d1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use D1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-scope-before-you-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ Understand the Scope Before You Build
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚠️ Understand the Scope Before You Build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#not-suitable-for-production-ml-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not suitable for production ML training
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation-1-wide-tables-use-populate-default-not-full-describe-parity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation 1 — Wide tables use populate + default (not full DESCRIBE parity)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation-2-fk-columns-must-exist-in-the-csv-before-agent-4-can-patch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation 2 — FK columns must exist in the CSV before Agent 4 can patch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation-3-confirm-join-column-names-with-sql-do-not-assume-account_no" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation 3 — Confirm join column names with SQL (do not assume account_no)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation-4-llm-non-determinism-and-agent-studio-timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation 4 — LLM non-determinism and Agent Studio timeouts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation-summary-by-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation summary by agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-makes-an-acceptable-d1-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What makes an acceptable D1 run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagram-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagram quick reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-iceberg-mcp-iceberg-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Iceberg MCP — iceberg-mcp-server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-file-io-tools-artifact-files-readwrite-tool-and-csv_reader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. File I/O tools — Artifact Files Read/Write Tool and csv_reader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-yaml-reference-optional-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. YAML reference (optional import)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-create-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create the Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-configure-workflow-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure Workflow Settings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Configure Workflow Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-input-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow input variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-add-all-five-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Add All Five Agents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Add All Five Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-1-schema-analyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 1 — Schema Analyst
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-2-relationship-mapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 2 — Relationship Mapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-3-synthetic-data-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 3 — Synthetic Data Generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-4-integrity-linker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 4 — Integrity Linker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-5-quality-evaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 5 — Quality Evaluator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-add-all-five-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Add All Five Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Add All Five Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-schema-profiling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1 — Schema Profiling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-relationship-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2 — Relationship Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-data-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3 — Data Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-integrity-linking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4 — Integrity Linking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-quality-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5 — Quality Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beat-3-spot-check-csvs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Beat 3 — Spot-check CSVs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beat-4-task-5-scorecard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Beat 4 — Task 5 scorecard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-d2-or-d3-instead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use D2 or D3 instead
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related files
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic_data_d2_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D2: SDS Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic_data_d3_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D3: Production Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SYNTHETIC_DATA_DEMO_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workshop Presenter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NL-to-SQL Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/nl_to_sql/nl_to_sql_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Agentic Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/nl_to_sql/nl_to_sql_workflow_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Memory Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Memory Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/memory/digital_banking_chatbot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Banking Chatbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IoT Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/iot/uc1_predictive_maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC1: Predictive Maintenance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../demos/iot/uc2_predictive_quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC2: Predictive Quality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vehicle Manufacturing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Vehicle Manufacturing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hallucination_guardrails/anti_hallucination_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Grounding + Guardrails (POC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hallucination_guardrails/anti_hallucination_lab_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anti-Hallucination (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/rag_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/synthetic_data_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jailbreak_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jailbreak & Input Safety Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/nl_query_evaluator_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL Query Evaluator Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/ontology_grounding_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ontology Grounding Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g1_verdict_lock_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G1: Verdict Lock Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g2_claim_citation_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G2: Claim Citation Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g3_grounding_verifier_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G3: Grounding Verifier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g4_action_catalog_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G4: Action Catalog Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-d1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use D1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-scope-before-you-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ Understand the Scope Before You Build
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚠️ Understand the Scope Before You Build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#not-suitable-for-production-ml-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not suitable for production ML training
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation-1-wide-tables-use-populate-default-not-full-describe-parity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation 1 — Wide tables use populate + default (not full DESCRIBE parity)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation-2-fk-columns-must-exist-in-the-csv-before-agent-4-can-patch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation 2 — FK columns must exist in the CSV before Agent 4 can patch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation-3-confirm-join-column-names-with-sql-do-not-assume-account_no" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation 3 — Confirm join column names with SQL (do not assume account_no)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation-4-llm-non-determinism-and-agent-studio-timeouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation 4 — LLM non-determinism and Agent Studio timeouts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation-summary-by-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation summary by agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-makes-an-acceptable-d1-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What makes an acceptable D1 run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagram-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagram quick reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-iceberg-mcp-iceberg-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Iceberg MCP — iceberg-mcp-server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-file-io-tools-artifact-files-readwrite-tool-and-csv_reader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. File I/O tools — Artifact Files Read/Write Tool and csv_reader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-yaml-reference-optional-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. YAML reference (optional import)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-create-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create the Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-configure-workflow-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure Workflow Settings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Configure Workflow Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-input-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow input variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-add-all-five-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Add All Five Agents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Add All Five Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-1-schema-analyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 1 — Schema Analyst
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-2-relationship-mapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 2 — Relationship Mapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-3-synthetic-data-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 3 — Synthetic Data Generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-4-integrity-linker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 4 — Integrity Linker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-5-quality-evaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 5 — Quality Evaluator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-add-all-five-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Add All Five Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Add All Five Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-schema-profiling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1 — Schema Profiling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-relationship-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2 — Relationship Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-data-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3 — Data Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-integrity-linking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4 — Integrity Linking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-quality-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5 — Quality Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beat-3-spot-check-csvs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Beat 3 — Spot-check CSVs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beat-4-task-5-scorecard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Beat 4 — Task 5 scorecard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-d2-or-d3-instead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use D2 or D3 instead
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related files
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="building-the-synthetic-data-generation-workflow-direction-1">Building the Synthetic Data Generation Workflow (Direction 1)<a class="headerlink" href="#building-the-synthetic-data-generation-workflow-direction-1" title="Permanent link">&para;</a></h1>
+<h2 id="when-to-use-d1">When to use D1<a class="headerlink" href="#when-to-use-d1" title="Permanent link">&para;</a></h2>
+<p>Choose <strong>Direction 1</strong> when you want to learn agentic pipeline mechanics <strong>entirely inside Agent Studio</strong> — no Synthetic Data Studio deployment required:</p>
+<table>
+<thead>
+<tr>
+<th>Choose D1 when…</th>
+<th>Avoid D1 when…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Teaching <strong>five-agent sequencing</strong>, MCP schema discovery, and CSV artifact I/O</td>
+<td>You need a <strong>live SDS integration showcase</strong> → use <a href="../synthetic_data_d2_workflow/">D2</a></td>
+</tr>
+<tr>
+<td>You want <strong>FK patching via CSV rewrite</strong> (Agent 4) in a single Test run</td>
+<td>You need <strong>production-scale, reproducible training data</strong> → use <a href="../synthetic_data_d3_workflow/">D3</a></td>
+</tr>
+<tr>
+<td>Output is <strong>scoped CSV files</strong> (typically 100–1,000 rows per table) for ML prototyping</td>
+<td>You need full wide-table column parity or CI-gatable evaluation gates</td>
+</tr>
+</tbody>
+</table>
+<p>D1 produces session-bound CSV artifacts with LLM-generated cell values. Re-running the same inputs yields <strong>different data</strong> — that is expected for this workshop direction.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>In this lab you build a <strong>five-agent sequential pipeline</strong> that generates PII-free
+synthetic training data for the <code>&lt;your_database&gt;</code> lakehouse <strong>entirely inside Agent Studio</strong>
+— no Synthetic Data Studio, no external generation service.</p>
+<p>The pipeline scans live Impala schemas, infers FK relationships with SQL validation,
+generates CSV files locally, <strong>patches child FK columns by rewriting CSVs</strong> (Agent 4),
+and produces a statistical quality scorecard.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│        SYNTHETIC DATA GENERATION — PURELY AGENT STUDIO (D1)                    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├────────────────────────────────────────────────────────────────────────────────┤
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Input: {target_tables}, {rows_per_table}, {database}                         │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│          │                                                                     │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│          ▼                                                                     │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  ┌──────────────────┐                                                          │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │   AGENT 1        │  ← iceberg-mcp-server                                   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  Schema Analyst  │    DESCRIBE, COUNT, profile key columns, PII flags       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  └────────┬─────────┘    Output: schema manifest JSON                          │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│           ▼                                                                    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ┌──────────────────┐                                                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │   AGENT 2        │  ← iceberg-mcp-server                                   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  Relationship    │    FK inference + JOIN validation + generation order    │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  Mapper          │    Output: relationships + wide_tables manifest         │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  └────────┬─────────┘                                                         │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│           ▼                                                                    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  ┌──────────────────┐                                                          │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  │   AGENT 3        │  ← Artifact Files Read/Write Tool, csv_reader                                  │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  │  Synthetic Data  │    Generate rows per column rules → CSV on disk          │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  │  Generator       │    Output: /synthetic_output/&lt;table&gt;_synthetic.csv      │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  └────────┬─────────┘                                                         │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│           ▼                                                                    │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  ┌──────────────────┐                                                          │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  │   AGENT 4        │  ← Artifact Files Read/Write Tool, csv_reader                                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  │  Integrity       │    Read parent CSV → patch child FK → validate orphans  │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  │  Linker          │    Output: corrected CSVs + fk_validation report         │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  └────────┬─────────┘                                                         │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│           ▼                                                                    │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  ┌──────────────────┐                                                          │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  │   AGENT 5        │  ← Artifact Files Read/Write Tool, csv_reader             │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  │  Quality         │    Read session CSVs → schema/distribution/PII/FK checks  │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  │  Evaluator       │    Output: per-table scorecard                            │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  └──────────────────┘                                                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>└────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><img alt="Figure 1 — D1 architecture: five agents, Impala schema read, local CSV generation and FK patch" src="../../images/synthetic_data_workflow_d1/architecture.png" /></p>
+<p><strong>How to read Figure 1</strong></p>
+<table>
+<thead>
+<tr>
+<th>Region in the diagram</th>
+<th>What it represents</th>
+<th>Runs on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Workflow inputs</strong></td>
+<td><code>{target_tables}</code>, <code>{rows_per_table}</code>, <code>{database}</code> — set at run time</td>
+<td>Agent Studio UI</td>
+</tr>
+<tr>
+<td><strong>Tasks 1–2 → iceberg-mcp-server → <your_database></strong></td>
+<td>Schema profiling and FK validation via SQL (<code>DESCRIBE</code>, <code>COUNT</code>, join-count queries). Reads aggregated stats only — never exports real row values</td>
+<td>Agent Studio + Impala</td>
+</tr>
+<tr>
+<td><strong>Task 3 → Artifact Files Read/Write Tool + csv_reader</strong></td>
+<td>LLM-driven row generation written as session artifact CSVs</td>
+<td>Agent Studio session store</td>
+</tr>
+<tr>
+<td><strong>Task 4 → Artifact Files Read/Write Tool + csv_reader</strong></td>
+<td><strong>Deterministic FK patch</strong> — reads parent CSV, overwrites child FK column, validates zero orphans</td>
+<td>Agent Studio session store</td>
+</tr>
+<tr>
+<td><strong>Task 5 → Artifact Files Read/Write Tool + csv_reader</strong></td>
+<td>Read session CSVs; statistical evaluation against schema manifest and FK report</td>
+<td>Agent Studio session store</td>
+</tr>
+</tbody>
+</table>
+<p>Unlike D2, there is <strong>no SDS integration surface</strong>. All generation and FK enforcement
+happens on the Agent Studio side via CSV read/write.</p>
+<p>Source files for all figures: <code>../extra_materials/synthetic_data_workflow_d1/</code> (<code>.mmd</code>
+sources). Instruction embeds use PNGs from <code>../images/synthetic_data_workflow_d1/</code>.
+Re-render: <code>./render_mermaid.sh</code> in the extra_materials folder.</p>
+<p>Full agent/task copy-paste blocks are in <strong>Step 3 (agents)</strong> and <strong>Step 4 (tasks)</strong> below.
+YAML import: <code>../extra_materials/synthetic_data_workflow_d1/agents.yaml</code> + <code>tasks.yaml</code>.</p>
+<hr />
+<h2 id="understand-the-scope-before-you-build">⚠️ Understand the Scope Before You Build<a class="headerlink" href="#understand-the-scope-before-you-build" title="Permanent link">&para;</a></h2>
+<p>Read this section before touching Agent Studio. D1 is an <strong>ML training path inside
+Agent Studio</strong>, not a stakeholder SDS demo and not a production batch pipeline.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>D1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IS</strong></td>
+<td>Agent Studio–only path — 1k–10k rows, FK patch via CSV overwrite, statistical evaluation. No SDS dependency.</td>
+</tr>
+<tr>
+<td><strong>IS NOT</strong></td>
+<td>Full 896-column parity on wide tables in one pass. Guaranteed reproducibility. Unlimited scale.</td>
+</tr>
+<tr>
+<td><strong>Best for</strong></td>
+<td>ML engineers who need scoped training data with FK integrity and PII-safe surrogates.</td>
+</tr>
+<tr>
+<td><strong>For SDS demos</strong></td>
+<td>Use <strong>Direction 2</strong> — <a href="../synthetic_data_d2_workflow/"><code>synthetic_data_d2_workflow.md</code></a></td>
+</tr>
+<tr>
+<td><strong>For production volume</strong></td>
+<td>Use <strong>Direction 3</strong> — <a href="../synthetic_data_d3_workflow/"><code>synthetic_data_d3_workflow.md</code></a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="not-suitable-for-production-ml-training">Not suitable for production ML training<a class="headerlink" href="#not-suitable-for-production-ml-training" title="Permanent link">&para;</a></h3>
+<p>D1 is a <strong>workshop direction only</strong>. Do not use it to deliver production training datasets.</p>
+<table>
+<thead>
+<tr>
+<th>Why not</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Non-reproducible generation</strong></td>
+<td>Agent 3 writes cell values via LLM inference. Re-running produces different data even with the same <code>{rows_per_table}</code>. Production needs <code>--seed</code>-fixed faker/SDV code (D3).</td>
+</tr>
+<tr>
+<td><strong>No full column parity</strong></td>
+<td>Wide tables synthesise a semantic subset only; remaining columns are NULL-defaulted. ML pipelines expecting all 896 <code>DESCRIBE</code> columns will fail schema checks.</td>
+</tr>
+<tr>
+<td><strong>Volume &amp; timeout limits</strong></td>
+<td><code>{target_tables}=all</code> at 1000 rows exceeds practical Agent Studio session limits. Production uses CML Jobs and <code>batch-generate</code> (D3).</td>
+</tr>
+<tr>
+<td><strong>Session-bound artefacts</strong></td>
+<td>CSVs live in the Test session Artifact Files tab, not in versioned project paths (<code>/home/cdsw/artifacts/</code>) that Jobs and downstream pipelines consume.</td>
+</tr>
+<tr>
+<td><strong>Agent-driven FK patch</strong></td>
+<td>Agent 4 CSV overwrite is stronger than D2 prompts but still LLM-orchestrated — not the deterministic <code>pandas</code> enforcement in D3 scripts.</td>
+</tr>
+<tr>
+<td><strong>Evaluation not CI-gatable</strong></td>
+<td>Agent 5 produces a conversational scorecard, not a <code>--strict</code> scipy report with PASS/FAIL gates suitable for release pipelines.</td>
+</tr>
+</tbody>
+</table>
+<p>When stakeholders ask for <strong>real training data</strong>, point them to <a href="../synthetic_data_d3_workflow/">D3 deterministic mode</a>.</p>
+<h3 id="limitation-1-wide-tables-use-populate-default-not-full-describe-parity">Limitation 1 — Wide tables use populate + default (not full DESCRIBE parity)<a class="headerlink" href="#limitation-1-wide-tables-use-populate-default-not-full-describe-parity" title="Permanent link">&para;</a></h3>
+<p><code>source_transactions</code> has ~896 columns. D1 profiles a semantic subset and generates only
+columns listed in <code>wide_tables[].columns_to_populate</code>; the rest are NULL-defaulted.</p>
+<p><img alt="Figure 2 — Wide-table strategy: profile subset → populate list → partial CSV → PARTIAL verdict" src="../../images/synthetic_data_workflow_d1/wide_table_strategy.png" /></p>
+<p>Agent 5 reports <code>schema_fidelity: PARTIAL</code> for wide tables — <strong>that is expected and
+acceptable</strong> for D1. Full column parity is <strong>Direction 3</strong> scope.</p>
+<h3 id="limitation-2-fk-columns-must-exist-in-the-csv-before-agent-4-can-patch">Limitation 2 — FK columns must exist in the CSV before Agent 4 can patch<a class="headerlink" href="#limitation-2-fk-columns-must-exist-in-the-csv-before-agent-4-can-patch" title="Permanent link">&para;</a></h3>
+<p>Agent 4 reads and overwrites CSV files. If Agent 3 never wrote the child FK column,
+Agent 4 cannot fix it. Agent 2 must list <strong>every FK column from <code>relationships</code></strong> in
+<code>columns_to_populate</code> for wide tables.</p>
+<h3 id="limitation-3-confirm-join-column-names-with-sql-do-not-assume-account_no">Limitation 3 — Confirm join column names with SQL (do not assume <code>account_no</code>)<a class="headerlink" href="#limitation-3-confirm-join-column-names-with-sql-do-not-assume-account_no" title="Permanent link">&para;</a></h3>
+<p>Banking schemas use varied account-key stems (<code>transaction_no</code>, <code>transaction_no</code>, etc.). Agent 2 must
+validate each candidate FK with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="o">&lt;</span><span class="n">parent_col</span><span class="o">&gt;</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">FROM</span><span class="w"> </span><span class="o">&lt;</span><span class="n">your_database</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="n">parent</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">JOIN</span><span class="w"> </span><span class="o">&lt;</span><span class="n">your_database</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="n">child</span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="o">&lt;</span><span class="n">parent_col</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="o">&lt;</span><span class="n">child_col</span><span class="o">&gt;</span>
+</code></pre></div>
+<h3 id="limitation-4-llm-non-determinism-and-agent-studio-timeouts">Limitation 4 — LLM non-determinism and Agent Studio timeouts<a class="headerlink" href="#limitation-4-llm-non-determinism-and-agent-studio-timeouts" title="Permanent link">&para;</a></h3>
+<p>Row values differ between runs. Running <code>{target_tables}=all</code> at <code>{rows_per_table}=1000</code>
+may hit timeouts. <strong>Start scoped:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>First-run value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>target_tables</code></td>
+<td><code>source_customers,source_accounts,source_transactions</code></td>
+</tr>
+<tr>
+<td><code>rows_per_table</code></td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<td><code>database</code></td>
+<td><code>&lt;your_database&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="limitation-summary-by-agent">Limitation summary by agent<a class="headerlink" href="#limitation-summary-by-agent" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Primary constraint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Agent 1 — Schema Analyst</strong></td>
+<td>Profiles metadata and aggregated stats only; never exports real row values</td>
+</tr>
+<tr>
+<td><strong>Agent 2 — Relationship Mapper</strong></td>
+<td>Must SQL-validate FK join columns; must list every FK column in <code>columns_to_populate</code> for wide tables</td>
+</tr>
+<tr>
+<td><strong>Agent 3 — Synthetic Data Generator</strong></td>
+<td>LLM-written cell values — output is <strong>non-reproducible</strong> across runs</td>
+</tr>
+<tr>
+<td><strong>Agent 4 — Integrity Linker</strong></td>
+<td>Can only patch FK columns that already exist in the child CSV header</td>
+</tr>
+<tr>
+<td><strong>Agent 5 — Quality Evaluator</strong></td>
+<td>Produces a conversational scorecard — not a <code>--strict</code> scipy PASS/FAIL gate</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-makes-an-acceptable-d1-run">What makes an acceptable D1 run<a class="headerlink" href="#what-makes-an-acceptable-d1-run" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Bar</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FK columns in CSV headers</td>
+<td>Every column in <code>relationships</code> appears in generated CSV</td>
+</tr>
+<tr>
+<td>FK orphan count = 0</td>
+<td>Agent 4 <code>fk_validation</code>: all <code>orphan_count_after: 0</code></td>
+</tr>
+<tr>
+<td>PII safety PASS</td>
+<td>No NRIC/email/phone regex hits</td>
+</tr>
+<tr>
+<td><code>schema_fidelity</code></td>
+<td>PASS on master/account; PARTIAL acceptable on wide transaction table</td>
+</tr>
+<tr>
+<td>Row count</td>
+<td>Matches <code>{rows_per_table}</code> (lookup tables 50–200 exempt)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="diagram-quick-reference">Diagram quick reference<a class="headerlink" href="#diagram-quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Figure</th>
+<th>File</th>
+<th>Consult when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Figure 1</strong></td>
+<td><code>architecture.png</code></td>
+<td>Full pipeline — which agent uses Impala vs file I/O</td>
+</tr>
+<tr>
+<td><strong>Figure 2</strong></td>
+<td><code>wide_table_strategy.png</code></td>
+<td>Explaining partial column fill on <code>source_transactions</code></td>
+</tr>
+<tr>
+<td><strong>Figure 3</strong></td>
+<td><code>fk_integrity_flow.png</code></td>
+<td>How Agent 4 patches FKs by rewriting CSVs</td>
+</tr>
+<tr>
+<td><strong>Figure 4</strong></td>
+<td><code>final_workflow.png</code></td>
+<td>Verifying Agent Studio UI wiring — 5 tasks, context links</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Suggested demo narrative:</strong></p>
+<ol>
+<li><strong>Figure 1</strong> — "Five agents, one Impala read path, local CSVs — no SDS."</li>
+<li><strong>Figure 4</strong> — "Sequential tasks with context chaining."</li>
+<li><strong>Figure 3</strong> — "D1's advantage over D2: Agent 4 rewrites child CSVs, not prompt hints."</li>
+<li><strong>Figure 2</strong> — "Wide tables are intentionally partial — D3 for full parity."</li>
+</ol>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<h3 id="1-iceberg-mcp-iceberg-mcp-server">1. Iceberg MCP — iceberg-mcp-server<a class="headerlink" href="#1-iceberg-mcp-iceberg-mcp-server" title="Permanent link">&para;</a></h3>
+<p>Registered in Agent Studio from Part 1 of the workshop.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IMPALA_HOST</strong></td>
+<td><code>hue-impala-gateway.datalake.…cloudera.site</code></td>
+</tr>
+<tr>
+<td><strong>IMPALA_PORT</strong></td>
+<td><code>443</code></td>
+</tr>
+<tr>
+<td><strong>IMPALA_USER</strong></td>
+<td>Provided by instructor</td>
+</tr>
+<tr>
+<td><strong>IMPALA_PASSWORD</strong></td>
+<td>Provided by instructor</td>
+</tr>
+<tr>
+<td><strong>IMPALA_DATABASE</strong></td>
+<td><code>&lt;your_database&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>Verify connectivity (optional):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>scripts/test_impala_connection.py
+</code></pre></div>
+<h3 id="2-file-io-tools-artifact-files-readwrite-tool-and-csv_reader">2. File I/O tools — Artifact Files Read/Write Tool and csv_reader<a class="headerlink" href="#2-file-io-tools-artifact-files-readwrite-tool-and-csv_reader" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Used by</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Artifact Files Read/Write Tool</strong></td>
+<td>Agents 3, 4, 5</td>
+<td>Write and read CSV artifacts in the <strong>current workflow session</strong></td>
+</tr>
+<tr>
+<td><strong>csv_reader</strong></td>
+<td>Agents 3, 4, 5</td>
+<td>Parse CSV contents after Artifact Files Read/Write Tool returns a readable path</td>
+</tr>
+</tbody>
+</table>
+<p>Attach <strong>Artifact Files Read/Write Tool</strong> to Agents 3, 4, and <strong>5</strong>.</p>
+<blockquote>
+<p><strong>Session artifact paths:</strong> Each Test run gets a unique session folder, e.g.
+<code>agent-studio/studio-data/workflows/&lt;workflow_name&gt;/session/&lt;session_id&gt;/</code>.
+Agents 3–4 write CSVs there via the Artifact Files Read/Write Tool — they appear in
+the Test UI <strong>Artifact Files</strong> tab for download. <strong>Do not</strong> read <code>/synthetic_output/</code>
+with <code>csv_reader</code> alone in Task 5; that path is not where session artifacts live.
+Task 5 must use the <strong>same Artifact Files Read/Write Tool</strong> (and optionally
+<code>csv_reader</code> on the path the tool returns) to read files Agents 3–4 wrote.</p>
+</blockquote>
+<h3 id="3-yaml-reference-optional-import">3. YAML reference (optional import)<a class="headerlink" href="#3-yaml-reference-optional-import" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>agents.yaml</code></td>
+<td><code>../extra_materials/synthetic_data_workflow_d1/agents.yaml</code></td>
+</tr>
+<tr>
+<td><code>tasks.yaml</code></td>
+<td><code>../extra_materials/synthetic_data_workflow_d1/tasks.yaml</code></td>
+</tr>
+</tbody>
+</table>
+<p>You may import via <code>crewai_yaml_importer</code> or build manually in the UI (Steps below).</p>
+<hr />
+<h2 id="step-1-create-the-workflow">Step 1: Create the Workflow<a class="headerlink" href="#step-1-create-the-workflow" title="Permanent link">&para;</a></h2>
+<p>In Agent Studio: <strong>Agentic Workflows</strong> → <strong>Create Workflow</strong> → <strong>New Workflow</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Workflow Name</strong></td>
+<td><code>Synthetic Data Generation D1</code></td>
+</tr>
+<tr>
+<td><strong>Process type</strong></td>
+<td><strong>Sequential</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="step-2-configure-workflow-settings">Step 2: Configure Workflow Settings<a class="headerlink" href="#step-2-configure-workflow-settings" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Toggle</th>
+<th>Setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Is Conversational</strong></td>
+<td><strong>OFF</strong></td>
+</tr>
+<tr>
+<td><strong>Manager Agent</strong></td>
+<td><strong>OFF</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="workflow-input-variables">Workflow input variables<a class="headerlink" href="#workflow-input-variables" title="Permanent link">&para;</a></h3>
+<p>Add <strong>exactly three</strong> input variables. Do not add <code>parent</code>, <code>column</code>, <code>parent_table</code>,
+<code>parent_column</code>, <code>child_column</code>, <code>table</code>, <code>target_tables_echo</code>, or any FK-related
+variable — FK linking is inferred in Task 2 and handled internally by Agents 3–4.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>target_tables</code></td>
+<td><code>source_customers,source_accounts,source_transactions</code></td>
+<td>Comma-separated table names</td>
+</tr>
+<tr>
+<td><code>rows_per_table</code></td>
+<td><code>100</code></td>
+<td>Rows per table (start at 100)</td>
+</tr>
+<tr>
+<td><code>database</code></td>
+<td><code>&lt;your_database&gt;</code></td>
+<td>Impala database</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Template rule:</strong> Agent Studio treats any name written in curly braces as a workflow
+input. Only <code>{target_tables}</code>, <code>{rows_per_table}</code>, and <code>{database}</code> may appear in
+curly braces — in backstory, goal, task <strong>Description</strong>, or <strong>Expected Output</strong>.
+Never brace-wrap FK or task-output field names (parent_table, parent_column, column,
+table, target_tables_echo). Use angle brackets for path placeholders
+(e.g. <code>/synthetic_output/&lt;table&gt;_synthetic.csv</code>). Do not embed JSON objects in task
+<strong>Description</strong> fields; put JSON examples only in <strong>Expected Output</strong>.</p>
+</blockquote>
+<hr />
+<h2 id="step-3-add-all-five-agents">Step 3: Add All Five Agents<a class="headerlink" href="#step-3-add-all-five-agents" title="Permanent link">&para;</a></h2>
+<p>Create each agent below. Attach tools before moving to the next agent.</p>
+<h3 id="agent-1-schema-analyst">Agent 1 — Schema Analyst<a class="headerlink" href="#agent-1-schema-analyst" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Schema Analyst</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Database Schema Profiling Specialist</code></td>
+</tr>
+<tr>
+<td><strong>LLM Model</strong></td>
+<td><code>gpt-4o (Default)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Backstory:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>You are an expert data analyst for banking data warehouses. You read Impala schemas
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>via iceberg-mcp-server, run lightweight statistical queries, and produce schema profiles.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Flag PII-risk columns (cif, name, email, phone, addr, mobile, nric). Never export real
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>row values — only aggregated statistics and representative codes.
+</code></pre></div></p>
+<p><strong>Goal:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Profile every table in {target_tables}: DESCRIBE, COUNT, MIN/MAX/AVG, GROUP BY top-20.
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>For wide tables (&gt;200 cols) profile key columns plus id/no/date/amt/ccy/status/type/code.
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Output a JSON schema manifest.
+</code></pre></div></p>
+<p><strong>MCP:</strong> <code>iceberg-mcp-server</code> — add <code>get_schema</code> and <code>execute_query</code>.</p>
+<hr />
+<h3 id="agent-2-relationship-mapper">Agent 2 — Relationship Mapper<a class="headerlink" href="#agent-2-relationship-mapper" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Relationship Mapper</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Data Modelling and FK Inference Specialist</code></td>
+</tr>
+<tr>
+<td><strong>LLM Model</strong></td>
+<td><code>gpt-4o (Default)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Backstory:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>You infer FK relationships from column names and validate every candidate with a JOIN
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>COUNT query. Never assume account_no for transaction tables in some source systems — confirm transaction_no, transaction_no, or
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>other stems via DESCRIBE + SQL. Produce generation_order (parents before children) and
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>wide_tables.columns_to_populate as a list of column NAMES (not a count).
+</code></pre></div></p>
+<p><strong>Goal:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Using the schema manifest from Task 1: infer FKs, validate with SQL, classify table
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>types, output generation_order + relationships + wide_tables manifest.
+</code></pre></div></p>
+<p><strong>MCP:</strong> <code>iceberg-mcp-server</code></p>
+<hr />
+<h3 id="agent-3-synthetic-data-generator">Agent 3 — Synthetic Data Generator<a class="headerlink" href="#agent-3-synthetic-data-generator" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Synthetic Data Generator</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>PII-Free Tabular Data Generation Specialist</code></td>
+</tr>
+<tr>
+<td><strong>LLM Model</strong></td>
+<td><code>gpt-4o (Default)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Backstory:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>You generate PII-free banking synthetic data and physically write each table to disk
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>using the Artifact Files Read/Write Tool. Writing to disk is MANDATORY — generating
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>data in memory and reporting it in text is NOT sufficient. For each table you must:
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>(a) generate the rows, (b) format them as a CSV string (header + rows), (c) call the
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Artifact Files Read/Write Tool to write the file to /synthetic_output/&lt;table&gt;_synthetic.csv,
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>(d) call csv_reader to confirm the file exists and has the correct row count.
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Use SYN-CUST-* for customer IDs, SYN-ACCT-* for account keys. Every CSV header must
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>include ALL FK columns from relationships. For wide tables populate only
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>columns_to_populate; NULL the rest. Never skip any table in the target_tables_echo
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>checklist — wide and transaction tables are the most common omissions.
+</code></pre></div></p>
+<p><strong>Goal:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>For EVERY table in the target_tables_echo list from Task 2:
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  1. Generate rows in memory.
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  2. CALL Artifact Files Read/Write Tool → write CSV to /synthetic_output/&lt;table&gt;_synthetic.csv.
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  3. CALL csv_reader → confirm file exists, row count correct.
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  4. Log file path and fk_columns_written.
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>missing_tables must be empty when done.
+</code></pre></div></p>
+<p><strong>Tools:</strong> <code>Artifact Files Read/Write Tool</code>, <code>csv_reader</code></p>
+<hr />
+<h3 id="agent-4-integrity-linker">Agent 4 — Integrity Linker<a class="headerlink" href="#agent-4-integrity-linker" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Integrity Linker</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Referential Integrity Enforcement Specialist</code></td>
+</tr>
+<tr>
+<td><strong>LLM Model</strong></td>
+<td><code>gpt-4o (Default)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Backstory:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>You enforce FK integrity by reading parent CSVs, extracting key pools, overwriting child
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>FK columns, and validating orphan_count=0. You read and rewrite actual CSV files using
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Artifact Files Read/Write Tool and csv_reader — do not rely on prompt instructions alone.
+</code></pre></div></p>
+<p><strong>Goal:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>For each relationship: read parent CSV → extract pool → patch child FK column → validate
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>→ overwrite child CSV. Output fk_validation report with orphan_count_after=0 for PASS.
+</code></pre></div></p>
+<p><strong>Tools:</strong> <code>Artifact Files Read/Write Tool</code>, <code>csv_reader</code></p>
+<p><img alt="Figure 3 — FK integrity: Agent 3 writes CSVs → Agent 4 patches child FK from parent pool" src="../../images/synthetic_data_workflow_d1/fk_integrity_flow.png" /></p>
+<p><strong>How to read Figure 3</strong></p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task 3</td>
+<td>Parent and child CSVs written to <code>/synthetic_output/</code></td>
+</tr>
+<tr>
+<td>Task 4 read</td>
+<td>Agent 4 reads parent CSV via <code>Artifact Files Read/Write Tool</code> / <code>csv_reader</code></td>
+</tr>
+<tr>
+<td>Task 4 patch</td>
+<td>Child FK column overwritten with samples from parent key pool</td>
+</tr>
+<tr>
+<td>Task 4 validate</td>
+<td><code>orphan_count_after</code> must be <code>0</code> for every relationship</td>
+</tr>
+<tr>
+<td>Task 4 save</td>
+<td>Corrected child CSV written back to disk</td>
+</tr>
+</tbody>
+</table>
+<p>This is <strong>stronger than D2</strong> (prompt-only FK hints) but still agent-driven — not compiled
+code like D3's <code>enforce_fk()</code>.</p>
+<hr />
+<h3 id="agent-5-quality-evaluator">Agent 5 — Quality Evaluator<a class="headerlink" href="#agent-5-quality-evaluator" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Quality Evaluator</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Synthetic Data Statistical Quality Evaluator</code></td>
+</tr>
+<tr>
+<td><strong>LLM Model</strong></td>
+<td><code>gpt-4o (Default)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Backstory:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>You evaluate synthetic CSVs against the schema manifest and FK validation report.
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>CSVs live in the current workflow session artifact store (written by Tasks 3–4 via
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>the Artifact Files Read/Write Tool) — NOT at a bare /synthetic_output/ filesystem path.
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Always CALL the Artifact Files Read/Write Tool to read each &lt;table&gt;_synthetic.csv
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>(use paths from Task 3 generated_tables[].file, or list session artifacts and match
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>*_synthetic.csv). Then use csv_reader only if the tool returns a local path you can
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>parse. Check schema fidelity, distribution fidelity, PII safety, referential integrity,
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>and row counts. PARTIAL schema_fidelity is acceptable on wide tables when only
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>columns_to_populate were written.
+</code></pre></div></p>
+<p><strong>Goal:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>For each table in target_tables_echo: read its CSV via Artifact Files Read/Write Tool,
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>evaluate against the Task 1 manifest and Task 4 fk_validation, produce per-table
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>scorecards and overall PASS/FAIL. Set dataset_ready_for_training=true only if all
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>tables PASS (PARTIAL on wide-table schema_fidelity is OK).
+</code></pre></div></p>
+<p><strong>Tools:</strong> <code>Artifact Files Read/Write Tool</code>, <code>csv_reader</code></p>
+<hr />
+<h2 id="step-4-add-all-five-tasks">Step 4: Add All Five Tasks<a class="headerlink" href="#step-4-add-all-five-tasks" title="Permanent link">&para;</a></h2>
+<p>Click <strong>Save &amp; Next</strong> to advance to <strong>Add Tasks</strong>. Create one task per agent in order.
+Assign each task to its corresponding agent using the <strong>Select Agent</strong> dropdown.</p>
+<blockquote>
+<p>Agent Studio requires <strong>two fields</strong> for every task: <strong>Description</strong> (what to do) and
+<strong>Expected Output</strong> (the JSON shape the agent must return). Copy each block below into
+the matching UI field — do not merge them into a single field.</p>
+</blockquote>
+<p>Set <strong>Context</strong> as shown for each task.</p>
+<h3 id="task-1-schema-profiling">Task 1 — Schema Profiling<a class="headerlink" href="#task-1-schema-profiling" title="Permanent link">&para;</a></h3>
+<p><strong>Agent:</strong> Schema Analyst | <strong>Context:</strong> <em>(none)</em></p>
+<p>Copy the following into the task <strong>Description</strong> field:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>For each table in {target_tables} in {database}, use iceberg-mcp-server:
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>1. DESCRIBE {database}.&lt;table&gt; — columns, types, nullability
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>2. SELECT COUNT(*) — row count
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>3. GROUP BY top-20 on categoricals; MIN/MAX/AVG on numerics
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>4. Flag PII-risk columns (cif, name, email, phone, addr, mobile, nric) as pii_risk=true
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>For wide tables (&gt;200 columns): profile key columns plus any column containing
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>id, no, date, amt, ccy, status, type, code — but list ALL columns from DESCRIBE
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>in the manifest.
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>Echo {rows_per_table} in the output JSON.
+</code></pre></div>
+<p><strong>Expected Output</strong> (copy into the <strong>Expected Output</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">{</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;your_database&gt;"</span><span class="p">,</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nt">"rows_per_table"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="nt">"tables"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="nt">"source_customers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">      </span><span class="nt">"row_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">45000</span><span class="p">,</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">      </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customer_id"</span><span class="p">,</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">          </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">          </span><span class="nt">"pii_risk"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">          </span><span class="nt">"top_values"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">          </span><span class="nt">"min"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">          </span><span class="nt">"max"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">          </span><span class="nt">"avg"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">          </span><span class="nt">"null_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"branch_code"</span><span class="p">,</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="w">          </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="w">          </span><span class="nt">"pii_risk"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="w">          </span><span class="nt">"top_values"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"001"</span><span class="p">,</span><span class="w"> </span><span class="s2">"002"</span><span class="p">,</span><span class="w"> </span><span class="s2">"003"</span><span class="p">],</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="w">          </span><span class="nt">"null_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="w">      </span><span class="p">]</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a><span class="w">  </span><span class="nt">"total_tables_profiled"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a><span class="w">  </span><span class="nt">"pii_flagged_columns"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h3 id="task-2-relationship-mapping">Task 2 — Relationship Mapping<a class="headerlink" href="#task-2-relationship-mapping" title="Permanent link">&para;</a></h3>
+<p><strong>Agent:</strong> Relationship Mapper | <strong>Context:</strong> Task 1</p>
+<p>Copy the following into the task <strong>Description</strong> field:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Using the schema manifest from Task 1:
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>1. Infer FK candidates from exact column name matches and banking naming conventions
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>2. Validate EACH candidate with JOIN COUNT SQL — do not assume column names
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>3. Classify tables: master, child, transaction, lookup
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>4. Produce generation_order (parents before children) — EVERY table in {target_tables} must appear
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>5. For wide_tables: columns_to_populate MUST list every FK column from relationships
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>   plus semantic core (&gt;=4 master, &gt;=6 account, &gt;=7 transaction column names)
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>MANDATORY COLUMN RULES (same bar as D2 — do not skip):
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>A. FK columns are non-negotiable. Any column in relationships (parent_column or
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>   child_column) MUST appear in columns_to_populate for that table.
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>   - source_accounts: customer_id (child FK) AND account key column (transaction_no or account_no)
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>   - source_transactions: the confirmed account join column from DESCRIBE + JOIN SQL
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>B. Minimum semantic core (column names, not counts only):
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>   - Master: PK/CIF + branch + name + open date (&gt;= 4)
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>   - Account: account key + customer_id + type + balance + ccy + status (&gt;= 6)
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>   - Transaction: account FK + txn id + amount + ccy + date + type + status (&gt;= 7)
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>C. Confirm source_transactions join column — transaction tables in some source systems often use transaction_id or transaction_ref, not account_no.
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>D. Emit target_tables_echo: comma-split list of every table in {target_tables} for Task 3 checklist.
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>Example wide_tables entry (no JSON in this field — see Expected Output for full JSON):
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>  table=source_transactions, total_columns=896,
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>  columns_to_populate=[transaction_no, customer_id, transaction_no, txn_dt, txn_amt, ccy_cd, txn_type, status_cd]
+</code></pre></div>
+<p><strong>Expected Output</strong> (copy into the <strong>Expected Output</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">"generation_order"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="p">{</span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_customers"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w"> </span><span class="nt">"depends_on"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nt">"fk"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">},</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="p">{</span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_accounts"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"child"</span><span class="p">,</span><span class="w"> </span><span class="nt">"depends_on"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"source_customers"</span><span class="p">],</span><span class="w"> </span><span class="nt">"fk"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customer_id"</span><span class="p">},</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="p">{</span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_transactions"</span><span class="p">,</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transaction"</span><span class="p">,</span><span class="w"> </span><span class="nt">"depends_on"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"source_accounts"</span><span class="p">],</span><span class="w"> </span><span class="nt">"fk"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transaction_no"</span><span class="p">}</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span><span class="nt">"relationships"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">      </span><span class="nt">"parent_table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_customers"</span><span class="p">,</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">      </span><span class="nt">"parent_column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customer_id"</span><span class="p">,</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">      </span><span class="nt">"child_table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_accounts"</span><span class="p">,</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">      </span><span class="nt">"child_column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customer_id"</span><span class="p">,</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">      </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="s2">"high"</span><span class="p">,</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="w">      </span><span class="nt">"validated_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">44982</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="w">      </span><span class="nt">"parent_table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_accounts"</span><span class="p">,</span>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="w">      </span><span class="nt">"parent_column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transaction_no"</span><span class="p">,</span>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="w">      </span><span class="nt">"child_table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_transactions"</span><span class="p">,</span>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="w">      </span><span class="nt">"child_column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transaction_no"</span><span class="p">,</span>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="w">      </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="s2">"high"</span><span class="p">,</span>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="w">      </span><span class="nt">"validated_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">128450</span>
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="w">  </span><span class="nt">"lookup_tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"source_lookup_table"</span><span class="p">],</span>
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="w">  </span><span class="nt">"transaction_tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"source_transactions"</span><span class="p">],</span>
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a><span class="w">  </span><span class="nt">"target_tables_echo"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"source_customers"</span><span class="p">,</span><span class="w"> </span><span class="s2">"source_accounts"</span><span class="p">,</span><span class="w"> </span><span class="s2">"source_transactions"</span><span class="p">],</span>
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a><span class="w">  </span><span class="nt">"wide_tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a><span class="w">      </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_transactions"</span><span class="p">,</span>
+<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a><span class="w">      </span><span class="nt">"total_columns"</span><span class="p">:</span><span class="w"> </span><span class="mi">896</span><span class="p">,</span>
+<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a><span class="w">      </span><span class="nt">"columns_to_populate"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"transaction_no"</span><span class="p">,</span><span class="w"> </span><span class="s2">"customer_id"</span><span class="p">,</span><span class="w"> </span><span class="s2">"transaction_no"</span><span class="p">,</span><span class="w"> </span><span class="s2">"txn_dt"</span><span class="p">,</span><span class="w"> </span><span class="s2">"txn_amt"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ccy_cd"</span><span class="p">,</span><span class="w"> </span><span class="s2">"txn_type"</span><span class="p">,</span><span class="w"> </span><span class="s2">"status_cd"</span><span class="p">]</span>
+<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h3 id="task-3-data-generation">Task 3 — Data Generation<a class="headerlink" href="#task-3-data-generation" title="Permanent link">&para;</a></h3>
+<p><strong>Agent:</strong> Synthetic Data Generator | <strong>Context:</strong> Tasks 1, 2</p>
+<p>Copy the following into the task <strong>Description</strong> field:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Process every table in target_tables_echo from Task 2 in generation_order.
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>For EACH table T (repeat until all tables done):
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>STEP A — Generate rows in memory
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  - {rows_per_table} rows, using column rules:
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    * PII IDs → SYN-CUST-000001 format; account keys → SYN-ACCT-0000000001
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    * Amounts → log-normal within profiled [min, max]
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    * Categoricals → sample from top_values frequencies
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    * FK columns → include in EVERY row; Task 4 will overwrite with parent pool values
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>    * Wide tables → populate ONLY wide_tables[].columns_to_populate; all other columns NULL
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>  - Minimum column sets (use columns_to_populate from Task 2 for transactions):
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>    * customers: customer_id, branch_code, full_name, open_date (and all other manifest columns)
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>    * accounts: transaction_no (or confirmed account key), customer_id, acct_type, bal_amt, ccy, status
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>    * transactions: account FK col, transaction_no, txn_amt, ccy_cd, txn_dt, txn_type, status_cd
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>STEP B — Build CSV string
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>  - First row: comma-separated column header
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>  - Remaining rows: one data row per line
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>  - Include ALL FK columns in the header even if values are placeholder
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>STEP C — CALL Artifact Files Read/Write Tool
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>  - Write the CSV string to: /synthetic_output/&lt;T&gt;_synthetic.csv
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>  - This step is MANDATORY. Generating rows without calling the tool means NO FILE EXISTS.
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>STEP D — CALL csv_reader to verify
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>  - Read /synthetic_output/&lt;T&gt;_synthetic.csv
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>  - Confirm: file exists, row count = {rows_per_table}, FK columns in header
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>  - If file is missing or row count is 0: retry STEP C before moving on
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>STEP E — Record in log
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>  - file: /synthetic_output/&lt;T&gt;_synthetic.csv
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>  - rows: {rows_per_table}
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>  - fk_columns_written: [list of FK columns in header]
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>  - columns_populated / columns_defaulted count
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a>
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>Advance to next table. When all tables in target_tables_echo are done, output the JSON.
+</code></pre></div>
+<p><strong>Expected Output</strong> (copy into the <strong>Expected Output</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">{</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span><span class="nt">"target_tables_requested"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="nt">"tables_generated_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="nt">"missing_tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span><span class="nt">"generated_tables"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">      </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_customers"</span><span class="p">,</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">      </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">      </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/synthetic_output/source_customers_synthetic.csv"</span><span class="p">,</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="w">      </span><span class="nt">"columns_populated"</span><span class="p">:</span><span class="w"> </span><span class="mi">82</span><span class="p">,</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="w">      </span><span class="nt">"columns_defaulted"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="w">      </span><span class="nt">"fk_columns_written"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"customer_id"</span><span class="p">]</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="w">      </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_accounts"</span><span class="p">,</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="w">      </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="w">      </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/synthetic_output/source_accounts_synthetic.csv"</span><span class="p">,</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="w">      </span><span class="nt">"columns_populated"</span><span class="p">:</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="w">      </span><span class="nt">"columns_defaulted"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a><span class="w">      </span><span class="nt">"fk_columns_written"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"customer_id"</span><span class="p">,</span><span class="w"> </span><span class="s2">"transaction_no"</span><span class="p">]</span>
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a><span class="w">      </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_transactions"</span><span class="p">,</span>
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a><span class="w">      </span><span class="nt">"rows"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a><span class="w">      </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/synthetic_output/source_transactions_synthetic.csv"</span><span class="p">,</span>
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a><span class="w">      </span><span class="nt">"columns_populated"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a><span class="w">      </span><span class="nt">"columns_defaulted"</span><span class="p">:</span><span class="w"> </span><span class="mi">888</span><span class="p">,</span>
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a><span class="w">      </span><span class="nt">"fk_columns_written"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"transaction_no"</span><span class="p">]</span>
+<a id="__codelineno-18-29" name="__codelineno-18-29" href="#__codelineno-18-29"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-18-30" name="__codelineno-18-30" href="#__codelineno-18-30"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-18-31" name="__codelineno-18-31" href="#__codelineno-18-31"></a><span class="w">  </span><span class="nt">"generation_log"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3/3 CSVs written in FK order; source_transactions wide-table partial populate."</span>
+<a id="__codelineno-18-32" name="__codelineno-18-32" href="#__codelineno-18-32"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h3 id="task-4-integrity-linking">Task 4 — Integrity Linking<a class="headerlink" href="#task-4-integrity-linking" title="Permanent link">&para;</a></h3>
+<p><strong>Agent:</strong> Integrity Linker | <strong>Context:</strong> Tasks 2, 3</p>
+<p>Copy the following into the task <strong>Description</strong> field:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>For every entry in relationships from Task 2:
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>1. Read parent CSV from /synthetic_output/&lt;parent&gt;_synthetic.csv
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>2. Extract unique parent_column values into a key pool
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>3. Read child CSV; overwrite child_column with random samples from pool
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>4. Validate orphan_count = 0
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>5. Overwrite child CSV using Artifact Files Read/Write Tool
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>For many-to-many bridge tables: generate membership counts using Poisson(lambda=3).
+</code></pre></div>
+<p><strong>Expected Output</strong> (copy into the <strong>Expected Output</strong> field):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="p">{</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="nt">"fk_validation"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">      </span><span class="nt">"parent_table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_customers"</span><span class="p">,</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">      </span><span class="nt">"parent_column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customer_id"</span><span class="p">,</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">      </span><span class="nt">"child_table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_accounts"</span><span class="p">,</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">      </span><span class="nt">"child_column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customer_id"</span><span class="p">,</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">      </span><span class="nt">"orphan_count_before"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">      </span><span class="nt">"orphan_count_after"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">      </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PASS"</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">      </span><span class="nt">"parent_table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_accounts"</span><span class="p">,</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="w">      </span><span class="nt">"parent_column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transaction_no"</span><span class="p">,</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="w">      </span><span class="nt">"child_table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source_transactions"</span><span class="p">,</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="w">      </span><span class="nt">"child_column"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transaction_no"</span><span class="p">,</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="w">      </span><span class="nt">"orphan_count_before"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="w">      </span><span class="nt">"orphan_count_after"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="w">      </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PASS"</span>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="w">  </span><span class="nt">"tables_updated"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"source_accounts"</span><span class="p">,</span><span class="w"> </span><span class="s2">"source_transactions"</span><span class="p">],</span>
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a><span class="w">  </span><span class="nt">"bridge_tables_created"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a><span class="w">  </span><span class="nt">"overall_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PASS"</span>
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h3 id="task-5-quality-evaluation">Task 5 — Quality Evaluation<a class="headerlink" href="#task-5-quality-evaluation" title="Permanent link">&para;</a></h3>
+<p><strong>Agent:</strong> Quality Evaluator | <strong>Context:</strong> Tasks 1, 3, 4</p>
+<p>Copy the following into the task <strong>Description</strong> field:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Evaluate all generated CSVs from Tasks 3–4. Files are session artifacts — NOT on a
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>bare /synthetic_output/ filesystem path.
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>STEP 1 — Resolve file list
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>  - From Task 3 output: use generated_tables[].file for each table (preferred).
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>  - Fallback: for each table in target_tables_echo, expect &lt;table&gt;_synthetic.csv.
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>  - If unsure: CALL Artifact Files Read/Write Tool to list artifacts in the current
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    session and match files ending in _synthetic.csv.
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>STEP 2 — Read each CSV (mandatory)
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>  - For EACH file: CALL Artifact Files Read/Write Tool to read the CSV content.
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>    Use the exact path from Task 3 generated_tables[].file when available.
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>  - Do NOT call csv_reader with /synthetic_output/... alone — that path is not where
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>    session artifacts live. csv_reader is only for parsing after the artifact tool
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>    returns a readable path.
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>STEP 3 — Evaluate each table in target_tables_echo
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>  1. completeness_check — CSV read succeeded (missing → FAIL)
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>  2. schema_fidelity — PASS / PARTIAL (wide) / FAIL
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>  3. distribution_fidelity — top-3 categoricals, numeric mean within 20% of profile
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>  4. pii_safety — no NRIC/email/phone patterns in string cells
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>  5. referential_integrity — use Task 4 fk_validation (any FAIL → dataset FAIL)
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>  6. row_count_check — matches {rows_per_table} (lookup 50-200 exempt)
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>OUTPUT FORMAT (required for Test UI readability):
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>Return a markdown report with headers and tables (not a single JSON blob).
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>Use this structure:
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a># Synthetic Data Quality Report — D1
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>
+<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>## Executive Summary
+<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>| Field | Value |
+<a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a>| overall_verdict | PASS or FAIL |
+<a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>| tables_requested | 3 |
+<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a>| csv_files_found | 3 |
+<a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>| dataset_ready_for_training | true or false |
+<a id="__codelineno-21-37" name="__codelineno-21-37" href="#__codelineno-21-37"></a>
+<a id="__codelineno-21-38" name="__codelineno-21-38" href="#__codelineno-21-38"></a>## Files Generated
+<a id="__codelineno-21-39" name="__codelineno-21-39" href="#__codelineno-21-39"></a>| Table | CSV file | Rows | Columns in header | FK columns present |
+<a id="__codelineno-21-40" name="__codelineno-21-40" href="#__codelineno-21-40"></a>(one row per table; flag MISSING if CSV absent or unreadable)
+<a id="__codelineno-21-41" name="__codelineno-21-41" href="#__codelineno-21-41"></a>
+<a id="__codelineno-21-42" name="__codelineno-21-42" href="#__codelineno-21-42"></a>## FK Chain (from Task 4)
+<a id="__codelineno-21-43" name="__codelineno-21-43" href="#__codelineno-21-43"></a>| Parent → Child | Column | orphan_count_after | Status |
+<a id="__codelineno-21-44" name="__codelineno-21-44" href="#__codelineno-21-44"></a>
+<a id="__codelineno-21-45" name="__codelineno-21-45" href="#__codelineno-21-45"></a>## Per-Table Scorecards
+<a id="__codelineno-21-46" name="__codelineno-21-46" href="#__codelineno-21-46"></a>### &lt;table_name&gt;
+<a id="__codelineno-21-47" name="__codelineno-21-47" href="#__codelineno-21-47"></a>| Criterion | Result | Notes |
+<a id="__codelineno-21-48" name="__codelineno-21-48" href="#__codelineno-21-48"></a>(schema_fidelity, distribution_fidelity, pii_safety, referential_integrity, row_count_check)
+<a id="__codelineno-21-49" name="__codelineno-21-49" href="#__codelineno-21-49"></a>
+<a id="__codelineno-21-50" name="__codelineno-21-50" href="#__codelineno-21-50"></a>## Issues &amp; Recommendations
+<a id="__codelineno-21-51" name="__codelineno-21-51" href="#__codelineno-21-51"></a>- Bullet list; CRITICAL if any target table CSV is missing or unreadable
+<a id="__codelineno-21-52" name="__codelineno-21-52" href="#__codelineno-21-52"></a>
+<a id="__codelineno-21-53" name="__codelineno-21-53" href="#__codelineno-21-53"></a>After the markdown, append a fenced ```json block with evaluation_summary and table_scorecards.
+<a id="__codelineno-21-54" name="__codelineno-21-54" href="#__codelineno-21-54"></a>
+<a id="__codelineno-21-55" name="__codelineno-21-55" href="#__codelineno-21-55"></a>If any target table CSV cannot be read via Artifact Files Read/Write Tool,
+<a id="__codelineno-21-56" name="__codelineno-21-56" href="#__codelineno-21-56"></a>overall_verdict = FAIL and dataset_ready_for_training = false.
+<a id="__codelineno-21-57" name="__codelineno-21-57" href="#__codelineno-21-57"></a>PARTIAL schema_fidelity on wide tables is OK when FK and PII pass.
+</code></pre></div>
+<p><strong>Expected Output</strong> (copy into the <strong>Expected Output</strong> field):</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="gh"># Synthetic Data Quality Report — D1</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="gu">## Executive Summary</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>| Field | Value |
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>|---|---|
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>| overall_verdict | PASS |
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>| tables_requested | 3 |
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>| csv_files_found | 3 |
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>| tables_passed | 3 |
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>| dataset_ready_for_training | true |
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="gu">## Files Generated</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>| Table | CSV file | Rows | Columns in header | FK columns present |
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>|---|---|---:|---:|---|
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>| source_customers | source_customers_synthetic.csv | 100 | 12 | customer_id |
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a>| source_accounts | source_accounts_synthetic.csv | 100 | 10 | customer_id, transaction_no |
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>| source_transactions | source_transactions_synthetic.csv | 100 | 8 | transaction_no |
+<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>
+<a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="gu">## FK Chain (from Task 4)</span>
+<a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a>| Parent → Child | Join column | orphan_count_after | Status |
+<a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>|---|---|---:|---|
+<a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a>| customers → accounts | customer_id | 0 | PASS |
+<a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a>| accounts → transactions | transaction_no | 0 | PASS |
+<a id="__codelineno-22-24" name="__codelineno-22-24" href="#__codelineno-22-24"></a>
+<a id="__codelineno-22-25" name="__codelineno-22-25" href="#__codelineno-22-25"></a><span class="gu">## Per-Table Scorecards</span>
+<a id="__codelineno-22-26" name="__codelineno-22-26" href="#__codelineno-22-26"></a><span class="gu">### source_customers</span>
+<a id="__codelineno-22-27" name="__codelineno-22-27" href="#__codelineno-22-27"></a>| Criterion | Result | Notes |
+<a id="__codelineno-22-28" name="__codelineno-22-28" href="#__codelineno-22-28"></a>|---|---|---|
+<a id="__codelineno-22-29" name="__codelineno-22-29" href="#__codelineno-22-29"></a>| schema_fidelity | PASS | |
+<a id="__codelineno-22-30" name="__codelineno-22-30" href="#__codelineno-22-30"></a>| distribution_fidelity | PASS | |
+<a id="__codelineno-22-31" name="__codelineno-22-31" href="#__codelineno-22-31"></a>| pii_safety | PASS | |
+<a id="__codelineno-22-32" name="__codelineno-22-32" href="#__codelineno-22-32"></a>| referential_integrity | PASS | parent table |
+<a id="__codelineno-22-33" name="__codelineno-22-33" href="#__codelineno-22-33"></a>| row_count_check | PASS | 100 rows |
+<a id="__codelineno-22-34" name="__codelineno-22-34" href="#__codelineno-22-34"></a>
+<a id="__codelineno-22-35" name="__codelineno-22-35" href="#__codelineno-22-35"></a><span class="gu">### source_accounts</span>
+<a id="__codelineno-22-36" name="__codelineno-22-36" href="#__codelineno-22-36"></a>| Criterion | Result | Notes |
+<a id="__codelineno-22-37" name="__codelineno-22-37" href="#__codelineno-22-37"></a>|---|---|---|
+<a id="__codelineno-22-38" name="__codelineno-22-38" href="#__codelineno-22-38"></a>| schema_fidelity | PASS | |
+<a id="__codelineno-22-39" name="__codelineno-22-39" href="#__codelineno-22-39"></a>| referential_integrity | PASS | customer_id ⊆ customers |
+<a id="__codelineno-22-40" name="__codelineno-22-40" href="#__codelineno-22-40"></a>
+<a id="__codelineno-22-41" name="__codelineno-22-41" href="#__codelineno-22-41"></a><span class="gu">### source_transactions</span>
+<a id="__codelineno-22-42" name="__codelineno-22-42" href="#__codelineno-22-42"></a>| Criterion | Result | Notes |
+<a id="__codelineno-22-43" name="__codelineno-22-43" href="#__codelineno-22-43"></a>|---|---|---|
+<a id="__codelineno-22-44" name="__codelineno-22-44" href="#__codelineno-22-44"></a>| schema_fidelity | PARTIAL | 8/896 cols populated (expected) |
+<a id="__codelineno-22-45" name="__codelineno-22-45" href="#__codelineno-22-45"></a>| referential_integrity | PASS | transaction_no ⊆ accounts |
+<a id="__codelineno-22-46" name="__codelineno-22-46" href="#__codelineno-22-46"></a>
+<a id="__codelineno-22-47" name="__codelineno-22-47" href="#__codelineno-22-47"></a><span class="gu">## Issues &amp; Recommendations</span>
+<a id="__codelineno-22-48" name="__codelineno-22-48" href="#__codelineno-22-48"></a><span class="k">-</span><span class="w"> </span>None — all 3 target CSVs present with FK columns in headers.
+<a id="__codelineno-22-49" name="__codelineno-22-49" href="#__codelineno-22-49"></a>
+<a id="__codelineno-22-50" name="__codelineno-22-50" href="#__codelineno-22-50"></a>```json
+<a id="__codelineno-22-51" name="__codelineno-22-51" href="#__codelineno-22-51"></a>{
+<a id="__codelineno-22-52" name="__codelineno-22-52" href="#__codelineno-22-52"></a>  "evaluation_summary": {
+<a id="__codelineno-22-53" name="__codelineno-22-53" href="#__codelineno-22-53"></a>    "overall_verdict": "PASS",
+<a id="__codelineno-22-54" name="__codelineno-22-54" href="#__codelineno-22-54"></a>    "tables_evaluated": 3,
+<a id="__codelineno-22-55" name="__codelineno-22-55" href="#__codelineno-22-55"></a>    "tables_passed": 3,
+<a id="__codelineno-22-56" name="__codelineno-22-56" href="#__codelineno-22-56"></a>    "tables_failed": 0,
+<a id="__codelineno-22-57" name="__codelineno-22-57" href="#__codelineno-22-57"></a>    "csv_files_found": 3,
+<a id="__codelineno-22-58" name="__codelineno-22-58" href="#__codelineno-22-58"></a>    "dataset_ready_for_training": true
+<a id="__codelineno-22-59" name="__codelineno-22-59" href="#__codelineno-22-59"></a>  },
+<a id="__codelineno-22-60" name="__codelineno-22-60" href="#__codelineno-22-60"></a>  "table_scorecards": [
+<a id="__codelineno-22-61" name="__codelineno-22-61" href="#__codelineno-22-61"></a>    {
+<a id="__codelineno-22-62" name="__codelineno-22-62" href="#__codelineno-22-62"></a>      "table": "source_customers",
+<a id="__codelineno-22-63" name="__codelineno-22-63" href="#__codelineno-22-63"></a>      "schema_fidelity": "PASS",
+<a id="__codelineno-22-64" name="__codelineno-22-64" href="#__codelineno-22-64"></a>      "distribution_fidelity": "PASS",
+<a id="__codelineno-22-65" name="__codelineno-22-65" href="#__codelineno-22-65"></a>      "pii_safety": "PASS",
+<a id="__codelineno-22-66" name="__codelineno-22-66" href="#__codelineno-22-66"></a>      "referential_integrity": "PASS",
+<a id="__codelineno-22-67" name="__codelineno-22-67" href="#__codelineno-22-67"></a>      "row_count_check": "PASS",
+<a id="__codelineno-22-68" name="__codelineno-22-68" href="#__codelineno-22-68"></a>      "verdict": "PASS"
+<a id="__codelineno-22-69" name="__codelineno-22-69" href="#__codelineno-22-69"></a>    },
+<a id="__codelineno-22-70" name="__codelineno-22-70" href="#__codelineno-22-70"></a>    {
+<a id="__codelineno-22-71" name="__codelineno-22-71" href="#__codelineno-22-71"></a>      "table": "source_accounts",
+<a id="__codelineno-22-72" name="__codelineno-22-72" href="#__codelineno-22-72"></a>      "schema_fidelity": "PASS",
+<a id="__codelineno-22-73" name="__codelineno-22-73" href="#__codelineno-22-73"></a>      "distribution_fidelity": "PASS",
+<a id="__codelineno-22-74" name="__codelineno-22-74" href="#__codelineno-22-74"></a>      "pii_safety": "PASS",
+<a id="__codelineno-22-75" name="__codelineno-22-75" href="#__codelineno-22-75"></a>      "referential_integrity": "PASS",
+<a id="__codelineno-22-76" name="__codelineno-22-76" href="#__codelineno-22-76"></a>      "row_count_check": "PASS",
+<a id="__codelineno-22-77" name="__codelineno-22-77" href="#__codelineno-22-77"></a>      "verdict": "PASS"
+<a id="__codelineno-22-78" name="__codelineno-22-78" href="#__codelineno-22-78"></a>    },
+<a id="__codelineno-22-79" name="__codelineno-22-79" href="#__codelineno-22-79"></a>    {
+<a id="__codelineno-22-80" name="__codelineno-22-80" href="#__codelineno-22-80"></a>      "table": "source_transactions",
+<a id="__codelineno-22-81" name="__codelineno-22-81" href="#__codelineno-22-81"></a>      "schema_fidelity": "PARTIAL",
+<a id="__codelineno-22-82" name="__codelineno-22-82" href="#__codelineno-22-82"></a>      "distribution_fidelity": "PARTIAL",
+<a id="__codelineno-22-83" name="__codelineno-22-83" href="#__codelineno-22-83"></a>      "pii_safety": "PASS",
+<a id="__codelineno-22-84" name="__codelineno-22-84" href="#__codelineno-22-84"></a>      "referential_integrity": "PASS",
+<a id="__codelineno-22-85" name="__codelineno-22-85" href="#__codelineno-22-85"></a>      "row_count_check": "PASS",
+<a id="__codelineno-22-86" name="__codelineno-22-86" href="#__codelineno-22-86"></a>      "verdict": "PASS",
+<a id="__codelineno-22-87" name="__codelineno-22-87" href="#__codelineno-22-87"></a>      "notes": "Wide table: 8 columns populated; FK transaction_no present."
+<a id="__codelineno-22-88" name="__codelineno-22-88" href="#__codelineno-22-88"></a>    }
+<a id="__codelineno-22-89" name="__codelineno-22-89" href="#__codelineno-22-89"></a>  ]
+<a id="__codelineno-22-90" name="__codelineno-22-90" href="#__codelineno-22-90"></a>}
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Once all five tasks are added:
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>![Figure 4 — Agent Studio UI: five agents, five tasks, sequential context wiring](../images/synthetic_data_workflow_d1/final_workflow.png)
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>**How to read Figure 4**
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>| Element | Verify |
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>|---|---|
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>| Sequential, non-conversational | Fixed task order |
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>| Task 2 context → Task 1 | Schema manifest available for FK inference |
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>| Task 3 context → Tasks 1+2 | Generation uses manifest + relationships |
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>| Task 4 context → Tasks 2+3 | FK patch uses relationships + generated CSVs |
+<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>| Task 5 context → Tasks 1+3+4 | Evaluation uses manifest, CSVs, FK report |
+<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>| Agents 1–2 + iceberg-mcp-server | Only schema tasks touch Impala |
+<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>| Agents 3–5 + Artifact Files Read/Write Tool | CSV write (3–4), read (5), FK patch (4) on session artifact store |
+<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>
+<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>---
+<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a>
+<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>## Step 5: Configure Tool Parameters
+<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a>
+<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a>### iceberg-mcp-server (Agents 1 and 2)
+<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a>
+<a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a>Same Impala credentials as D2 prerequisites.
+<a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a>
+<a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a>### Artifact Files Read/Write Tool / csv_reader (Agents 3, 4, 5)
+<a id="__codelineno-23-26" name="__codelineno-23-26" href="#__codelineno-23-26"></a>
+<a id="__codelineno-23-27" name="__codelineno-23-27" href="#__codelineno-23-27"></a>No extra UserParameters unless your deployment requires a base path override.
+<a id="__codelineno-23-28" name="__codelineno-23-28" href="#__codelineno-23-28"></a>
+<a id="__codelineno-23-29" name="__codelineno-23-29" href="#__codelineno-23-29"></a>**Task 5 read rule:** Attach **Artifact Files Read/Write Tool** to Agent 5. Session
+<a id="__codelineno-23-30" name="__codelineno-23-30" href="#__codelineno-23-30"></a>CSVs are under `studio-data/workflows/&lt;workflow&gt;/session/&lt;session_id&gt;/` — visible in
+<a id="__codelineno-23-31" name="__codelineno-23-31" href="#__codelineno-23-31"></a>the Test UI **Artifact Files** tab. Task 5 must read through the artifact tool using
+<a id="__codelineno-23-32" name="__codelineno-23-32" href="#__codelineno-23-32"></a>paths from Task 3 `generated_tables[].file`, not `csv_reader` on `/synthetic_output/` alone.
+<a id="__codelineno-23-33" name="__codelineno-23-33" href="#__codelineno-23-33"></a>
+<a id="__codelineno-23-34" name="__codelineno-23-34" href="#__codelineno-23-34"></a>---
+<a id="__codelineno-23-35" name="__codelineno-23-35" href="#__codelineno-23-35"></a>
+<a id="__codelineno-23-36" name="__codelineno-23-36" href="#__codelineno-23-36"></a>## Step 6: Run the Workflow
+</code></pre></div>
+target_tables  = source_customers,source_accounts,source_transactions
+rows_per_table = 100
+database       = <your_database>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>A scoped first run typically takes **5–15 minutes** (five LLM tasks + Impala queries +
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>CSV generation). Sequence: Task 1 → 2 → 3 → 4 → 5.
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>---
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>## Step 7: Verify the FK Chain
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>After Task 4 completes, verify programmatic FK integrity — D1's key differentiator vs D2.
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>### Beat 0 — Artifact file count
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>In the Test UI **Artifact Files** tab, confirm **3 CSVs** (one per target table):
+</code></pre></div>
+source_customers_synthetic.csv
+source_accounts_synthetic.csv
+source_transactions_synthetic.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>If only 2 CSVs appear, Task 3 skipped the transaction table — re-run with the updated Task 3 description.
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>### Beat 1 — Task 2 `relationships` array
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>Confirm edges like:
+</code></pre></div>
+source_customers.customer_id  →  source_accounts.customer_id
+source_accounts.transaction_no →  source_transactions.transaction_no   (confirm actual column names)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>### Beat 2 — Task 4 `fk_validation`
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>Every entry must show:
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>```json
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>{"orphan_count_after": 0, "status": "PASS"}
+</code></pre></div></p>
+<p>If <code>orphan_count_after &gt; 0</code>, re-run Task 4 or fix Task 2 join column names.</p>
+<h3 id="beat-3-spot-check-csvs">Beat 3 — Spot-check CSVs<a class="headerlink" href="#beat-3-spot-check-csvs" title="Permanent link">&para;</a></h3>
+<p>Open child CSV and confirm every FK value appears in the parent CSV for that column.</p>
+<h3 id="beat-4-task-5-scorecard">Beat 4 — Task 5 scorecard<a class="headerlink" href="#beat-4-task-5-scorecard" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>source_customers</code></td>
+<td>schema_fidelity PASS</td>
+</tr>
+<tr>
+<td><code>source_accounts</code></td>
+<td>schema_fidelity PASS, referential_integrity PASS</td>
+</tr>
+<tr>
+<td><code>source_transactions</code></td>
+<td>schema_fidelity <strong>PARTIAL</strong> (expected), referential_integrity PASS</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task 5 reports all CSVs missing but Artifact Files tab shows them</td>
+<td>Agent 5 used csv_reader on <code>/synthetic_output/</code> instead of Artifact Files Read/Write Tool</td>
+<td>Attach artifact tool to Agent 5; re-paste Agent 5 Backstory/Goal and Task 5 Description</td>
+</tr>
+<tr>
+<td>Workflow shows extra inputs (parent_table, table, column, target_tables_echo)</td>
+<td>Agent/task text contains brace-wrapped field names or inline JSON like <code>{"table":...}</code> in a <strong>Description</strong> field</td>
+<td>Delete extra inputs; re-paste Description/Expected Output from Step 4 (only 3 inputs allowed)</td>
+</tr>
+<tr>
+<td><code>Template variable '…' not found</code></td>
+<td>Same as above — Agent Studio parsed a name in curly braces that is not a workflow input</td>
+<td>Search agent backstory/goal and task fields for stray <code>{…}</code>; remove or rephrase without braces</td>
+</tr>
+<tr>
+<td>Agent 4 cannot patch FK</td>
+<td>FK column missing from child CSV header</td>
+<td>Add column to Task 2 <code>columns_to_populate</code>; re-run Task 3</td>
+</tr>
+<tr>
+<td>Only 2 CSVs / missing source_transactions</td>
+<td>Agent 3 stopped after master+account</td>
+<td>Re-run Task 3 with updated description: must write all tables in <code>target_tables_echo</code></td>
+</tr>
+<tr>
+<td>CSVs too simple (FK cols only)</td>
+<td>Task 2 semantic core too thin</td>
+<td>Expand <code>columns_to_populate</code> with &gt;=6 account / &gt;=7 transaction columns</td>
+</tr>
+<tr>
+<td>orphan_count_after &gt; 0</td>
+<td>Wrong parent/child column in relationships</td>
+<td>Re-run Task 2 with JOIN validation SQL</td>
+</tr>
+<tr>
+<td>Wide table FAIL schema</td>
+<td>Too few columns in CSV</td>
+<td>Expand <code>columns_to_populate</code> in Task 2</td>
+</tr>
+<tr>
+<td>PII regex hits in Task 5</td>
+<td>Real-looking NRIC/email in generated text</td>
+<td>Regenerate with SYN-* surrogate rules in Task 3</td>
+</tr>
+<tr>
+<td>Timeout on <code>target_tables=all</code></td>
+<td>Too many tables for one session</td>
+<td>Stay scoped or move to D3</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="when-to-use-d2-or-d3-instead">When to use D2 or D3 instead<a class="headerlink" href="#when-to-use-d2-or-d3-instead" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stakeholder SDS demo, ≤25 rows, LLM judge</td>
+<td><strong>D2</strong> — <a href="../synthetic_data_d2_workflow/"><code>synthetic_data_d2_workflow.md</code></a></td>
+</tr>
+<tr>
+<td>Full schema parity, 10k+ rows, reproducible CML Jobs</td>
+<td><strong>D3</strong> — <a href="../synthetic_data_d3_workflow/"><code>synthetic_data_d3_workflow.md</code></a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="related-files">Related files<a class="headerlink" href="#related-files" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>../extra_materials/synthetic_data_workflow_d1/agents.yaml</code></td>
+<td>Agent definitions (YAML import)</td>
+</tr>
+<tr>
+<td><code>../extra_materials/synthetic_data_workflow_d1/tasks.yaml</code></td>
+<td>Task definitions (YAML import)</td>
+</tr>
+<tr>
+<td><code>../extra_materials/synthetic_data_workflow_d1/agents.yaml</code></td>
+<td>Agent Studio import</td>
+</tr>
+<tr>
+<td><code>../extra_materials/synthetic_data_workflow_d1/tasks.yaml</code></td>
+<td>Task definitions</td>
+</tr>
+<tr>
+<td><code>../images/synthetic_data_workflow_d1/*.png</code></td>
+<td>Rendered diagrams</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Workflow Overview">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Workflow Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../synthetic_data_d2_workflow/" class="md-footer__link md-footer__link--next" aria-label="Next: D2: SDS Integration">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                D2: SDS Integration
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "navigation.footer", "content.code.annotate", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/username-replacer.js"></script>
+      
+    
+  </body>
+</html>

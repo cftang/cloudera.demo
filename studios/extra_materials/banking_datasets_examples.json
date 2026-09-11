@@ -1,0 +1,245 @@
+[
+  {
+    "customer": {
+      "cust_id": "C10001",
+      "first_name": "Sarah",
+      "last_name": "Lim",
+      "date_of_birth": "1995-03-15",
+      "email": "sarah.lim@email.com",
+      "phone": "9234-5678",
+      "address": "123 Marina Boulevard",
+      "postal_code": "018981",
+      "nationality": "Singaporean",
+      "region": "Central",
+      "customer_since": "2020-01-15",
+      "customer_segment": "Young Professional",
+      "credit_score": 720
+    },
+    "accounts": [
+      {
+        "account_id": "A10001",
+        "cust_id": "C10001",
+        "account_type": "Checking",
+        "account_status": "Active",
+        "branch": "Marina Bay Branch",
+        "open_date": "2020-01-15",
+        "current_balance": 7050.00,
+        "currency": "SGD",
+        "interest_rate": 0.10,
+        "overdraft_limit": 1500.00
+      },
+      {
+        "account_id": "A10002",
+        "cust_id": "C10001",
+        "account_type": "Savings",
+        "account_status": "Active",
+        "branch": "Marina Bay Branch",
+        "open_date": "2020-01-15",
+        "current_balance": 19500.00,
+        "currency": "SGD",
+        "interest_rate": 1.50,
+        "overdraft_limit": 0.00
+      }
+    ],
+    "transactions": [
+      {
+        "transaction_id": "T10001",
+        "account_id": "A10001",
+        "transaction_date": "2024-01-20",
+        "transaction_time": "10:24:15",
+        "transaction_type": "Debit",
+        "transaction_category": "Groceries",
+        "amount": -163.20,
+        "merchant_name": "Fairprice Supermarket",
+        "description": "Grocery purchase",
+        "balance_after": 7050.00
+      },
+      {
+        "transaction_id": "T10002",
+        "account_id": "A10001",
+        "transaction_date": "2024-01-22",
+        "transaction_time": "14:15:00",
+        "transaction_type": "Credit",
+        "transaction_category": "Salary",
+        "amount": 5850.00,
+        "merchant_name": "Tech Corp Singapore",
+        "description": "Bi-weekly payroll deposit",
+        "balance_after": 12750.00
+      },
+      {
+        "transaction_id": "T10003",
+        "account_id": "A10002",
+        "transaction_date": "2024-01-25",
+        "transaction_time": "09:00:00",
+        "transaction_type": "Credit",
+        "transaction_category": "Interest",
+        "amount": 24.38,
+        "merchant_name": "Bank Interest",
+        "description": "Monthly interest credit",
+        "balance_after": 19524.38
+      }
+    ]
+  },
+  {
+    "customer": {
+      "cust_id": "C10002",
+      "first_name": "Michael",
+      "last_name": "Chen",
+      "date_of_birth": "1982-07-22",
+      "email": "mchen@smallbiz.sg",
+      "phone": "8765-4321",
+      "address": "456 Jurong Road",
+      "postal_code": "628554",
+      "nationality": "Malaysian",
+      "region": "West",
+      "customer_since": "2018-05-10",
+      "customer_segment": "Small Business",
+      "credit_score": 780
+    },
+    "accounts": [
+      {
+        "account_id": "A10003",
+        "cust_id": "C10002",
+        "account_type": "Business Checking",
+        "account_status": "Active",
+        "branch": "Jurong Branch",
+        "open_date": "2018-05-10",
+        "current_balance": 58799.75,
+        "currency": "SGD",
+        "interest_rate": 0.15,
+        "overdraft_limit": 8000.00
+      }
+    ],
+    "transactions": [
+      {
+        "transaction_id": "T10004",
+        "account_id": "A10003",
+        "transaction_date": "2024-01-18",
+        "transaction_time": "11:30:45",
+        "transaction_type": "Debit",
+        "transaction_category": "Business Expense",
+        "amount": -3055.00,
+        "merchant_name": "Staples Singapore",
+        "description": "Office equipment purchase",
+        "balance_after": 55744.75
+      },
+      {
+        "transaction_id": "T10005",
+        "account_id": "A10003",
+        "transaction_date": "2024-01-21",
+        "transaction_time": "16:20:00",
+        "transaction_type": "Credit",
+        "transaction_category": "Business Income",
+        "amount": 19500.00,
+        "merchant_name": "Client Payment",
+        "description": "Invoice #1245 payment",
+        "balance_after": 75244.75
+      }
+    ]
+  },
+  {
+    "customer": {
+      "cust_id": "C10003",
+      "first_name": "Emily",
+      "last_name": "Tan",
+      "date_of_birth": "1958-11-08",
+      "email": "emily.tan@email.com",
+      "phone": "6789-1234",
+      "address": "789 Orchard Road",
+      "postal_code": "238823",
+      "nationality": "Singaporean",
+      "region": "Central",
+      "customer_since": "2005-03-20",
+      "customer_segment": "Retiree",
+      "credit_score": 810
+    },
+    "accounts": [
+      {
+        "account_id": "A10004",
+        "cust_id": "C10003",
+        "account_type": "Checking",
+        "account_status": "Active",
+        "branch": "Orchard Branch",
+        "open_date": "2005-03-20",
+        "current_balance": 16250.00,
+        "currency": "SGD",
+        "interest_rate": 0.10,
+        "overdraft_limit": 2000.00
+      },
+      {
+        "account_id": "A10005",
+        "cust_id": "C10003",
+        "account_type": "Savings",
+        "account_status": "Active",
+        "branch": "Orchard Branch",
+        "open_date": "2005-03-20",
+        "current_balance": 110500.00,
+        "currency": "SGD",
+        "interest_rate": 1.25,
+        "overdraft_limit": 0.00
+      },
+      {
+        "account_id": "A10006",
+        "cust_id": "C10003",
+        "account_type": "Fixed Deposit",
+        "account_status": "Active",
+        "branch": "Orchard Branch",
+        "open_date": "2023-06-15",
+        "current_balance": 65000.00,
+        "currency": "SGD",
+        "interest_rate": 3.75,
+        "overdraft_limit": 0.00
+      }
+    ],
+    "transactions": [
+      {
+        "transaction_id": "T10006",
+        "account_id": "A10004",
+        "transaction_date": "2024-01-15",
+        "transaction_time": "09:15:00",
+        "transaction_type": "Credit",
+        "transaction_category": "Transfer",
+        "amount": 2500.00,
+        "merchant_name": "Transfer from Savings",
+        "description": "Internal transfer",
+        "balance_after": 16250.00
+      },
+      {
+        "transaction_id": "T10007",
+        "account_id": "A10004",
+        "transaction_date": "2024-01-16",
+        "transaction_time": "14:30:00",
+        "transaction_type": "Debit",
+        "transaction_category": "Utilities",
+        "amount": -241.15,
+        "merchant_name": "Power Company",
+        "description": "Monthly utility bill",
+        "balance_after": 16008.85
+      },
+      {
+        "transaction_id": "T10008",
+        "account_id": "A10005",
+        "transaction_date": "2024-01-15",
+        "transaction_time": "09:15:00",
+        "transaction_type": "Debit",
+        "transaction_category": "Transfer",
+        "amount": -2500.00,
+        "merchant_name": "Transfer to Checking",
+        "description": "Internal transfer",
+        "balance_after": 108000.00
+      },
+      {
+        "transaction_id": "T10009",
+        "account_id": "A10005",
+        "transaction_date": "2024-01-25",
+        "transaction_time": "00:00:01",
+        "transaction_type": "Credit",
+        "transaction_category": "Interest",
+        "amount": 113.04,
+        "merchant_name": "Bank Interest",
+        "description": "Monthly interest payment",
+        "balance_after": 108113.04
+      }
+    ]
+  }
+]

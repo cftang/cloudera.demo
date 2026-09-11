@@ -1,0 +1,3876 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Hands-on lab demonstrating how Cloudera AI Agent Studio, RAG Studio, and Synthetic Data Studio interoperate — two focused demos plus a three-studio capstone.">
+      
+      
+      
+        <link rel="canonical" href="https://ferdinandzhong.github.io/handson-labs/demos/agent_rag_demo/">
+      
+      
+        <link rel="prev" href="../lab2_calculator_with_tools/">
+      
+      
+        <link rel="next" href="../../synthetic_data_lab/SYNTHETIC_DATA_WORKFLOWS_SUMMARY/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Agentic RAG-App Evaluation - Cloudera AI Studios Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#agentic-rag-app-evaluation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Cloudera AI Studios Lab" class="md-header__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cloudera AI Studios Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Agentic RAG-App Evaluation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../studios/agent_studio/" class="md-tabs__link">
+          
+  
+  
+  Studios
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../lab1_calculator_workflow/" class="md-tabs__link">
+          
+  
+  
+  Agent Studio Quickstart
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  RAG Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../synthetic_data_lab/SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-tabs__link">
+          
+  
+  
+  Synthetic Data Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../nl_to_sql/nl_to_sql_workflow/" class="md-tabs__link">
+          
+  
+  
+  NL-to-SQL Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../memory/digital_banking_chatbot/" class="md-tabs__link">
+          
+  
+  
+  Agent Memory Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../iot/uc1_predictive_maintenance/" class="md-tabs__link">
+          
+  
+  
+  IoT Demos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../hallucination_guardrails/anti_hallucination_lab/" class="md-tabs__link">
+          
+  
+  
+  Vehicle Manufacturing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/rag_studio_tool/" class="md-tabs__link">
+          
+  
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cloudera AI Studios Lab" class="md-nav__button md-logo" aria-label="Cloudera AI Studios Lab" data-md-component="logo">
+      
+  <img src="../../assets/images/logo-cloudera-white.svg" alt="logo">
+
+    </a>
+    Cloudera AI Studios Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Studios
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Studios
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/agent_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/rag_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../studios/synthetic_data_studio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Studio Quickstart
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Studio Quickstart
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab1_calculator_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1: Build Your First Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab2_calculator_with_tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 2: Workflow with a Custom Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RAG Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic RAG-App Evaluation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agentic RAG-App Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-knowledge-base-global-financial-markets-geopolitical-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Knowledge Base: Global Financial Markets &amp; Geopolitical Risk
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Knowledge Base: Global Financial Markets &amp; Geopolitical Risk">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-base-documents-pre-downloaded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge base documents (pre-downloaded)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-explore-rag-studio-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1 — Explore RAG Studio First
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 1 — Explore RAG Studio First">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-create-the-knowledge-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Create the Knowledge Base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-upload-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Upload Documents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-query-rag-studio-directly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Query RAG Studio Directly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-generate-your-cdp-api-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Generate Your CDP API Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-understand-the-rag-studio-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Understand the RAG Studio API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-set-up-the-rag-studio-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2 — Set Up the RAG Studio Tool
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 2 — Set Up the RAG Studio Tool">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#userparameters-configure-once-per-tool-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UserParameters (configure once per tool registration)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toolparameters-set-by-agents-at-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ToolParameters (set by agents at runtime)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-build-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3 — Build the Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 3 — Build the Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-1-qa-pair-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 1 — Q&amp;A Pair Generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-2-qa-quality-verifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 2 — Q&amp;A Quality Verifier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-3-document-generator-uploader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 3 — Document Generator &amp; Uploader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-4-rag-query-specialist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 4 — RAG Query Specialist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-5-rag-evaluation-analyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 5 — RAG Evaluation Analyst
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-generate-ground-truth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1 — Generate Ground Truth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-verify-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2 — Verify Quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-upload-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3 — Upload Document
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-query-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4 — Query RAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-evaluate-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5 — Evaluate Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-4-configure-the-rag-studio-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 4 — Configure the RAG Studio Tool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-5-test-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 5 — Test the Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 5 — Test the Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-text-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample text files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#primary-sample-world-bank-cmo-oct-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary sample — World Bank CMO Oct 2024
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secondary-sample-world-bank-cmo-oct-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secondary sample — World Bank CMO Oct 2025
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-and-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run and review
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interpreting-your-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpreting your results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Synthetic Data Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/synthetic_data_d1_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D1: LLM-Driven Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/synthetic_data_d2_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D2: SDS Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/synthetic_data_d3_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D3: Production Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../synthetic_data_lab/SYNTHETIC_DATA_DEMO_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workshop Presenter Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NL-to-SQL Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nl_to_sql/nl_to_sql_workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL Agentic Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nl_to_sql/nl_to_sql_workflow_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL-to-SQL (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Memory Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agent Memory Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory/digital_banking_chatbot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Digital Banking Chatbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IoT Demos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IoT Demos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iot/uc1_predictive_maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC1: Predictive Maintenance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iot/uc2_predictive_quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UC2: Predictive Quality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vehicle Manufacturing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Vehicle Manufacturing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hallucination_guardrails/anti_hallucination_lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Grounding + Guardrails (POC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hallucination_guardrails/anti_hallucination_lab_as3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anti-Hallucination (Agent Studio 3.0)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/rag_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/synthetic_data_studio_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthetic Data Studio Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jailbreak_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jailbreak & Input Safety Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/nl_query_evaluator_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NL Query Evaluator Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/ontology_grounding_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ontology Grounding Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g1_verdict_lock_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G1: Verdict Lock Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g2_claim_citation_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G2: Claim Citation Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g3_grounding_verifier_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G3: Grounding Verifier Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/g4_action_catalog_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    G4: Action Catalog Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-knowledge-base-global-financial-markets-geopolitical-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Knowledge Base: Global Financial Markets &amp; Geopolitical Risk
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Knowledge Base: Global Financial Markets &amp; Geopolitical Risk">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-base-documents-pre-downloaded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge base documents (pre-downloaded)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-explore-rag-studio-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 1 — Explore RAG Studio First
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 1 — Explore RAG Studio First">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-create-the-knowledge-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Create the Knowledge Base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-upload-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Upload Documents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-query-rag-studio-directly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Query RAG Studio Directly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-generate-your-cdp-api-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Generate Your CDP API Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-understand-the-rag-studio-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Understand the RAG Studio API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-set-up-the-rag-studio-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 2 — Set Up the RAG Studio Tool
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 2 — Set Up the RAG Studio Tool">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#userparameters-configure-once-per-tool-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UserParameters (configure once per tool registration)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toolparameters-set-by-agents-at-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ToolParameters (set by agents at runtime)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-build-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 3 — Build the Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 3 — Build the Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-1-qa-pair-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 1 — Q&amp;A Pair Generator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-2-qa-quality-verifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 2 — Q&amp;A Quality Verifier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-3-document-generator-uploader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 3 — Document Generator &amp; Uploader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-4-rag-query-specialist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 4 — RAG Query Specialist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-5-rag-evaluation-analyst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 5 — RAG Evaluation Analyst
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-generate-ground-truth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1 — Generate Ground Truth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-verify-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2 — Verify Quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-upload-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3 — Upload Document
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-query-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4 — Query RAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-evaluate-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5 — Evaluate Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-4-configure-the-rag-studio-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 4 — Configure the RAG Studio Tool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-5-test-the-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 5 — Test the Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 5 — Test the Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-text-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample text files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#primary-sample-world-bank-cmo-oct-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary sample — World Bank CMO Oct 2024
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secondary-sample-world-bank-cmo-oct-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secondary sample — World Bank CMO Oct 2025
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-and-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run and review
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interpreting-your-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpreting your results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="agentic-rag-app-evaluation">Agentic RAG-App Evaluation<a class="headerlink" href="#agentic-rag-app-evaluation" title="Permanent link">&para;</a></h1>
+<p>This demo shows Agent Studio orchestrating an end-to-end RAG evaluation pipeline against a
+RAG Studio knowledge base — generating ground-truth Q&amp;A pairs from a document, uploading
+it, querying the knowledge base, and scoring retrieval and generation quality across five
+metrics.</p>
+<p>For the full workflow specification (including tool source), see
+<a href="https://github.com/FerdinandZhong/agent_studios_assets/blob/main/instructions/rag_evaluation_workflow.md">rag_evaluation_workflow.md</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code>rag_studio_tool</code> source is included in this lab. See the
+<a href="../../tools/rag_studio_tool/">RAG Studio Tool setup</a> page and the
+<a href="../../studios/rag_studio/">RAG Studio overview</a> for configuration details.</p>
+</div>
+<hr />
+<h2 id="the-knowledge-base-global-financial-markets-geopolitical-risk">The Knowledge Base: Global Financial Markets &amp; Geopolitical Risk<a class="headerlink" href="#the-knowledge-base-global-financial-markets-geopolitical-risk" title="Permanent link">&para;</a></h2>
+<p>This demo uses a knowledge base built from public research reports on global financial
+market changes driven by geopolitical events in 2024–2025, with a focus on the Middle
+East conflict and its impact on oil, energy, equities, and macroeconomic stability.</p>
+<h3 id="knowledge-base-documents-pre-downloaded">Knowledge base documents (pre-downloaded)<a class="headerlink" href="#knowledge-base-documents-pre-downloaded" title="Permanent link">&para;</a></h3>
+<p>The following PDFs are ready to upload to your RAG Studio knowledge base. Click a filename
+to download it directly.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Publisher</th>
+<th>Report</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a download="download" href="../rag/kb_documents/worldbank_geopolitical_oil_supply_shocks.pdf">worldbank_geopolitical_oil_supply_shocks.pdf</a></td>
+<td>World Bank</td>
+<td><strong>The Effects of Geopolitical Oil Supply Shocks</strong> (Special Focus)</td>
+<td>How oil-supply conflicts transmit to prices, inflation, and growth — three escalation scenarios</td>
+</tr>
+<tr>
+<td><a download="download" href="../rag/kb_documents/worldbank_cmo_apr2026.pdf">worldbank_cmo_apr2026.pdf</a></td>
+<td>World Bank</td>
+<td><strong>Commodity Markets Outlook — April 2026</strong> (full report, 69 pp.)</td>
+<td>Energy price forecasts, geopolitical risk premium, post-escalation trajectory</td>
+</tr>
+<tr>
+<td><a download="download" href="../rag/kb_documents/worldbank_cmo_apr2026_forecasts.pdf">worldbank_cmo_apr2026_forecasts.pdf</a></td>
+<td>World Bank</td>
+<td><strong>Commodity Markets Outlook — April 2026</strong> (executive summary)</td>
+<td>Compact price forecast tables — good for quick Q&amp;A pairs</td>
+</tr>
+<tr>
+<td><a download="download" href="../rag/kb_documents/imf_weo_oct2024.pdf">imf_weo_oct2024.pdf</a></td>
+<td>IMF</td>
+<td><strong>World Economic Outlook — October 2024</strong> ("Policy Pivot, Rising Threats")</td>
+<td>Global growth risks from Middle East conflict, inflation outlook, policy tradeoffs</td>
+</tr>
+<tr>
+<td><a download="download" href="../rag/kb_documents/imf_gfsr_oct2024.pdf">imf_gfsr_oct2024.pdf</a></td>
+<td>IMF</td>
+<td><strong>Global Financial Stability Report — October 2024</strong> ("Steadying the Course")</td>
+<td>Financial stability risks from geopolitical escalation, asset price volatility</td>
+</tr>
+<tr>
+<td><a download="download" href="../rag/kb_documents/bis_quarterly_review_sep2024.pdf">bis_quarterly_review_sep2024.pdf</a></td>
+<td>BIS</td>
+<td><strong>BIS Quarterly Review — September 2024</strong></td>
+<td>International banking developments, geopolitical risk and financial fragmentation</td>
+</tr>
+<tr>
+<td><a download="download" href="../rag/kb_documents/bis_quarterly_review_dec2024.pdf">bis_quarterly_review_dec2024.pdf</a></td>
+<td>BIS</td>
+<td><strong>BIS Quarterly Review — December 2024</strong></td>
+<td>Latest market developments, commodity price dynamics, financial stability</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Recommended documents for the demo</p>
+<p>Start with
+<strong><a download="download" href="../rag/kb_documents/worldbank_geopolitical_oil_supply_shocks.pdf">worldbank_geopolitical_oil_supply_shocks.pdf</a></strong>
+— it is concise (Special Focus chapter), has clear factual claims about three conflict
+escalation scenarios and their price impacts, and generates well-scoped Q&amp;A pairs. Add
+<strong><a download="download" href="../rag/kb_documents/imf_weo_oct2024.pdf">imf_weo_oct2024.pdf</a></strong> as a second
+document for broader macro context.</p>
+</div>
+<hr />
+<h2 id="workflow-overview">Workflow Overview<a class="headerlink" href="#workflow-overview" title="Permanent link">&para;</a></h2>
+<p>The RAG evaluation workflow performs five sequential tasks:</p>
+<ol>
+<li><strong>Generate Ground Truth</strong> — Read the document and generate 5–10 Q&amp;A pairs</li>
+<li><strong>Verify Quality</strong> — Validate and score each Q&amp;A pair (approve ≥ 0.8)</li>
+<li><strong>Upload Document</strong> — Upload the PDF to the RAG Studio knowledge base</li>
+<li><strong>Query RAG</strong> — Query the knowledge base with each validated question</li>
+<li><strong>Evaluate Results</strong> — Score retrieval and generation quality across 5 metrics</li>
+</ol>
+<p>Each task produces <strong>JSON output only</strong> — no PDF reports. Agent 3 uses <code>write_to_shared_pdf</code>
+internally to create an intermediate upload file; that PDF is not a user-facing deliverable.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  TASK 1  │    │  TASK 2  │    │  TASK 3  │    │  TASK 4  │    │  TASK 5  │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│ Generate │───▶│  Verify  │───▶│  Upload  │───▶│  Query   │───▶│ Evaluate │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ Ground   │    │ Quality  │    │ Document │    │   RAG    │    │ Results  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Truth   │    │          │    │          │    │          │    │          │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└────┬─────┘    └────┬─────┘    └────┬─────┘    └────┬─────┘    └────┬─────┘
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>     ▼               ▼               ▼               ▼               ▼
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│ AGENT 1  │    │ AGENT 2  │    │ AGENT 3  │    │ AGENT 4  │    │ AGENT 5  │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│ Q&amp;A Pair │    │ Quality  │    │ Document │    │RAG Query │    │Evaluation│
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│Generator │    │Verifier  │    │ Uploader │    │Specialist│    │ Analyst  │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>└──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘
+</code></pre></div>
+<hr />
+<h2 id="part-1-explore-rag-studio-first">Part 1 — Explore RAG Studio First<a class="headerlink" href="#part-1-explore-rag-studio-first" title="Permanent link">&para;</a></h2>
+<p>Before building the workflow, spend a few minutes setting up and exploring RAG Studio
+directly.</p>
+<h3 id="11-create-the-knowledge-base">1.1 Create the Knowledge Base<a class="headerlink" href="#11-create-the-knowledge-base" title="Permanent link">&para;</a></h3>
+<p>In RAG Studio, go to <strong>Knowledge Bases → Create</strong> (or edit an existing base) and configure
+the settings shown below. Use the name <strong>Global Finance KB</strong> — this must match the
+<code>knowledge_base_name</code> parameter when you configure <code>rag_studio_tool</code> later.</p>
+<p><img alt="Create or update the Global Finance KB" src="../../images/rag_demo/create_or_update_kb.png" /></p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Global Finance KB</code></td>
+</tr>
+<tr>
+<td><strong>Chunk size (tokens)</strong></td>
+<td><code>512</code></td>
+</tr>
+<tr>
+<td><strong>Embedding model</strong></td>
+<td><code>Text Embedding Ada 002</code></td>
+</tr>
+<tr>
+<td><strong>Connection</strong></td>
+<td><code>Manual</code></td>
+</tr>
+<tr>
+<td><strong>Summarization model</strong></td>
+<td><code>OpenAI GPT-4o</code></td>
+</tr>
+<tr>
+<td><strong>Available without project</strong></td>
+<td>ON</td>
+</tr>
+<tr>
+<td><strong>Distance metric</strong></td>
+<td><code>Cosine</code></td>
+</tr>
+<tr>
+<td><strong>Chunk overlap</strong></td>
+<td><code>10%</code></td>
+</tr>
+</tbody>
+</table>
+<p>Click <strong>Update</strong> (or <strong>Create</strong>) to save the knowledge base.</p>
+<h3 id="12-upload-documents">1.2 Upload Documents<a class="headerlink" href="#12-upload-documents" title="Permanent link">&para;</a></h3>
+<p>Open <strong>Global Finance KB → Manage</strong> and upload the pre-downloaded PDFs from the
+<a href="#knowledge-base-documents-pre-downloaded">knowledge base table above</a> — not the
+<code>sample_documents/</code> text files (those are pasted at Test time in Part 5). Drag and drop
+PDFs into the upload area, then click <strong>Start Upload</strong>. Wait until all documents show as
+indexed before running the workflow.</p>
+<p><img alt="Upload documents to Global Finance KB" src="../../images/rag_demo/created_global_finance_kb.png" /></p>
+<p>When indexing completes, you should see a summary of the uploaded content and a status like
+<strong>Documents indexed: 6 / 6</strong>. You can also let Agent 3 upload a single document generated
+from pasted text during the workflow run (see Task 3).</p>
+<h3 id="13-query-rag-studio-directly">1.3 Query RAG Studio Directly<a class="headerlink" href="#13-query-rag-studio-directly" title="Permanent link">&para;</a></h3>
+<p>Start a chat session against <strong>Global Finance KB</strong> and try a question about the document
+content:</p>
+<blockquote>
+<p><em>"What are the main risks to oil markets from the Middle East conflict in 2024?"</em></p>
+</blockquote>
+<p>Notice the answer and the <strong>retrieved chunks</strong> shown in the Sources panel. This is exactly
+what the RAG Query agent (Task 4) will automate — but across 5–10 questions at once with
+automatic scoring.</p>
+<h3 id="14-generate-your-cdp-api-key">1.4 Generate Your CDP API Key<a class="headerlink" href="#14-generate-your-cdp-api-key" title="Permanent link">&para;</a></h3>
+<p>The workflow needs a CDP API key to authenticate against RAG Studio.</p>
+<ol>
+<li>In <strong>CDP Management Console</strong>, click your username (bottom-left) → <strong>User Settings</strong>.</li>
+<li>Go to <strong>API Keys → Create API Key</strong>.</li>
+<li>Select <strong>both audiences</strong>: Control Plane API and Workload API. Click <strong>Create</strong>.</li>
+<li><strong>Copy the key immediately</strong> — it is only shown once.</li>
+</ol>
+<p>You will use this key as the <code>api_key</code> parameter when configuring the RAG Studio Tool in
+the workflow.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The API key is only shown once. If you lose it, create a new one.</p>
+</div>
+<h3 id="15-understand-the-rag-studio-api">1.5 Understand the RAG Studio API<a class="headerlink" href="#15-understand-the-rag-studio-api" title="Permanent link">&para;</a></h3>
+<p>The <code>rag_studio_tool</code> calls RAG Studio REST endpoints under the hood. In RAG Studio, open
+<strong>Settings → API Service → Metadata API</strong> to browse the available endpoints:</p>
+<p><img alt="RAG Studio Metadata API" src="../../images/rag_demo/rag_studio_apis.png" /></p>
+<table>
+<thead>
+<tr>
+<th>API endpoint</th>
+<th>Tool action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/v1/rag/dataSources</code></td>
+<td><code>list_knowledge_bases</code>, KB lookup for query/upload</td>
+</tr>
+<tr>
+<td><code>POST /api/v1/rag/dataSources/{id}/files</code></td>
+<td><code>upload_document</code></td>
+</tr>
+<tr>
+<td><code>POST /api/v1/rag/sessions</code></td>
+<td><code>query</code> — creates a temporary session</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/rag/sessions</code></td>
+<td><code>get_sessions</code></td>
+</tr>
+<tr>
+<td><code>DELETE /api/v1/rag/sessions/{id}</code></td>
+<td><code>query</code> — cleans up after each query</td>
+</tr>
+<tr>
+<td><code>GET /llm-service/sessions/{id}/chat-history</code></td>
+<td><code>get_chat_history</code></td>
+</tr>
+</tbody>
+</table>
+<p>For the <code>query</code> action, the tool creates a session, sends the question via the streaming
+completion endpoint, collects the answer and source chunks, then deletes the session.</p>
+<p>See <a href="../../tools/rag_studio_tool/">RAG Studio Tool</a> for full registration and parameter
+details.</p>
+<hr />
+<h2 id="part-2-set-up-the-rag-studio-tool">Part 2 — Set Up the RAG Studio Tool<a class="headerlink" href="#part-2-set-up-the-rag-studio-tool" title="Permanent link">&para;</a></h2>
+<p>The workflow uses a custom <code>rag_studio_tool</code>. Register it in Agent Studio's Tools Catalog
+before building the workflow.</p>
+<p>See the full tool setup guide: <a href="../../tools/rag_studio_tool/">RAG Studio Tool</a></p>
+<h3 id="supported-actions">Supported actions<a class="headerlink" href="#supported-actions" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td>Send a question to the knowledge base; returns answer and source citations</td>
+</tr>
+<tr>
+<td><code>upload_document</code></td>
+<td>Upload a local file into the configured knowledge base</td>
+</tr>
+<tr>
+<td><code>list_knowledge_bases</code></td>
+<td>List all knowledge bases with document count and embedding model</td>
+</tr>
+<tr>
+<td><code>get_sessions</code></td>
+<td>List existing RAG sessions</td>
+</tr>
+<tr>
+<td><code>get_chat_history</code></td>
+<td>Retrieve message history with per-turn evaluations (requires <code>session_id</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="userparameters-configure-once-per-tool-registration">UserParameters (configure once per tool registration)<a class="headerlink" href="#userparameters-configure-once-per-tool-registration" title="Permanent link">&para;</a></h3>
+<p>Set these in the Agent Studio Tools Catalog. They apply to every agent that uses this tool.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>base_url</code></td>
+<td>RAG Studio API URL</td>
+<td><code>https://ragstudio-xxx.cloudera.site</code></td>
+</tr>
+<tr>
+<td><code>api_key</code></td>
+<td>CDP API key from Part 1.4</td>
+<td>(paste the key you generated)</td>
+</tr>
+<tr>
+<td><code>knowledge_base_name</code></td>
+<td>Target knowledge base name (case-insensitive partial match)</td>
+<td><code>Global Finance KB</code></td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td>Project ID for session creation</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>inference_model</code></td>
+<td>LLM for RAG generation</td>
+<td><code>gpt-4o</code> (or instructor-provided model)</td>
+</tr>
+<tr>
+<td><code>response_chunks</code></td>
+<td>Number of retrieved chunks per query</td>
+<td><code>5</code></td>
+</tr>
+<tr>
+<td><code>timeout_seconds</code></td>
+<td>HTTP timeout in seconds</td>
+<td><code>60</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="toolparameters-set-by-agents-at-runtime">ToolParameters (set by agents at runtime)<a class="headerlink" href="#toolparameters-set-by-agents-at-runtime" title="Permanent link">&para;</a></h3>
+<p>When an agent calls the tool during workflow execution, it specifies:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Required for</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>action</code></td>
+<td>All calls</td>
+<td>One of: <code>query</code>, <code>upload_document</code>, <code>list_knowledge_bases</code>, <code>get_sessions</code>, <code>get_chat_history</code></td>
+</tr>
+<tr>
+<td><code>query</code></td>
+<td><code>query</code></td>
+<td>The question string to send to the knowledge base</td>
+</tr>
+<tr>
+<td><code>file_path</code></td>
+<td><code>upload_document</code></td>
+<td>Absolute path to the file on the Agent Studio host</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td><code>get_chat_history</code></td>
+<td>Session ID to retrieve history for</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="part-3-build-the-workflow">Part 3 — Build the Workflow<a class="headerlink" href="#part-3-build-the-workflow" title="Permanent link">&para;</a></h2>
+<p>Create a <strong>Sequential</strong> workflow in Agent Studio named <code>RAG Evaluation Workflow</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Is Conversational</strong></td>
+<td><strong>OFF</strong> — each document evaluation is a self-contained pipeline run</td>
+</tr>
+<tr>
+<td><strong>Manager Agent</strong></td>
+<td><strong>OFF</strong> — sequential pipeline, no routing needed</td>
+</tr>
+</tbody>
+</table>
+<p>Add a workflow input variable <code>{document_text}</code> for copy-pasted document content at test
+time.</p>
+<h3 id="agents">Agents<a class="headerlink" href="#agents" title="Permanent link">&para;</a></h3>
+<h4 id="agent-1-qa-pair-generator">Agent 1 — Q&amp;A Pair Generator<a class="headerlink" href="#agent-1-qa-pair-generator" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>QA Pair Generator (Text Input)</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Ground Truth Dataset Creator for RAG Evaluation (Text-Based)</code></td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You are an expert in creating high-quality question-answer pairs for evaluating RAG systems. You have deep experience in analyzing text content, identifying key information, and formulating diverse question types that thoroughly test retrieval and generation capabilities. Unlike your PDF-reading counterpart, you work directly with text content that users copy and paste, making you ideal for situations where file uploads are not available. You understand that effective RAG evaluation requires questions of varying difficulty and types — from simple factual lookups to complex reasoning questions. Your Q&amp;A pairs serve as the gold standard ground truth against which RAG system outputs will be measured.</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>See below</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Goal (copy this):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Receive and thoroughly analyze the provided text content from {document_text}.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. Generate 5-10 high-quality question-answer pairs covering: Factual Questions (2-3), Reasoning Questions (2-3), Summarization Questions (1-2), Comparison Questions (1-2).
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3. For each Q&amp;A pair, provide: question, answer, type (factual/reasoning/summarization/comparison), source_reference.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4. Output the Q&amp;A pairs in the following JSON format:
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>{
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  "document_name": "User Provided Text",
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  "qa_pairs": [
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    {
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>      "id": 1,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>      "question": "What is the question text?",
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>      "answer": "The ground truth answer",
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>      "type": "factual",
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>      "source_reference": "Paragraph 3, starting with '...'"
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    }
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  ]
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>}
+</code></pre></div>
+<h4 id="agent-2-qa-quality-verifier">Agent 2 — Q&amp;A Quality Verifier<a class="headerlink" href="#agent-2-qa-quality-verifier" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>QA Quality Verifier (Text Input)</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>Ground Truth Dataset Quality Assurance Specialist (Text-Based)</code></td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You have extensive experience in data validation and quality assurance within AI and machine learning projects. Over the years, you have developed a keen eye for spotting subtle errors and inconsistencies in large datasets. You approach your work methodically, combining automated checks with thoughtful manual review to guarantee that datasets are reliable and useful for downstream applications. Unlike your PDF-reading counterpart, you work directly with text content that users copy and paste, allowing you to validate Q&amp;A pairs even when file uploads are not available. You understand that the quality of ground truth data directly impacts evaluation accuracy — a flawed Q&amp;A pair will produce misleading evaluation results. Your rigorous validation ensures that only high-quality, unambiguous Q&amp;A pairs proceed to the evaluation pipeline.</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>See below</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Goal (copy this):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Receive the Q&amp;A pairs generated by the Q&amp;A Pair Generator.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Reference the original text content from {document_text} for validation.
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>3. Validate each Q&amp;A pair for: Answer accuracy, completeness, conciseness; Question clarity and answerability; Question type coverage and diversity; No duplicates, accurate source references.
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>4. Assign quality score (0-1) to each pair, flag issues. Approved pairs must score &gt;= 0.8.
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>5. Output validation report in the following JSON format:
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>{
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  "validation_summary": {
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    "total_pairs": 10,
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    "approved": 8,
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    "flagged": 2,
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    "overall_quality_score": 0.85,
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    "question_type_coverage": {"factual": 3, "reasoning": 3, "summarization": 2, "comparison": 2}
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>  },
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  "validated_pairs": [
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    {
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>      "id": 1,
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>      "question": "...",
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>      "answer": "...",
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>      "type": "factual",
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>      "source_reference": "Paragraph 3",
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>      "quality_score": 0.95,
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>      "status": "approved",
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>      "issues": []
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>    }
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>  ],
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>  "recommendations": ["Consider revising flagged Q&amp;A pairs before proceeding"]
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>}
+</code></pre></div>
+<h4 id="agent-3-document-generator-uploader">Agent 3 — Document Generator &amp; Uploader<a class="headerlink" href="#agent-3-document-generator-uploader" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>Document Generator and Uploader (Text Input)</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>PDF Generator and RAG Knowledge Base Manager</code></td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You are responsible for converting text content into PDF documents and managing them in the RAG Studio knowledge base. Unlike the standard Document Uploader who works with existing files, you handle situations where users provide text content directly through copy-paste. You understand that the text must first be properly formatted as a PDF document before it can be uploaded to the RAG system for indexing. Your expertise ensures that text-based inputs are seamlessly converted and ingested into the knowledge base, enabling RAG evaluation even when file uploads are not available.</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>See below</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td><code>write_to_shared_pdf</code>, <code>rag_studio_tool</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Goal (copy this):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Receive the text content from {document_text}.
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2. Use write_to_shared_pdf tool with output_file="source_document.pdf" and markdown_content set to the text content.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>3. After PDF generation, use rag_studio_tool with action="upload_document" to upload the generated PDF to the configured knowledge base.
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>4. Verify both operations were successful.
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>5. Report combined status in the following JSON format:
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>{
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  "pdf_generation": {
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    "status": "success",
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    "file_path": "/home/cdsw/source_document.pdf",
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    "file_name": "source_document.pdf"
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  },
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  "upload_status": {
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    "status": "success",
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    "knowledge_base_name": "Global Finance KB",
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    "knowledge_base_id": "kb-123",
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    "document_name": "source_document.pdf",
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    "message": "Document uploaded successfully",
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    "timestamp": "2026-03-03T10:30:00Z"
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  }
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>}
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Intermediate PDF only</p>
+<p>Agent 3 uses <code>write_to_shared_pdf</code> to create <code>source_document.pdf</code> because
+<code>rag_studio_tool</code> <code>upload_document</code> requires a file path. This PDF is an upload
+artifact, not a workflow deliverable.</p>
+</div>
+<h4 id="agent-4-rag-query-specialist">Agent 4 — RAG Query Specialist<a class="headerlink" href="#agent-4-rag-query-specialist" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>RAG Query Specialist</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>RAG System Tester and Response Collector</code></td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You systematically query the RAG system with each ground-truth question and record both the generated answers and the retrieved context chunks for evaluation. You meticulously record both generated answers and retrieved context chunks — the raw material needed to evaluate retrieval and generation separately.</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>For each approved Q&amp;A pair from Task 2, call <code>rag_studio_tool</code> with <code>action=query</code> and the question text. Collect RAG answers and retrieved chunks. Output JSON with <code>query_results</code> array preserving Q&amp;A pair IDs.</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td><code>rag_studio_tool</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="agent-5-rag-evaluation-analyst">Agent 5 — RAG Evaluation Analyst<a class="headerlink" href="#agent-5-rag-evaluation-analyst" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><code>RAG Evaluation Analyst</code></td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td><code>RAG Quality Assessment Specialist</code></td>
+</tr>
+<tr>
+<td><strong>Backstory</strong></td>
+<td>You evaluate RAG system performance using five metrics covering retrieval and generation quality: Context Relevance, Faithfulness, Answer Relevance, Semantic Similarity, and Correctness. You use LLM-as-judge techniques combined with semantic analysis for objective scoring.</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>See below</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Goal (copy this):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. Evaluate each query result from Agent 4 against the ground truth answer.
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Compute five metrics per question (all 0-1): context_relevance, faithfulness, answer_relevance, semantic_similarity, correctness.
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>3. Provide reasoning for each score.
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>4. Compute summary statistics across all questions.
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>5. Output the evaluation report in the following JSON format:
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>{
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  "evaluation_summary": {
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    "total_questions": 10,
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    "avg_context_relevance": 0.85,
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    "avg_faithfulness": 0.90,
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    "avg_answer_relevance": 0.88,
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    "avg_semantic_similarity": 0.82,
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    "avg_correctness": 0.80
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  },
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  "detailed_results": [
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    {
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>      "id": 1,
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>      "question": "...",
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>      "question_type": "factual",
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>      "scores": {
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>        "context_relevance": 0.9,
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>        "faithfulness": 1.0,
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>        "answer_relevance": 0.85,
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>        "semantic_similarity": 0.8,
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>        "correctness": 0.9
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>      },
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>      "reasoning": "..."
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>    }
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>  ],
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>  "recommendations": ["..."]
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>}
+</code></pre></div>
+<hr />
+<h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
+<h4 id="task-1-generate-ground-truth">Task 1 — Generate Ground Truth<a class="headerlink" href="#task-1-generate-ground-truth" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Description</strong></td>
+<td>Analyze the document content provided directly as text input {document_text} (copy-pasted by the user). Generate a comprehensive set of question-answer pairs that will serve as the ground truth dataset for RAG evaluation. The generated Q&amp;A pairs must be diverse, covering different question types and difficulty levels to thoroughly test the RAG system's retrieval and generation capabilities.</td>
+</tr>
+<tr>
+<td><strong>Expected Output</strong></td>
+<td>See below</td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td><code>QA Pair Generator (Text Input)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Expected Output (copy this):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>A JSON object containing 5-10 Q&amp;A pairs with the following structure:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>{
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  "document_name": "User Provided Text",
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  "qa_pairs": [
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    {"id": 1, "question": "...", "answer": "...", "type": "factual", "source_reference": "Paragraph 3"}
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  ]
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>}
+</code></pre></div>
+<h4 id="task-2-verify-quality">Task 2 — Verify Quality<a class="headerlink" href="#task-2-verify-quality" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Description</strong></td>
+<td>Review and validate the Q&amp;A pairs generated in the previous task against the original text content provided as {document_text}. Verify that each answer is factually accurate and grounded in the source text. Assess each pair for accuracy, clarity, completeness, and appropriate difficulty classification. Filter out low-quality pairs and provide quality scores for approved pairs (approve &gt;= 0.8).</td>
+</tr>
+<tr>
+<td><strong>Expected Output</strong></td>
+<td>See below</td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td><code>QA Quality Verifier (Text Input)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Expected Output (copy this):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>A JSON validation report with the following structure:
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>{
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  "validation_summary": {"total_pairs": 10, "approved": 8, "flagged": 2, "overall_quality_score": 0.85, "question_type_coverage": {...}},
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  "validated_pairs": [{"id": 1, "question": "...", "answer": "...", "type": "factual", "quality_score": 0.95, "status": "approved", "issues": []}],
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  "recommendations": ["..."]
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>}
+</code></pre></div>
+<h4 id="task-3-upload-document">Task 3 — Upload Document<a class="headerlink" href="#task-3-upload-document" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Description</strong></td>
+<td>First, use the write_to_shared_pdf tool with output_file set to "source_document.pdf" and markdown_content set to the text content from {document_text} to generate a PDF document from the user's pasted text. Then, use the rag_studio_tool with action "upload_document" and file_path parameter set to the generated PDF path to upload the document to the configured RAG Studio knowledge base. Ensure the document is successfully ingested and ready for retrieval queries.</td>
+</tr>
+<tr>
+<td><strong>Expected Output</strong></td>
+<td>See below</td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td><code>Document Generator and Uploader (Text Input)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Expected Output (copy this):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>A JSON status report with the following structure:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>{
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  "pdf_generation": {"status": "success", "file_path": "/home/cdsw/source_document.pdf", "file_name": "source_document.pdf"},
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  "upload_status": {"status": "success", "knowledge_base_name": "...", "knowledge_base_id": "...", "document_name": "source_document.pdf", "message": "Document uploaded successfully", "timestamp": "..."}
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>}
+</code></pre></div>
+<h4 id="task-4-query-rag">Task 4 — Query RAG<a class="headerlink" href="#task-4-query-rag" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Description</strong></td>
+<td>For each approved question from the validated Q&amp;A pairs, use the rag_studio_tool with action "query" and the query parameter set to the question text. Execute all queries against the RAG Studio knowledge base and collect both the RAG-generated answers and the retrieved source chunks for each query.</td>
+</tr>
+<tr>
+<td><strong>Expected Output</strong></td>
+<td>See below</td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td><code>RAG Query Specialist</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Expected Output (copy this):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>A JSON object with the following structure:
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>{
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  "query_results": [
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    {"id": 1, "question": "...", "ground_truth_answer": "...", "rag_answer": "...", "retrieved_chunks": ["chunk 1...", "chunk 2..."], "question_type": "factual"}
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  ]
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>}
+</code></pre></div>
+<h4 id="task-5-evaluate-results">Task 5 — Evaluate Results<a class="headerlink" href="#task-5-evaluate-results" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Description</strong></td>
+<td>Perform comprehensive evaluation of RAG system performance by comparing RAG outputs against ground truth answers. Apply multiple evaluation metrics covering both retrieval quality (context relevance) and generation quality (faithfulness, answer relevance, semantic similarity, correctness). Generate a detailed evaluation report with per-question scores and overall summary statistics as JSON.</td>
+</tr>
+<tr>
+<td><strong>Expected Output</strong></td>
+<td>See below</td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td><code>RAG Evaluation Analyst</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Expected Output (copy this):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>A JSON evaluation report with the following structure:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>{
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  "evaluation_summary": {"total_questions": 10, "avg_context_relevance": 0.85, "avg_faithfulness": 0.90, "avg_answer_relevance": 0.88, "avg_semantic_similarity": 0.82, "avg_correctness": 0.80},
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  "detailed_results": [{"id": 1, "question": "...", "question_type": "factual", "scores": {"context_relevance": 0.9, "faithfulness": 1.0, "answer_relevance": 0.85, "semantic_similarity": 0.8, "correctness": 0.9}, "reasoning": "..."}],
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  "recommendations": ["..."]
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>}
+</code></pre></div>
+<hr />
+<h2 id="part-4-configure-the-rag-studio-tool">Part 4 — Configure the RAG Studio Tool<a class="headerlink" href="#part-4-configure-the-rag-studio-tool" title="Permanent link">&para;</a></h2>
+<p>In the <strong>Configure</strong> step, fill in your RAG Studio connection details under the
+<code>rag_studio_tool</code> parameters section.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>base_url</strong></td>
+<td>Your assigned RAG Studio URL</td>
+</tr>
+<tr>
+<td><strong>api_key</strong></td>
+<td>CDP API key from Part 1.4</td>
+</tr>
+<tr>
+<td><strong>knowledge_base_name</strong></td>
+<td><code>Global Finance KB</code></td>
+</tr>
+<tr>
+<td><strong>project_id</strong></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><strong>inference_model</strong></td>
+<td>LLM model name (instructor-provided)</td>
+</tr>
+<tr>
+<td><strong>response_chunks</strong></td>
+<td><code>5</code></td>
+</tr>
+<tr>
+<td><strong>timeout_seconds</strong></td>
+<td><code>60</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Knowledge base must exist first</p>
+<p>The target knowledge base must already exist in RAG Studio before running the workflow.
+Create it in Part 1.1 if you haven't already — the workflow uploads into it during
+Task 3.</p>
+</div>
+<hr />
+<h2 id="part-5-test-the-workflow">Part 5 — Test the Workflow<a class="headerlink" href="#part-5-test-the-workflow" title="Permanent link">&para;</a></h2>
+<p>In the <strong>Test</strong> step, paste your document text into the <code>{document_text}</code> input.</p>
+<p>This workflow uses <strong>two separate document sets</strong> — they must not overlap:</p>
+<ul>
+<li><strong>Knowledge base PDFs</strong> (<a href="#the-knowledge-base-global-financial-markets-geopolitical-risk">table at the top of this page</a>): upload once to <strong>Global Finance KB</strong> in RAG Studio (Part 1.2). These indexed PDFs power <strong>Task 4</strong> retrieval.</li>
+<li><strong>Sample text files</strong> (<a href="rag/sample_documents/"><code>sample_documents/</code></a>): paste at <strong>Test</strong> time only. They are <strong>not</strong> included in <code>kb_documents/</code> and are <strong>not</strong> uploaded beforehand. This text powers <strong>Tasks 1–3</strong> (ground-truth Q&amp;A generation, validation, and Agent 3's PDF upload). Use at least <strong>500 words</strong> of narrative prose — tables alone are too sparse for Q&amp;A generation.</li>
+</ul>
+<p>Keeping the two sets separate avoids duplicating content in the knowledge base and makes evaluation results easier to interpret.</p>
+<h3 id="sample-text-files">Sample text files<a class="headerlink" href="#sample-text-files" title="Permanent link">&para;</a></h3>
+<p>All five samples are drawn from public reports that are <strong>not</strong> among the KB PDFs above. Download a file and paste its contents into <code>{document_text}</code>:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Source report</th>
+<th>Words</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a download="download" href="../rag/sample_documents/worldbank_cmo_executive_summary_oct2024.txt">worldbank_cmo_executive_summary_oct2024.txt</a></td>
+<td>World Bank CMO Oct 2024 (not in KB)</td>
+<td>~570</td>
+<td><strong>Primary demo</strong> — Brent / Middle East scenarios</td>
+</tr>
+<tr>
+<td><a download="download" href="../rag/sample_documents/worldbank_cmo_executive_summary_oct2025.txt">worldbank_cmo_executive_summary_oct2025.txt</a></td>
+<td>World Bank CMO Oct 2025 (not in KB)</td>
+<td>~760</td>
+<td>Commodity outlook / geopolitical risks</td>
+</tr>
+<tr>
+<td><a download="download" href="../rag/sample_documents/imf_meca_reo_executive_summary_oct2024.txt">imf_meca_reo_executive_summary_oct2024.txt</a></td>
+<td>IMF Middle East REO Oct 2024 (not in KB)</td>
+<td>~670</td>
+<td>Regional growth / conflicts</td>
+</tr>
+<tr>
+<td><a download="download" href="../rag/sample_documents/imf_meca_reo_chapter1_outlook_oct2024.txt">imf_meca_reo_chapter1_outlook_oct2024.txt</a></td>
+<td>IMF Middle East REO Oct 2024 Ch. 1 (not in KB)</td>
+<td>~520</td>
+<td>MENA oil exporters / fragmentation</td>
+</tr>
+<tr>
+<td><a download="download" href="../rag/sample_documents/bis_wp1249_geopolitics_trade.txt">bis_wp1249_geopolitics_trade.txt</a></td>
+<td>BIS Working Paper 1249 (not in KB)</td>
+<td>~670</td>
+<td>Geopolitics and trade fragmentation</td>
+</tr>
+</tbody>
+</table>
+<p>Also available (download only): <a download="download" href="../rag/sample_documents/imf_meca_reo_executive_summary_oct2024.txt">imf_meca_reo_executive_summary_oct2024.txt</a>, <a download="download" href="../rag/sample_documents/imf_meca_reo_chapter1_outlook_oct2024.txt">imf_meca_reo_chapter1_outlook_oct2024.txt</a>, and <a download="download" href="../rag/sample_documents/bis_wp1249_geopolitics_trade.txt">bis_wp1249_geopolitics_trade.txt</a>.</p>
+<h3 id="primary-sample-world-bank-cmo-oct-2024">Primary sample — World Bank CMO Oct 2024<a class="headerlink" href="#primary-sample-world-bank-cmo-oct-2024" title="Permanent link">&para;</a></h3>
+<p>Use the excerpt below from
+<strong><a download="download" href="../rag/sample_documents/worldbank_cmo_executive_summary_oct2024.txt">worldbank_cmo_executive_summary_oct2024.txt</a></strong>
+(~570 words). This report is <strong>not</strong> in the KB PDF set (the KB uses the April 2026 CMO instead).</p>
+<details>
+<summary>Click to expand — paste this into {document_text}</summary>
+
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Commodity Markets Outlook — Executive Summary
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>World Bank Group — October 2024
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>THE STATE OF COMMODITY MARKETS
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>The early 2020s were characterized by large global shocks—the COVID-19 pandemic recession and subsequent rebound, a sharp runup in inflation, and Russia's invasion of Ukraine—accompanied by highly correlated swings in commodity prices. Over the last year, the economic effects of those outsized shocks have substantially abated, with global economic growth steadying and inflation moving toward targets. Correspondingly, commodity markets appear to be departing from a period of tight synchronization. Over the last year, commodity prices have been buffeted by a wide range of developments, including shifting expectations about supply management, surges in conflict-related risk, trade restrictions, and weather-related supply shocks.
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ENERGY AND GEOPOLITICAL RISK
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>In energy markets, geopolitical tensions have remained a critical driver of short-term price movements. Oil markets have responded to geopolitical flare-ups, with prices surpassing $90/bbl in October 2023 and April 2024. Anticipated oil price volatility approached its highest levels since Russia's invasion of Ukraine in early October 2024, as oil prices surged by 10 percent in just three days. Prices have tended to subsequently fall back, however, reflecting ample potential oil supply.
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>Commodity prices are expected to decrease by 5 percent in 2025 and 2 percent in 2026, after softening 3 percent this year. The Brent crude oil price is projected to average $80/bbl in 2024, before slipping to $73/bbl in 2025 and $72/bbl in 2026. Thus, from their 2022 high, annual average oil prices are expected to decline for four consecutive years through to 2026. The possibility of escalating conflict in the Middle East represents a substantial near-term upside risk to energy prices, with potential knock-on consequences for other commodities.
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>Three underlying longer-term factors shape the outlook. First, global oil consumption is decelerating, continuing the secular decline in the oil intensity of global GDP. Second, global oil supply continues to diversify, with the market share of non-OPEC+ producers gradually increasing. Third, following successive rounds of output cuts, OPEC+ holds spare oil capacity equivalent to slightly more than 7 percent of current global production—about double the average spare capacity in 2017-19, when the Brent oil price averaged $63/bbl.
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>RISK SCENARIOS
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>In the near term, the possibility of escalating conflict in the Middle East poses substantial upside risks to energy prices. A conflict-related reduction in the region's energy exports could drive oil and gas prices higher, with knock-on consequences for other commodities. Other upside risks stem from lower-than-expected North American oil output, increased competition for liquefied natural gas cargoes, and sustained, higher-than-assumed coal and natural gas consumption in Asia.
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>PRECIOUS METALS AND AGRICULTURE
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>Gold prices, which are particularly sensitive to geopolitical tensions, marched higher all year, standing 27 percent above their December 2023 level in September. In agricultural commodity markets, prices for grains and edible oils have softened on improved harvest prospects, though elevated freight costs from Red Sea disruptions continue to affect food trade flows for countries dependent on Suez Canal shipping routes. A conflict escalation scenario assessed in the report assumes global oil supply declines by 2 mb/d due to a conflict-related shock in late 2024—a shortfall comparable to the Iraq War in 2003 and the Libyan civil war in 2011. In response, the price of Brent crude oil would rise close to $92/bbl at peak impact. For 2025 as a whole, Brent would average $84/bbl, 15 percent above the baseline forecast.
+</code></pre></div>
+
+</details>
+
+<h3 id="secondary-sample-world-bank-cmo-oct-2025">Secondary sample — World Bank CMO Oct 2025<a class="headerlink" href="#secondary-sample-world-bank-cmo-oct-2025" title="Permanent link">&para;</a></h3>
+<p>A second external option from
+<strong><a download="download" href="../rag/sample_documents/worldbank_cmo_executive_summary_oct2025.txt">worldbank_cmo_executive_summary_oct2025.txt</a></strong>
+(~760 words):</p>
+<details>
+<summary>Click to expand — paste this into {document_text}</summary>
+
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Commodity Markets Outlook — Executive Summary
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>World Bank Group — October 2025
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Commodity prices are expected to decline by about 7 percent overall this year, reflecting subdued global economic activity, elevated trade tensions and policy uncertainty, and ample global supply of oil. In 2026, commodity prices are forecast to fall by a further 7 percent, a fourth consecutive year of decline, as global growth remains sluggish and the oil market oversupplied. Energy price movements are expected to continue contributing to global disinflation in 2026. Metals and minerals prices are projected to remain stable in 2026, while agricultural prices are forecast to edge down, primarily due to strong supply conditions. Precious metals prices are projected to rise another 5 percent, after a historically large, investment-driven rally of about 40 percent in 2025. Risks to the commodity price projections are tilted to the downside. Key downside risks include weakerthan-expected global growth, a longer-than-assumed period of economic policy uncertainty, and additional oversupply of oil. Upside risks include intensifying geopolitical tensions, the market impact of additional oil sanctions, supply reductions stemming from additional trade restrictions, unfavorable weather conditions, and faster-than-expected rollout of new data centers. Commodity price volatility in recent years has revived interest in supply management via international commodity agreements. Historical experience, however, shows that the most effective policy is to promote diversification, innovation, transparency, and market-based pricing— measures that build lasting resilience to commodity price volatility. Recent developments Commodity markets have been impacted by a confluence of factors over the past six months, leaving prices below 2024 levels. Continued subdued economic activity, trade restrictions and associated high economic policy uncertainty, and weather-related supply shocks have all affected commodity markets. Energy prices, in particular, have pulled down the World Bank Group’s overall commodity price index (figure 1.A). The softening of commodity prices in nominal U.S. dollars would have been larger without the depreciation of the dollar since early 2025. In energy markets, the announcement of a new set of U.S. sanctions on Russian oil companies in late October was followed by spike in oil prices. Prior to recent events, Brent oil prices declined by 14 percent in the first nine months of the year (y/y), reflecting an oversupplied market and sluggish global growth. Over the past two years, oil demand growth in China, a key source of demand, has been sharply below its 2015-19 average, weighing on prices, while growth in the rest of the world has been broadly steady (figure 1.B). Increasing oil production by eight OPEC+ members since April, on top of continued strong gains in non-OPEC countries, has put additional downward pressure on prices. The U.S. benchmark for natural gas prices rose by 64 percent in the first nine months of the year (y/y) as European demand for U.S. liquified natural gas (LNG) surged due to reduced electricity output from renewable sources and efforts to build stocks. Recent developments in base metals markets have been shaped by evolving trade policy and economic conditions in China. Metal prices recovered in 2025Q3 after declining earlier in the year, reflecting resilient demand in major economies. In the lead-up to the U.S. tariffs, importers front-loaded purchases of aluminum and copper, contributing to short-term market tightening. For copper, accelerated shipments to the United States lifted onshore inventories ahead of the August tariffs and widened the price spread between the COMEX and LME exchanges (figure 1.C). In addition, an accident at one of the world’s largest mines in September caused a spike in copper prices. Iron ore prices rebounded in the third quarter, supported by expectations of record-high steel exports and a temporary pickup in Chinese steel production, despite a prolonged downturn in the property sector. Among precious metals, for which prices have risen for eight consecutive quarters, gold has surged to successive record highs in the second half of 2025 on strong investment demand due to its safe-haven status amid elevated geopolitical uncertainty, macroeconomic factors such as recent FIGURE 1 Recent developments in commodity markets Commodity prices have fallen since the beginning of 2025, largely driven by lower energy prices. A sharp decline in oil prices in 2025 reflects sluggish oil demand growth in China and excess global supply. Market anticipation of tariffs led to unusually wide price differentials across major copper exchanges for several months in 2025. Gold prices surged to successive record highs in the second half of the year, largely reflecting safe-haven demand. Food prices have continued to edge down, while beverage prices experienced a sharp, weather-related spike in the first half of the year. A. Commodity prices B. Average annual increase in oil
+</code></pre></div>
+
+</details>
+
+<h3 id="run-and-review">Run and review<a class="headerlink" href="#run-and-review" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Click <strong>Test</strong> in the workflow editor.</li>
+<li>Paste your document text into <code>{document_text}</code>.</li>
+<li>Click <strong>Run Workflow</strong> and watch the five-agent pipeline execute.</li>
+</ol>
+<p>The <strong>Logs</strong> tab streams every tool call and LLM turn in real time. The <strong>Flow Diagram</strong>
+shows which agent is active at each step. Review the JSON output from Task 5 in the final
+agent response.</p>
+<hr />
+<h2 id="evaluation-metrics">Evaluation Metrics<a class="headerlink" href="#evaluation-metrics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>What it measures</th>
+<th>Scale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Context Relevance</strong></td>
+<td>Are the retrieved chunks relevant to the question?</td>
+<td>0–1</td>
+</tr>
+<tr>
+<td><strong>Faithfulness</strong></td>
+<td>Is the RAG answer grounded in the retrieved context?</td>
+<td>0–1</td>
+</tr>
+<tr>
+<td><strong>Answer Relevance</strong></td>
+<td>Does the RAG answer actually address the question?</td>
+<td>0–1</td>
+</tr>
+<tr>
+<td><strong>Semantic Similarity</strong></td>
+<td>How similar is the RAG answer to the ground truth?</td>
+<td>0–1</td>
+</tr>
+<tr>
+<td><strong>Correctness</strong></td>
+<td>Is the RAG answer factually correct vs. ground truth?</td>
+<td>0–1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interpreting-your-results">Interpreting your results<a class="headerlink" href="#interpreting-your-results" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Diagnosis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High Context Relevance + Low Correctness</td>
+<td>Generation issue — retrieval works but LLM struggles</td>
+</tr>
+<tr>
+<td>Low Context Relevance + Low Correctness</td>
+<td>Retrieval issue — wrong chunks being fetched</td>
+</tr>
+<tr>
+<td>Low Faithfulness + High Correctness</td>
+<td>Answer is right but the LLM is not using the context (potential hallucination)</td>
+</tr>
+<tr>
+<td>High all metrics</td>
+<td>Good RAG configuration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAG tool connection fails</td>
+<td>Verify <code>base_url</code>, <code>api_key</code>, and <code>knowledge_base_name</code></td>
+</tr>
+<tr>
+<td>"Knowledge base not found"</td>
+<td>Run the tool with <code>action=list_knowledge_bases</code> (from a session terminal, or add a temporary task) to see available names</td>
+</tr>
+<tr>
+<td>PDF generation fails (Agent 3 upload step)</td>
+<td>Check that <code>write_to_shared_pdf</code> is attached to Agent 3 and <code>{document_text}</code> is non-empty</td>
+</tr>
+<tr>
+<td>No Q&amp;A pairs generated</td>
+<td>Ensure pasted text is at least 500 words</td>
+</tr>
+<tr>
+<td>Low evaluation scores</td>
+<td>Check knowledge base content and chunking strategy; try increasing <code>response_chunks</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../lab2_calculator_with_tools/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 2: Workflow with a Custom Tool">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 2: Workflow with a Custom Tool
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../synthetic_data_lab/SYNTHETIC_DATA_WORKFLOWS_SUMMARY/" class="md-footer__link md-footer__link--next" aria-label="Next: Workflow Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Workflow Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.sections", "navigation.footer", "content.code.annotate", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/username-replacer.js"></script>
+      
+    
+  </body>
+</html>
